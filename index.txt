@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIRVEL HUB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { 
+            --bg-dark: #050508; 
+            --glass: rgba(255, 255, 255, 0.03); 
+            --accent: #8b5cf6; 
+        }
+        body { background: var(--bg-dark); color: #fff; font-family: 'Inter', sans-serif; }
+        .glass { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
+        .glow { box-shadow: 0 0 40px -10px rgba(139, 92, 246, 0.3); }
+        .nav-active { border-right: 2px solid #8b5cf6; background: rgba(139, 92, 246, 0.1); }
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-5px) scale(1.02); border-color: rgba(139, 92, 246, 0.5); }
+    </style>
+</head>
+<body class="flex min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black">
+
+    <!-- Sidebar -->
+    <nav class="w-64 p-8 flex flex-col gap-6 border-r border-white/5">
+        <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic">MIRVEL HUB</h1>
+        <div class="flex flex-col gap-2">
+            <button onclick="showPage('home')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🏠 Главная</button>
+            <button onclick="showPage('cds')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">💿 CD Коллекция</button>
+            <button onclick="showPage('vinyls')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">💽 Винил</button>
+            <button onclick="showPage('profile')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">👤 Профиль</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-10 overflow-y-auto">
+        <section id="home" class="animate-fade-in">
+            <div class="glass p-10 rounded-3xl mb-10 glow flex justify-between items-center">
+                <div>
+                    <h2 class="text-5xl font-black mb-4">Привет, <span id="display-name" class="text-cyan-400">Коллекционер</span>!</h2>
+                    <p class="text-gray-400 text-lg">Ваш уровень: <span id="user-lvl" class="text-purple-400 font-bold">1</span> | Опыт: <span id="user-xp">0</span> XP</p>
+                </div>
+                <img id="main-avatar" class="w-20 h-20 rounded-full border-2 border-purple-500 object-cover hidden">
+            </div>
+            
+            <div class="mb-10">
+                <h3 class="text-2xl font-bold mb-6">Любимые артисты</h3>
+                <div id="artist-list" class="flex flex-wrap gap-3 mb-6"></div>
+                <div class="flex gap-2 max-w-sm">
+                    <input id="artist-input" placeholder="Введите имя артиста..." class="flex-1 bg-white/5 p-4 rounded-2xl border border-white/10 outline-none focus:border-purple-500">
+                    <button onclick="addArtist()" class="bg-purple-600 px-8 rounded-2xl font-bold hover:bg-purple-500 transition-all">Добавить</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="cds" class="hidden animate-fade-in">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-4xl font-bold">CD Коллекция</h2>
+                <button onclick="openModal('cd')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button>
+            </div>
+            <div id="cd-grid" class="grid grid-cols-4 gap-6"></div>
+        </section>
+
+        <section id="vinyls" class="hidden animate-fade-in">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-4xl font-bold">Винил</h2>
+                <button onclick="openModal('vinyl')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button>
+            </div>
+            <div id="vinyl-grid" class="grid grid-cols-4 gap-6"></div>
+        </section>
+
+        <section id="profile" class="hidden animate-fade-in">
+            <h2 class="text-4xl font-bold mb-10">Настройки</h2>
+            <div class="glass p-8 rounded-3xl max-w-lg space-y-6">
+                <input type="file" onchange="uploadAvatar(event)" class="w-full">
+                <input id="profile-name" placeholder="Ваш никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
+                <button onclick="saveProfile()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold hover:bg-cyan-500 transition-all">Сохранить</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-10 rounded-3xl w-96 space-y-6 shadow-2xl">
+            <h2 class="text-2xl font-bold">Добавить</h2>
+            <input type="hidden" id="edit-type">
+            <input id="item-title" placeholder="Название" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
+            <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
+            <input type="file" id="item-img" class="w-full">
+            <button onclick="saveItem()" class="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500">Сохранить</button>
+            <button onclick="document.getElementById('modal').classList.add('hidden')" class="w-full bg-white/10 py-4 rounded-xl">Отмена</button>
+        </div>
+    </div>
+
+    <script>
+        let data = JSON.parse(localStorage.getItem('mirvel_data')) || { cds: [], vinyls: [], name: 'Коллекционер', artists: [], avatar: '' };
+
+        function save() { localStorage.setItem('mirvel_data', JSON.stringify(data)); updateUI(); }
+
+        window.showPage = (id) => {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        };
+
+        window.uploadAvatar = (e) => {
+            const reader = new FileReader();
+            reader.onload = (ev) => { data.avatar = ev.target.result; save(); };
+            reader.readAsDataURL(e.target.files[0]);
+        };
+
+        window.addArtist = () => {
+            const input = document.getElementById('artist-input');
+            if(input.value) { data.artists.push(input.value); input.value = ''; save(); renderArtists(); }
+        };
+
+        window.openModal = (type) => {
+            document.getElementById('edit-type').value = type;
+            document.getElementById('modal').classList.remove('hidden');
+        };
+
+        window.saveItem = () => {
+            const type = document.getElementById('edit-type').value;
+            const title = document.getElementById('item-title').value;
+            const price = parseFloat(document.getElementById('item-price').value) || 0;
+            const file = document.getElementById('item-img').files[0];
+            
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    data[type + 's'].push({ id: Date.now(), title, price, img: e.target.result });
+                    save(); document.getElementById('modal').classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                data[type + 's'].push({ id: Date.now(), title, price, img: '' });
+                save(); document.getElementById('modal').classList.add('hidden');
+            }
+        };
+
+        window.saveProfile = () => {
+            data.name = document.getElementById('profile-name').value;
+            save();
+        };
+
+        function renderArtists() {
+            document.getElementById('artist-list').innerHTML = data.artists.map(a => `<span class="bg-purple-600/30 border border-purple-500/50 px-4 py-2 rounded-2xl text-sm">${a}</span>`).join('');
+        }
+
+        function updateUI() {
+            document.getElementById('display-name').innerText = data.name;
+            document.getElementById('profile-name').value = data.name;
+            if(data.avatar) { 
+                document.getElementById('main-avatar').src = data.avatar; 
+                document.getElementById('main-avatar').classList.remove('hidden'); 
+            }
+            const xp = [...data.cds, ...data.vinyls].reduce((acc, c) => acc + Math.floor(c.price/100)*10, 0);
+            document.getElementById('user-xp').innerText = xp;
+            document.getElementById('user-lvl').innerText = Math.floor(xp/100)+1;
+            
+            const renderGrid = (key, id) => {
+                document.getElementById(id).innerHTML = data[key].map(i => `
+                    <div class="glass p-6 rounded-3xl card-hover animate-fade-in">
+                        ${i.img ? `<img src="${i.img}" class="w-full h-40 object-cover rounded-2xl mb-4">` : `<div class="w-full h-40 bg-white/5 rounded-2xl mb-4 flex items-center justify-center">Нет фото</div>`}
+                        <h3 class="font-bold text-lg">${i.title}</h3>
+                        <p class="text-cyan-400 font-mono">${i.price} ₴</p>
+                    </div>
+                `).join('');
+            };
+            renderGrid('cds', 'cd-grid');
+            renderGrid('vinyls', 'vinyl-grid');
+            renderArtists();
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
