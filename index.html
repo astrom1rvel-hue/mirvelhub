@@ -49,7 +49,7 @@
                     <h3 class="text-4xl font-black mt-2 text-cyan-400" id="stat-wish-val">0 ₴</h3>
                 </div>
             </div>
-
+            
             <div class="mb-10">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-3xl font-bold">Мои артисты</h2>
@@ -132,7 +132,7 @@
 
     <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl">
-            <h2 class="text-2xl font-bold">Заметка</h2>
+            <h2 class="text-2xl font-bold">Примечание</h2>
             <input type="hidden" id="note-type"><input type="hidden" id="note-id">
             <textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea>
             <button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500 transition-all">Сохранить</button>
@@ -156,12 +156,14 @@
         let data = JSON.parse(localStorage.getItem('mirvel_data')) || {};
         const defaults = { cds: [], vinyls: [], wishlists: [], artists: [], name: 'Коллекционер', description: '', xp: 0, lvl: 1, avatar: '', tempImg: '', quickNotes: [] };
         data = { ...defaults, ...data };
+        let editingQuickNoteId = null;
 
         function calculateStats() {
             const cdsVal = (data.cds || []).reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
             const vinylsVal = (data.vinyls || []).reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
             const wishVal = (data.wishlists || []).reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
             
+            // 100 грн = 10 XP, 500 XP = 1 lvl
             data.xp = Math.floor((cdsVal + vinylsVal) / 10);
             data.lvl = Math.floor(data.xp / 500) + 1;
             
@@ -286,9 +288,21 @@
         window.saveQuickNote = () => {
             const input = document.getElementById('new-quick-note');
             if(!input.value) return;
-            data.quickNotes.push({ id: Date.now(), text: input.value });
+            if(editingQuickNoteId) {
+                const note = data.quickNotes.find(n => n.id === editingQuickNoteId);
+                note.text = input.value;
+                editingQuickNoteId = null;
+            } else {
+                data.quickNotes.push({ id: Date.now(), text: input.value });
+            }
             input.value = '';
             save();
+        };
+
+        window.editQuickNote = (id) => {
+            const note = data.quickNotes.find(n => n.id === id);
+            document.getElementById('new-quick-note').value = note.text;
+            editingQuickNoteId = id;
         };
 
         window.deleteQuickNote = (id) => {
@@ -356,8 +370,11 @@
             const renderQuickNotes = () => {
                 document.getElementById('quick-notes-list').innerHTML = (data.quickNotes || []).map(n => `
                     <div class="bg-white/5 p-3 rounded-xl flex justify-between items-center text-sm">
-                        <span>${n.text}</span>
-                        <button onclick="deleteQuickNote(${n.id})" class="text-white/20 hover:text-red-400">✕</button>
+                        <span class="truncate">${n.text}</span>
+                        <div class="flex gap-2">
+                            <button onclick="editQuickNote(${n.id})" class="text-white/20 hover:text-cyan-400">✏️</button>
+                            <button onclick="deleteQuickNote(${n.id})" class="text-white/20 hover:text-red-400">✕</button>
+                        </div>
                     </div>
                 `).join('');
             };
