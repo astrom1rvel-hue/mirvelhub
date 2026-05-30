@@ -39,7 +39,6 @@
                 <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
             </div>
 
-            <!-- Статистика -->
             <div class="grid grid-cols-2 gap-6 mb-10">
                 <div class="glass p-8 rounded-3xl">
                     <p class="text-gray-500 text-sm font-bold uppercase tracking-wider">Всего в коллекции</p>
@@ -112,10 +111,8 @@
         </section>
     </main>
 
-    <!-- Floating Button -->
     <button onclick="openQuickNotes()" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl flex items-center justify-center text-3xl hover:bg-purple-500 hover:scale-110 transition-all z-40">📝</button>
 
-    <!-- Modals -->
     <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl">
             <h2 class="text-2xl font-bold">Редактор</h2>
@@ -123,6 +120,10 @@
             <input id="item-title" placeholder="Название" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
             <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
             <input id="item-url" placeholder="Ссылка (URL)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white hidden">
+            <div class="flex items-center gap-2 text-sm">
+                <input type="checkbox" id="item-gift" class="w-4 h-4 rounded border-white/10 bg-white/5">
+                <label for="item-gift">Это подарок 🎁</label>
+            </div>
             <input type="file" id="item-img" accept="image/*" onchange="processImage(event, 'temp')" class="w-full text-sm text-gray-400">
             <button onclick="saveItem()" class="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500 transition-all">Сохранить</button>
             <button onclick="closeModal('modal')" class="w-full bg-white/10 py-4 rounded-xl">Отмена</button>
@@ -134,12 +135,11 @@
             <h2 class="text-2xl font-bold">Заметка</h2>
             <input type="hidden" id="note-type"><input type="hidden" id="note-id">
             <textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea>
-            <button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500 transition-all">Сохранить заметку</button>
+            <button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500 transition-all">Сохранить</button>
             <button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button>
         </div>
     </div>
 
-    <!-- Quick Notes Modal -->
     <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl">
             <h2 class="text-2xl font-bold">Быстрые заметки</h2>
@@ -211,11 +211,13 @@
                 document.getElementById('item-title').value = item.title;
                 document.getElementById('item-price').value = item.price;
                 document.getElementById('item-url').value = item.url || '';
+                document.getElementById('item-gift').checked = !!item.isGift;
                 data.tempImg = item.img;
             } else {
                 document.getElementById('item-title').value = '';
                 document.getElementById('item-price').value = '';
                 document.getElementById('item-url').value = '';
+                document.getElementById('item-gift').checked = false;
             }
             document.getElementById('modal').classList.remove('hidden'); 
         };
@@ -243,13 +245,14 @@
             const title = document.getElementById('item-title').value;
             const price = parseFloat(document.getElementById('item-price').value) || 0;
             const url = document.getElementById('item-url').value;
+            const isGift = document.getElementById('item-gift').checked;
             
             if(id) {
                 const item = data[type].find(x => x.id === id);
-                item.title = title; item.price = price; item.url = url;
+                item.title = title; item.price = price; item.url = url; item.isGift = isGift;
                 if(data.tempImg) item.img = data.tempImg;
             } else {
-                data[type].push({ id: Date.now(), title, price, url, note: '', img: data.tempImg || '', pos: 'center' });
+                data[type].push({ id: Date.now(), title, price, url, note: '', img: data.tempImg || '', pos: 'center', isGift });
             }
             save();
             closeModal('modal');
@@ -278,7 +281,6 @@
             save(); 
         };
 
-        // Quick Notes Logic
         window.openQuickNotes = () => document.getElementById('quick-notes-modal').classList.remove('hidden');
         
         window.saveQuickNote = () => {
@@ -315,7 +317,6 @@
         window.updateUI = () => {
             const { cdsVal, vinylsVal, wishVal, totalCol } = calculateStats();
             
-            // Dashboard updates
             document.getElementById('display-name').innerText = data.name;
             document.getElementById('display-desc').innerText = data.description || 'Нет описания.';
             document.getElementById('user-xp').innerText = data.xp;
@@ -333,14 +334,13 @@
             const avatar = document.getElementById('main-avatar');
             if(data.avatar) { avatar.src = data.avatar; avatar.classList.remove('hidden'); }
             
-            // Grid render helper
             const renderGrid = (key, id) => {
                 document.getElementById(id).innerHTML = (data[key] || []).map(i => `
                     <div class="glass p-6 rounded-3xl card-hover relative group">
                         <div class="w-full h-40 bg-white/5 rounded-2xl mb-4 overflow-hidden">
                             ${i.img ? `<img src="${i.img}" class="w-full h-full object-cover" style="object-position: ${i.pos}">` : '<div class="h-full flex items-center justify-center text-white/10">Без фото</div>'}
                         </div>
-                        <h3 class="font-bold text-lg truncate">${i.title}</h3>
+                        <h3 class="font-bold text-lg truncate">${i.title} ${i.isGift ? '🎁' : ''}</h3>
                         <p class="text-cyan-400 font-mono mb-4">${i.price} ₴ ${i.url ? `<br><a href="${i.url}" target="_blank" class="text-xs text-white/50 hover:underline">Ссылка</a>` : ''}</p>
                         
                         <div class="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition">
