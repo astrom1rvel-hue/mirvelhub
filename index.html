@@ -369,9 +369,9 @@
 
             const renderQuickNotes = () => {
                 document.getElementById('quick-notes-list').innerHTML = (data.quickNotes || []).map(n => `
-                    <div class="bg-white/5 p-3 rounded-xl flex justify-between items-center text-sm">
-                        <span class="truncate">${n.text}</span>
-                        <div class="flex gap-2">
+                    <div class="bg-white/5 p-3 rounded-xl flex justify-between items-start text-sm gap-4">
+                        <span class="break-words w-full">${n.text}</span>
+                        <div class="flex gap-2 shrink-0">
                             <button onclick="editQuickNote(${n.id})" class="text-white/20 hover:text-cyan-400">✏️</button>
                             <button onclick="deleteQuickNote(${n.id})" class="text-white/20 hover:text-red-400">✕</button>
                         </div>
