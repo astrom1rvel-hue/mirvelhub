@@ -24,34 +24,63 @@
             <button onclick="showPage('cds')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">💿 CD Коллекция</button>
             <button onclick="showPage('vinyls')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">💽 Винил</button>
             <button onclick="showPage('wishlists')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🎁 Желаемое</button>
+            <button onclick="showPage('tracker')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🎯 Трекер покупок</button>
             <button onclick="showPage('profile')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">👤 Профиль</button>
         </div>
     </nav>
 
     <main class="flex-1 p-10 overflow-y-auto">
         <section id="home" class="fade-in">
-            <div class="glass p-10 rounded-3xl mb-10 flex justify-between items-center">
-                <div>
+            <div id="greeting-banner" class="glass p-10 rounded-3xl mb-10 flex justify-between items-center relative overflow-hidden transition-all duration-500">
+                <div id="banner-bg" class="absolute inset-0 opacity-10 blur-xl pointer-events-none bg-cover bg-center"></div>
+                <div class="relative z-10">
                     <h2 class="text-5xl font-black mb-4">Привет, <span id="display-name" class="text-cyan-400">Коллекционер</span>!</h2>
-                    <p id="display-desc" class="text-gray-500 mb-2 italic"></p>
-                    <p class="text-gray-400 text-sm mb-6">Любимые: <span id="display-artists" class="text-purple-300"></span></p>
+                    <p id="display-desc" class="text-gray-400 mb-2 italic"></p>
+                    <p class="text-gray-500 text-sm mb-6">Любимые: <span id="display-artists" class="text-purple-300"></span></p>
                     <p class="text-gray-400 text-lg">Уровень: <span id="user-lvl" class="text-purple-400 font-bold">1</span> | XP: <span id="user-xp" class="text-cyan-400 font-bold">0</span></p>
                 </div>
                 <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
             </div>
 
-            <div class="grid grid-cols-2 gap-6 mb-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                 <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Коллекция (CD + Винил)</p><h3 class="text-3xl font-black mt-2 text-purple-400" id="stat-col-val">0 ₴</h3></div>
                 <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Желаемое</p><h3 class="text-3xl font-black mt-2 text-cyan-400" id="stat-wish-val">0 ₴</h3></div>
+                <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Всего предметов (CD+Vinyl)</p><h3 class="text-3xl font-black mt-2 text-white" id="stat-count-val">0</h3></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass p-8 rounded-3xl">
+                    <h3 class="text-gray-500 text-sm mb-2 uppercase tracking-wider">Артист месяца</h3>
+                    <a id="fav-link-artist" href="#" target="_blank" class="text-2xl font-bold hover:text-cyan-400 transition"><span id="fav-artist-text">...</span></a>
+                    <div id="fav-artist-img-wrapper" class="w-20 h-20 bg-white/10 rounded-xl overflow-hidden mt-4 hidden"><img id="fav-artist-img" class="w-full h-full object-cover"></div>
+                </div>
+                <div class="glass p-8 rounded-3xl">
+                    <h3 class="text-gray-500 text-sm mb-2 uppercase tracking-wider">Альбом месяца</h3>
+                    <a id="fav-link-album" href="#" target="_blank" class="text-2xl font-bold hover:text-purple-400 transition"><span id="fav-album-text">...</span></a>
+                    <div id="fav-album-img-wrapper" class="w-20 h-20 bg-white/10 rounded-xl overflow-hidden mt-4 hidden"><img id="fav-album-img" class="w-full h-full object-cover"></div>
+                </div>
             </div>
         </section>
 
-        <section id="cds" class="hidden fade-in"><div class="flex justify-between items-center mb-10"><div><h2 class="text-4xl font-bold">CD Коллекция</h2><p class="text-gray-500">Сумма: <span id="total-cds">0</span> ₴</p></div><button onclick="openModal('cds')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button></div><div id="cd-grid" class="grid grid-cols-4 gap-6"></div></section>
-        <section id="vinyls" class="hidden fade-in"><div class="flex justify-between items-center mb-10"><div><h2 class="text-4xl font-bold">Винил</h2><p class="text-gray-500">Сумма: <span id="total-vinyls">0</span> ₴</p></div><button onclick="openModal('vinyls')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button></div><div id="vinyl-grid" class="grid grid-cols-4 gap-6"></div></section>
+        <section id="cds" class="hidden fade-in">
+            <div class="flex justify-between items-center mb-10">
+                <div><h2 class="text-4xl font-bold">CD Коллекция</h2><p class="text-gray-500">Сумма: <span id="total-cds">0</span> ₴ | Предметов: <span id="count-cds">0</span></p></div>
+                <button onclick="openModal('cds')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button>
+            </div>
+            <div id="cd-grid" class="grid grid-cols-4 gap-6"></div>
+        </section>
+        
+        <section id="vinyls" class="hidden fade-in">
+            <div class="flex justify-between items-center mb-10">
+                <div><h2 class="text-4xl font-bold">Винил</h2><p class="text-gray-500">Сумма: <span id="total-vinyls">0</span> ₴ | Предметов: <span id="count-vinyls">0</span></p></div>
+                <button onclick="openModal('vinyls')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button>
+            </div>
+            <div id="vinyl-grid" class="grid grid-cols-4 gap-6"></div>
+        </section>
         
         <section id="wishlists" class="hidden fade-in">
             <div class="flex justify-between items-center mb-10">
-                <div><h2 class="text-4xl font-bold">Желаемое</h2><p class="text-gray-500">Сумма: <span id="total-wishlists">0</span> ₴</p></div>
+                <div><h2 class="text-4xl font-bold">Желаемое</h2><p class="text-gray-500">Сумма: <span id="total-wishlists">0</span> ₴ | Предметов: <span id="count-wishlists">0</span></p></div>
                 <div class="flex gap-2">
                     <button onclick="openTagsManager()" class="bg-white/10 text-white px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">Тэги</button>
                     <button onclick="openModal('wishlists')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Добавить</button>
@@ -65,22 +94,53 @@
             <div id="wishlist-grid" class="grid grid-cols-4 gap-6"></div>
         </section>
 
+        <section id="tracker" class="hidden fade-in">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-4xl font-bold">Трекер покупок</h2>
+                <div class="flex gap-2">
+                    <input id="new-progress-artist" class="bg-white/5 p-3 rounded-xl border border-white/10 w-64" placeholder="Имя артиста">
+                    <button onclick="addProgressArtist()" class="bg-cyan-600 px-6 rounded-xl font-bold hover:bg-cyan-500 transition">+</button>
+                </div>
+            </div>
+            <div id="progress-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
         <section id="profile" class="hidden fade-in">
-            <h2 class="text-4xl font-bold mb-10">Настройки и Бэкапы</h2>
+            <h2 class="text-4xl font-bold mb-10">Настройки</h2>
             <div class="glass p-8 rounded-3xl max-w-lg space-y-6">
-                <button onclick="document.getElementById('avatar-input').click()" class="w-full bg-white/10 py-4 rounded-xl font-bold text-white hover:bg-white/20 transition">Выбрать аватар</button>
+                <div class="flex gap-4">
+                    <button onclick="document.getElementById('avatar-input').click()" class="flex-1 bg-cyan-600 py-4 rounded-xl font-bold text-white hover:bg-cyan-500 transition">Аватар</button>
+                    <button onclick="document.getElementById('banner-input').click()" class="flex-1 bg-purple-600 py-4 rounded-xl font-bold text-white hover:bg-purple-500 transition">Баннер</button>
+                </div>
                 <input type="file" id="avatar-input" accept="image/*" onchange="processImage(event, 'avatar')" class="hidden">
+                <input type="file" id="banner-input" accept="image/*" onchange="processImage(event, 'banner')" class="hidden">
                 <input id="profile-name" placeholder="Никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
                 <textarea id="profile-desc" placeholder="Описание" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
                 <textarea id="profile-artists" placeholder="Любимые исполнители" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
-                <button onclick="saveProfile()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold hover:bg-cyan-500 transition-all">Сохранить</button>
-                <button onclick="exportData()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Экспорт данных (JSON)</button>
+                
+                <div class="pt-4 border-t border-white/10 space-y-4">
+                    <h3 class="font-bold">Артист месяца</h3>
+                    <input id="fav-input-artist" placeholder="Артист" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white text-sm">
+                    <input id="fav-input-artist-url" placeholder="URL" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white text-sm">
+                    <button onclick="document.getElementById('fav-artist-img-input').click()" class="w-full bg-white/5 py-2 rounded-lg border border-white/10">Фото артиста</button>
+                    <input type="file" id="fav-artist-img-input" accept="image/*" onchange="processImage(event, 'fav-artist')" class="hidden">
+
+                    <h3 class="font-bold pt-4 border-t border-white/10">Альбом месяца</h3>
+                    <input id="fav-input-album" placeholder="Альбом" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white text-sm">
+                    <input id="fav-input-album-url" placeholder="URL" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white text-sm">
+                    <button onclick="document.getElementById('fav-album-img-input').click()" class="w-full bg-white/5 py-2 rounded-lg border border-white/10">Обложка альбома</button>
+                    <input type="file" id="fav-album-img-input" accept="image/*" onchange="processImage(event, 'fav-album')" class="hidden">
+                </div>
+
+                <button onclick="saveProfile()" class="w-full bg-green-600 py-4 rounded-xl font-bold hover:bg-green-500 transition-all">Сохранить настройки</button>
+                <button onclick="exportData()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Экспорт (.json)</button>
                 <input type="file" id="import-file" onchange="importData(event)" accept=".json" class="hidden">
                 <button onclick="document.getElementById('import-file').click()" class="w-full bg-white/10 py-4 rounded-xl font-bold">Импорт (.json)</button>
             </div>
         </section>
     </main>
 
+    <!-- Modals -->
     <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <h2 class="text-2xl font-bold">Редактор</h2>
@@ -96,27 +156,21 @@
         </div>
     </div>
 
-    <div id="tags-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Управление тегами</h2><div id="manage-tags-list" class="space-y-2"></div><div class="flex gap-2 pt-4"><input id="new-tag-text" placeholder="Новый тег" class="flex-1 bg-white/5 p-2 rounded-lg text-sm"><input type="color" id="new-tag-color" class="w-8 h-8"><button onclick="addGlobalTag()" class="bg-white/10 px-3 rounded-lg">+</button></div><button onclick="closeModal('tags-manager-modal')" class="w-full bg-white/10 py-4 rounded-xl mt-4">Закрыть</button></div>
-    </div>
-    <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Примечание</h2><textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea><button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button><button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button></div>
-    </div>
-    <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Быстрые заметки</h2><div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div><div class="flex gap-2"><input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10" placeholder="Заметка..."> <button onclick="saveQuickNote()" class="bg-purple-600 px-4 py-3 rounded-xl font-bold">+</button></div><button onclick="closeModal('quick-notes-modal')" class="w-full bg-white/10 py-3 rounded-xl mt-2">Закрыть</button></div>
-    </div>
-
+    <div id="tags-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Управление тэгами</h2><div id="manage-tags-list" class="space-y-2"></div><div class="flex gap-2 pt-4"><input id="new-tag-text" placeholder="Имя" class="flex-1 bg-white/5 p-2 rounded-lg text-sm"><input type="color" id="new-tag-color" class="w-8 h-8"><button onclick="addGlobalTag()" class="bg-white/10 px-3 rounded-lg">+</button></div><button onclick="closeModal('tags-manager-modal')" class="w-full bg-white/10 py-4 rounded-xl mt-4">Закрыть</button></div></div>
+    <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Примечание</h2><textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea><button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button><button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button></div></div>
+    <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Быстрые заметки</h2><div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div><div class="flex gap-2"><input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10" placeholder="Заметка..."> <button onclick="saveQuickNote()" class="bg-purple-600 px-4 py-3 rounded-xl font-bold">+</button></div><button onclick="closeModal('quick-notes-modal')" class="w-full bg-white/10 py-3 rounded-xl mt-2">Закрыть</button></div></div>
+    
     <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl text-3xl z-40 hover:scale-110 transition-transform">📝</button>
 
     <script>
-        const defaults = { cds: [], vinyls: [], wishlists: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', quickNotes: [] };
+        const defaults = { cds: [], vinyls: [], wishlists: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', bannerImg: '', favArtist: {name:'', url:'', img:''}, favAlbum: {name:'', url:'', img:''}, quickNotes: [], progress: [] };
         let data = JSON.parse(localStorage.getItem('mirvel_data')) || { ...defaults };
         data = { ...defaults, ...data };
-        let tempTags = []; let tempImg = ''; let currentFilter = null; let editingNoteId = null;
+        let tempTags = []; let currentFilter = null; let editingNoteId = null;
 
         function save() { localStorage.setItem('mirvel_data', JSON.stringify(data)); updateUI(); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function showPage(id) { document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id)); }
+        function showPage(id) { document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id)); updateUI(); }
         
         window.cyclePos = (type, id) => {
             const item = data[type].find(x => x.id === id);
@@ -136,7 +190,7 @@
         window.importData = (e) => {
             const file = e.target.files[0]; if(!file) return;
             const reader = new FileReader();
-            reader.onload = (ev) => { try { data = { ...defaults, ...JSON.parse(ev.target.result) }; save(); } catch(err) { alert('Ошибка'); } };
+            reader.onload = (ev) => { try { data = { ...defaults, ...JSON.parse(ev.target.result) }; save(); updateUI(); } catch(err) { console.error(err); } };
             reader.readAsText(file);
         };
 
@@ -150,7 +204,12 @@
                     canvas.width = img.width * scale; canvas.height = img.height * scale;
                     canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                     const base64 = canvas.toDataURL('image/jpeg', 0.7);
-                    if (target === 'avatar') { data.avatar = base64; save(); } else { tempImg = base64; }
+                    if (target === 'avatar') { data.avatar = base64; }
+                    else if (target === 'banner') { data.bannerImg = base64; }
+                    else if (target === 'fav-artist') { data.favArtist.img = base64; }
+                    else if (target === 'fav-album') { data.favAlbum.img = base64; }
+                    else { window.tempImg = base64; }
+                    save(); updateUI();
                 };
                 img.src = event.target.result;
             };
@@ -162,7 +221,7 @@
             document.getElementById('item-url').classList.toggle('hidden', type !== 'wishlists');
             document.getElementById('gift-container').classList.toggle('hidden', type === 'wishlists');
             document.getElementById('tags-selector').classList.toggle('hidden', type !== 'wishlists');
-            document.getElementById('item-img').value = ''; tempImg = ''; tempTags = [];
+            window.tempImg = ''; tempTags = [];
             
             if(id) {
                 const item = data[type].find(x => x.id === parseInt(id));
@@ -182,9 +241,6 @@
         window.saveItem = async () => {
             const type = document.getElementById('edit-type').value;
             const idStr = document.getElementById('edit-id').value;
-            const fileInput = document.getElementById('item-img');
-            if (fileInput.files[0]) await processImage({target: fileInput}, 'item');
-            
             const title = document.getElementById('item-title').value;
             const price = parseFloat(document.getElementById('item-price').value) || 0;
             const url = document.getElementById('item-url').value;
@@ -192,20 +248,66 @@
             
             if(idStr) {
                 const item = data[type].find(x => x.id === parseInt(idStr));
-                Object.assign(item, { title, price, url, isGift, tags: [...tempTags], img: tempImg || item.img });
+                Object.assign(item, { title, price, url, isGift, tags: [...tempTags], img: window.tempImg || item.img });
             } else {
-                data[type].push({ id: Date.now(), title, price, url, isGift, tags: [...tempTags], img: tempImg, imgPos: 'center', note: '' });
+                data[type].push({ id: Date.now(), title, price, url, isGift, tags: [...tempTags], img: window.tempImg, imgPos: 'center', note: '' });
             }
-            data.xp = Math.floor((data.cds.reduce((s, i) => s + i.price, 0) + data.vinyls.reduce((s, i) => s + i.price, 0)) / 10);
+            const colSum = (data.cds.reduce((s, i) => s + i.price, 0) + data.vinyls.reduce((s, i) => s + i.price, 0));
+            data.xp = Math.floor(colSum / 10);
             save(); closeModal('modal');
         };
 
-        window.openTagsManager = () => { renderManageTagsList(); document.getElementById('tags-manager-modal').classList.remove('hidden'); };
-        window.renderManageTagsList = () => {
-            document.getElementById('manage-tags-list').innerHTML = data.availableTags.map(t => `
-                <div class="flex justify-between items-center p-2 rounded-lg bg-white/5"><span class="px-2 py-1 rounded text-xs" style="background-color: ${t.color}">${t.text}</span><button onclick="deleteTag('${t.text}')" class="text-red-500">✕</button></div>
+        // PROGRESS TRACKER LOGIC
+        window.addProgressArtist = () => {
+            const val = document.getElementById('new-progress-artist').value;
+            if(!val) return;
+            if (!data.progress) data.progress = [];
+            data.progress.push({ id: Date.now(), artist: val, items: [] });
+            document.getElementById('new-progress-artist').value = ''; save(); renderProgress();
+        };
+        window.addProgressItem = (pId) => {
+            const input = document.getElementById(`new-album-${pId}`);
+            if(!input || !input.value) return;
+            const artistObj = data.progress.find(x => x.id === pId);
+            if(!artistObj) return;
+            if(!artistObj.items) artistObj.items = [];
+            artistObj.items.push({ text: input.value, checked: false });
+            input.value = '';
+            save(); renderProgress();
+        };
+        window.toggleProgressItem = (pId, idx) => {
+            const artistObj = data.progress.find(x => x.id === pId);
+            if(!artistObj) return;
+            artistObj.items[idx].checked = !artistObj.items[idx].checked;
+            save(); renderProgress();
+        };
+        window.renderProgress = () => {
+            if (!data.progress) data.progress = [];
+            document.getElementById('progress-list').innerHTML = data.progress.map(p => `
+                <div class="glass p-6 rounded-3xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-xl">${p.artist}</h4>
+                        <button onclick="data.progress = data.progress.filter(x=>x.id!==${p.id}); save(); renderProgress();" class="text-sm text-red-500">Удалить</button>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        ${(p.items || []).map((i, idx) => `
+                            <div class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-white/5 hover:bg-white/10" onclick="toggleProgressItem(${p.id}, ${idx})">
+                                <div class="w-5 h-5 border border-white/20 rounded flex items-center justify-center ${i.checked ? 'bg-cyan-600 border-none' : ''}">
+                                    ${i.checked ? '✓' : ''}
+                                </div>
+                                <span class="${i.checked ? 'line-through opacity-50' : ''}">${i.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="flex gap-2 w-full mt-4">
+                        <input id="new-album-${p.id}" class="flex-1 bg-white/5 p-2 rounded-xl border border-white/10 min-w-0 text-sm" placeholder="Альбом...">
+                        <button onclick="addProgressItem(${p.id})" class="bg-cyan-600 px-4 rounded-xl font-bold shrink-0">+</button>
+                    </div>
+                </div>
             `).join('');
         };
+
+        // TAGS
         window.addGlobalTag = () => {
             const text = document.getElementById('new-tag-text').value; const color = document.getElementById('new-tag-color').value;
             if(!text) return; data.availableTags.push({ text, color }); renderManageTagsList(); renderModalTags(); save();
@@ -224,7 +326,14 @@
                 <button type="button" onclick='toggleTag(${JSON.stringify(t)})' class="px-2 py-1 rounded text-xs border ${tempTags.find(x => x.text === t.text) ? 'opacity-100 ring-2 ring-white' : 'opacity-40'}" style="background-color: ${t.color}">${t.text}</button>
             `).join('');
         };
+        window.openTagsManager = () => { renderManageTagsList(); document.getElementById('tags-manager-modal').classList.remove('hidden'); };
+        window.renderManageTagsList = () => {
+            document.getElementById('manage-tags-list').innerHTML = data.availableTags.map(t => `
+                <div class="flex justify-between items-center p-2 rounded-lg bg-white/5"><span class="px-2 py-1 rounded text-xs" style="background-color: ${t.color}">${t.text}</span><button onclick="deleteTag('${t.text}')" class="text-red-500">✕</button></div>
+            `).join('');
+        };
 
+        // NOTES
         window.openNote = (type, id) => {
             document.getElementById('note-text').dataset.type = type;
             document.getElementById('note-text').dataset.id = id;
@@ -237,16 +346,15 @@
             data[type].find(x => x.id === id).note = document.getElementById('note-text').value;
             save(); closeModal('note-modal');
         };
-
         window.saveQuickNote = () => {
             const val = document.getElementById('new-quick-note').value;
             if(!val) return;
             if (editingNoteId) { data.quickNotes.find(n => n.id === editingNoteId).text = val; editingNoteId = null; }
             else { data.quickNotes.push({ id: Date.now(), text: val }); }
-            document.getElementById('new-quick-note').value = ''; save(); renderQuickNotes();
+            document.getElementById('new-quick-note').value = ''; save();
         };
         window.editQuickNote = (id) => { editingNoteId = id; document.getElementById('new-quick-note').value = data.quickNotes.find(n => n.id === id).text; };
-        window.deleteQuickNote = (id) => { data.quickNotes = data.quickNotes.filter(n => n.id !== id); save(); renderQuickNotes(); };
+        window.deleteQuickNote = (id) => { data.quickNotes = data.quickNotes.filter(n => n.id !== id); save(); };
         window.renderQuickNotes = () => {
             document.getElementById('quick-notes-list').innerHTML = data.quickNotes.map(n => `
                 <div class="bg-white/5 p-3 rounded-xl text-sm flex justify-between items-start gap-2">
@@ -256,13 +364,18 @@
             `).join('');
         };
 
-        window.setFilter = (tagText) => { currentFilter = tagText; updateUI(); };
         window.saveProfile = () => { 
             data.name = document.getElementById('profile-name').value; 
             data.description = document.getElementById('profile-desc').value; 
             data.favoriteArtists = document.getElementById('profile-artists').value; 
+            data.favArtist.name = document.getElementById('fav-input-artist').value;
+            data.favArtist.url = document.getElementById('fav-input-artist-url').value;
+            data.favAlbum.name = document.getElementById('fav-input-album').value;
+            data.favAlbum.url = document.getElementById('fav-input-album-url').value;
             save(); 
         };
+
+        window.setFilter = (tagText) => { currentFilter = tagText; updateUI(); };
 
         function updateUI() {
             const cdsVal = (data.cds || []).reduce((s, i) => s + i.price, 0);
@@ -272,16 +385,38 @@
             document.getElementById('display-name').innerText = data.name || 'Коллекционер';
             document.getElementById('display-desc').innerText = data.description || '';
             document.getElementById('display-artists').innerText = data.favoriteArtists || '-';
+            
             document.getElementById('profile-name').value = data.name || '';
             document.getElementById('profile-desc').value = data.description || '';
             document.getElementById('profile-artists').value = data.favoriteArtists || '';
+            document.getElementById('fav-input-artist').value = data.favArtist.name || '';
+            document.getElementById('fav-input-artist-url').value = data.favArtist.url || '';
+            document.getElementById('fav-input-album').value = data.favAlbum.name || '';
+            document.getElementById('fav-input-album-url').value = data.favAlbum.url || '';
+            
             document.getElementById('user-xp').innerText = data.xp || 0;
             document.getElementById('user-lvl').innerText = Math.floor((data.xp || 0) / 500) + 1;
             document.getElementById('stat-col-val').innerText = (cdsVal + vinylsVal) + ' ₴';
             document.getElementById('stat-wish-val').innerText = wishVal + ' ₴';
+            document.getElementById('stat-count-val').innerText = (data.cds?.length || 0) + (data.vinyls?.length || 0);
+            
             document.getElementById('total-cds').innerText = cdsVal;
+            document.getElementById('count-cds').innerText = data.cds.length;
             document.getElementById('total-vinyls').innerText = vinylsVal;
+            document.getElementById('count-vinyls').innerText = data.vinyls.length;
             document.getElementById('total-wishlists').innerText = wishVal;
+            document.getElementById('count-wishlists').innerText = data.wishlists.length;
+
+            document.getElementById('fav-artist-text').innerText = data.favArtist.name || '...';
+            document.getElementById('fav-album-text').innerText = data.favAlbum.name || '...';
+            document.getElementById('fav-link-artist').href = data.favArtist.url || '#';
+            document.getElementById('fav-link-album').href = data.favAlbum.url || '#';
+            
+            if(data.favArtist.img) { document.getElementById('fav-artist-img-wrapper').classList.remove('hidden'); document.getElementById('fav-artist-img').src = data.favArtist.img; }
+            if(data.favAlbum.img) { document.getElementById('fav-album-img-wrapper').classList.remove('hidden'); document.getElementById('fav-album-img').src = data.favAlbum.img; }
+
+            const banner = document.getElementById('banner-bg');
+            if(data.bannerImg) { banner.style.backgroundImage = `url(${data.bannerImg})`; }
 
             document.getElementById('filter-tags').innerHTML = (data.availableTags || []).map(t => `<button onclick="setFilter('${t.text}')" class="px-3 py-1 rounded-full text-xs ${currentFilter === t.text ? 'ring-2 ring-white' : ''}" style="background-color: ${t.color}">${t.text}</button>`).join('');
 
@@ -300,21 +435,22 @@
                         ${i.url ? `<a href="${i.url}" target="_blank" class="text-xs text-blue-400 hover:underline block mt-1">🔗 Ссылка</a>` : ''}
                         <div class="flex flex-wrap gap-1 mt-2">${(i.tags || []).map(t => `<span class="px-2 py-0.5 rounded text-[10px]" style="background-color: ${t.color}">${t.text}</span>`).join('')}</div>
                         <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition">
-                            <button onclick="cyclePos('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full">🔄</button>
-                            <button onclick="openNote('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full">💬</button>
-                            <button onclick="openModal('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full">✏️</button>
-                            <button onclick="data['${key}'] = data['${key}'].filter(x => x.id !== ${i.id}); save();" class="bg-red-500/20 p-2 rounded-full">🗑️</button>
+                            <button onclick="cyclePos('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full" title="Позиция фото">🔄</button>
+                            <button onclick="openNote('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full" title="Примечание">💬</button>
+                            <button onclick="openModal('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full" title="Редактировать">✏️</button>
+                            <button onclick="data['${key}'] = data['${key}'].filter(x => x.id !== ${i.id}); save();" class="bg-red-500/20 p-2 rounded-full" title="Удалить">🗑️</button>
                         </div>
                     </div>`;
                 }).join('');
             };
             
             renderGrid('cds', 'cd-grid'); renderGrid('vinyls', 'vinyl-grid'); renderGrid('wishlists', 'wishlist-grid');
-            renderQuickNotes();
+            renderQuickNotes(); renderProgress();
             const avatar = document.getElementById('main-avatar');
             if(data.avatar) { avatar.src = data.avatar; avatar.classList.remove('hidden'); }
         }
-        updateUI();
+        
+        window.onload = () => { updateUI(); renderProgress(); };
     </script>
 </body>
 </html>
