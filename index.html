@@ -33,23 +33,17 @@
             <div class="glass p-10 rounded-3xl mb-10 flex justify-between items-center">
                 <div>
                     <h2 class="text-5xl font-black mb-4">Привет, <span id="display-name" class="text-cyan-400">Коллекционер</span>!</h2>
-                    <p id="display-desc" class="text-gray-500 mb-6 italic">Здесь будет ваше описание...</p>
+                    <p id="display-desc" class="text-gray-500 mb-6 italic"></p>
                     <p class="text-gray-400 text-lg">Уровень: <span id="user-lvl" class="text-purple-400 font-bold">1</span> | XP: <span id="user-xp" class="text-cyan-400 font-bold">0</span></p>
                 </div>
                 <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
             </div>
 
             <div class="grid grid-cols-2 gap-6 mb-10">
-                <div class="glass p-8 rounded-3xl">
-                    <p class="text-gray-500 text-sm font-bold uppercase tracking-wider">Всего в коллекции</p>
-                    <h3 class="text-4xl font-black mt-2 text-purple-400" id="stat-col-val">0 ₴</h3>
-                </div>
-                <div class="glass p-8 rounded-3xl">
-                    <p class="text-gray-500 text-sm font-bold uppercase tracking-wider">Желаемое</p>
-                    <h3 class="text-4xl font-black mt-2 text-cyan-400" id="stat-wish-val">0 ₴</h3>
-                </div>
+                <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Коллекция</p><h3 class="text-3xl font-black mt-2 text-purple-400" id="stat-col-val">0 ₴</h3></div>
+                <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Желаемое</p><h3 class="text-3xl font-black mt-2 text-cyan-400" id="stat-wish-val">0 ₴</h3></div>
             </div>
-            
+
             <div class="mb-10">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-3xl font-bold">Мои артисты</h2>
@@ -62,35 +56,21 @@
             </div>
         </section>
 
-        <section id="cds" class="hidden fade-in">
-            <div class="flex justify-between items-center mb-10">
-                <div>
-                    <h2 class="text-4xl font-bold">CD Коллекция</h2>
-                    <p class="text-gray-500">Сумма: <span id="total-cds" class="text-white font-bold">0</span> ₴</p>
-                </div>
-                <button onclick="openModal('cds')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button>
-            </div>
-            <div id="cd-grid" class="grid grid-cols-4 gap-6"></div>
-        </section>
-        
-        <section id="vinyls" class="hidden fade-in">
-            <div class="flex justify-between items-center mb-10">
-                <div>
-                    <h2 class="text-4xl font-bold">Винил</h2>
-                    <p class="text-gray-500">Сумма: <span id="total-vinyls" class="text-white font-bold">0</span> ₴</p>
-                </div>
-                <button onclick="openModal('vinyls')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button>
-            </div>
-            <div id="vinyl-grid" class="grid grid-cols-4 gap-6"></div>
-        </section>
+        <section id="cds" class="hidden fade-in"><div class="flex justify-between items-center mb-10"><div><h2 class="text-4xl font-bold">CD Коллекция</h2><p class="text-gray-500">Сумма: <span id="total-cds">0</span> ₴</p></div><button onclick="openModal('cds')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button></div><div id="cd-grid" class="grid grid-cols-4 gap-6"></div></section>
+        <section id="vinyls" class="hidden fade-in"><div class="flex justify-between items-center mb-10"><div><h2 class="text-4xl font-bold">Винил</h2><p class="text-gray-500">Сумма: <span id="total-vinyls">0</span> ₴</p></div><button onclick="openModal('vinyls')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button></div><div id="vinyl-grid" class="grid grid-cols-4 gap-6"></div></section>
         
         <section id="wishlists" class="hidden fade-in">
             <div class="flex justify-between items-center mb-10">
-                <div>
-                    <h2 class="text-4xl font-bold">Желаемое</h2>
-                    <p class="text-gray-500">Сумма: <span id="total-wishlists" class="text-white font-bold">0</span> ₴</p>
+                <div><h2 class="text-4xl font-bold">Желаемое</h2><p class="text-gray-500">Сумма: <span id="total-wishlists">0</span> ₴</p></div>
+                <div class="flex gap-2">
+                    <button onclick="openTagsManager()" class="bg-white/10 text-white px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Тэги</button>
+                    <button onclick="openModal('wishlists')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Добавить</button>
                 </div>
-                <button onclick="openModal('wishlists')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Добавить</button>
+            </div>
+            <div id="filter-bar" class="flex flex-wrap gap-2 mb-6 p-4 glass rounded-2xl">
+                <span class="text-sm text-gray-500 self-center mr-2">Фильтр:</span>
+                <button onclick="setFilter(null)" class="px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10">Все</button>
+                <div id="filter-tags" class="flex flex-wrap gap-2"></div>
             </div>
             <div id="wishlist-grid" class="grid grid-cols-4 gap-6"></div>
         </section>
@@ -100,9 +80,9 @@
             <div class="glass p-8 rounded-3xl max-w-lg space-y-6">
                 <label class="block text-sm text-gray-400">Аватар</label>
                 <input type="file" accept="image/*" onchange="processImage(event, 'avatar')" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
-                <input id="profile-name" placeholder="Ваш никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
-                <textarea id="profile-desc" placeholder="Короткое описание о себе" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
-                <button onclick="saveProfile()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold hover:bg-cyan-500 transition-all">Сохранить профиль</button>
+                <input id="profile-name" placeholder="Никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
+                <textarea id="profile-desc" placeholder="Описание" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
+                <button onclick="saveProfile()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold hover:bg-cyan-500 transition-all">Сохранить</button>
                 <div class="pt-6 border-t border-white/10 space-y-4">
                     <button onclick="exportData()" class="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500 transition-all">Экспорт бэкапа</button>
                     <input type="file" accept=".json" onchange="importData(event)" class="w-full bg-white/5 p-4 rounded-xl border border-dashed border-white/10 text-gray-400">
@@ -111,22 +91,38 @@
         </section>
     </main>
 
-    <button onclick="openQuickNotes()" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl flex items-center justify-center text-3xl hover:bg-purple-500 hover:scale-110 transition-all z-40">📝</button>
-
     <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl">
+        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <h2 class="text-2xl font-bold">Редактор</h2>
             <input type="hidden" id="edit-type"><input type="hidden" id="edit-id">
             <input id="item-title" placeholder="Название" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
             <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
             <input id="item-url" placeholder="Ссылка (URL)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white hidden">
-            <div class="flex items-center gap-2 text-sm">
-                <input type="checkbox" id="item-gift" class="w-4 h-4 rounded border-white/10 bg-white/5">
-                <label for="item-gift">Это подарок 🎁</label>
+            
+            <div id="gift-container" class="flex items-center gap-2"><input type="checkbox" id="item-gift"> <label>Подарок 🎁</label></div>
+
+            <div id="tags-selector" class="hidden space-y-2">
+                <div class="text-sm text-gray-400">Выберите теги:</div>
+                <div id="available-tags-list" class="flex flex-wrap gap-2"></div>
             </div>
-            <input type="file" id="item-img" accept="image/*" onchange="processImage(event, 'temp')" class="w-full text-sm text-gray-400">
-            <button onclick="saveItem()" class="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500 transition-all">Сохранить</button>
+
+            <input type="file" id="item-img" accept="image/*" class="w-full text-sm">
+            <button onclick="saveItem()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button>
             <button onclick="closeModal('modal')" class="w-full bg-white/10 py-4 rounded-xl">Отмена</button>
+        </div>
+    </div>
+
+    <!-- Tags Manager Modal -->
+    <div id="tags-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h2 class="text-2xl font-bold">Управление тегами</h2>
+            <div id="manage-tags-list" class="space-y-2"></div>
+            <div class="flex gap-2 pt-4 border-t border-white/10">
+                <input id="new-tag-text" placeholder="Новый тег" class="flex-1 bg-white/5 p-2 rounded-lg text-sm">
+                <input type="color" id="new-tag-color" class="w-8 h-8 bg-transparent">
+                <button onclick="addGlobalTag()" class="bg-white/10 px-3 rounded-lg">+</button>
+            </div>
+            <button onclick="closeModal('tags-manager-modal')" class="w-full bg-white/10 py-4 rounded-xl mt-4">Закрыть</button>
         </div>
     </div>
 
@@ -135,7 +131,7 @@
             <h2 class="text-2xl font-bold">Примечание</h2>
             <input type="hidden" id="note-type"><input type="hidden" id="note-id">
             <textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea>
-            <button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500 transition-all">Сохранить</button>
+            <button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button>
             <button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button>
         </div>
     </div>
@@ -143,69 +139,60 @@
     <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl">
             <h2 class="text-2xl font-bold">Быстрые заметки</h2>
-            <div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2 pr-2"></div>
+            <div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div>
             <div class="flex gap-2">
-                <input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10" placeholder="Новая заметка...">
+                <input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10" placeholder="Новая заметка..."> 
                 <button onclick="saveQuickNote()" class="bg-purple-600 px-4 py-3 rounded-xl font-bold">+</button>
             </div>
-            <button onclick="closeModal('quick-notes-modal')" class="w-full bg-white/10 py-3 rounded-xl">Закрыть</button>
         </div>
     </div>
 
+    <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl text-3xl z-40">📝</button>
+
     <script>
-        let data = JSON.parse(localStorage.getItem('mirvel_data')) || {};
-        const defaults = { cds: [], vinyls: [], wishlists: [], artists: [], name: 'Коллекционер', description: '', xp: 0, lvl: 1, avatar: '', tempImg: '', quickNotes: [] };
+        const defaults = { cds: [], vinyls: [], wishlists: [], artists: [], availableTags: [], name: 'Коллекционер', description: '', xp: 0, avatar: '', quickNotes: [] };
+        let data = JSON.parse(localStorage.getItem('mirvel_data')) || { ...defaults };
         data = { ...defaults, ...data };
-        let editingQuickNoteId = null;
+        
+        let tempTags = [];
+        let currentFilter = null;
+        let editingNoteId = null;
 
-        function calculateStats() {
-            const cdsVal = (data.cds || []).reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
-            const vinylsVal = (data.vinyls || []).reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
-            const wishVal = (data.wishlists || []).reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
-            
-            // 100 грн = 10 XP, 500 XP = 1 lvl
-            data.xp = Math.floor((cdsVal + vinylsVal) / 10);
-            data.lvl = Math.floor(data.xp / 500) + 1;
-            
-            return { cdsVal, vinylsVal, wishVal, totalCol: cdsVal + vinylsVal };
-        }
+        function save() { localStorage.setItem('mirvel_data', JSON.stringify(data)); updateUI(); }
 
-        function save() { 
-            calculateStats();
-            localStorage.setItem('mirvel_data', JSON.stringify(data)); 
-            updateUI();
-        }
-
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        async function processImage(event, target) {
-            const file = event.target.files[0];
+        async function processImage(e, target) {
+            const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = (event) => {
                 const img = new Image();
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const maxW = target === 'avatar' ? 200 : 400;
-                    const scale = Math.min(1, maxW / img.width);
-                    canvas.width = img.width * scale;
-                    canvas.height = img.height * scale;
+                    const max = target === 'avatar' ? 200 : 400;
+                    const scale = Math.min(1, max / Math.max(img.width, img.height));
+                    canvas.width = img.width * scale; canvas.height = img.height * scale;
                     canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                     const base64 = canvas.toDataURL('image/jpeg', 0.6);
                     if (target === 'avatar') { data.avatar = base64; save(); }
                     else { data.tempImg = base64; }
                 };
-                img.src = e.target.result;
+                img.src = event.target.result;
             };
             reader.readAsDataURL(file);
         }
 
         window.showPage = (id) => document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id));
-        
-        window.openModal = (type, id = null) => { 
-            document.getElementById('edit-type').value = type; 
+        window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
+        window.setFilter = (tagText) => { currentFilter = tagText; updateUI(); };
+
+        window.openModal = (type, id = null) => {
+            document.getElementById('edit-type').value = type;
             document.getElementById('edit-id').value = id || '';
             document.getElementById('item-url').classList.toggle('hidden', type !== 'wishlists');
+            document.getElementById('gift-container').classList.toggle('hidden', type === 'wishlists');
+            document.getElementById('tags-selector').classList.toggle('hidden', type !== 'wishlists');
+            
+            tempTags = [];
             data.tempImg = '';
             
             if(id) {
@@ -214,36 +201,73 @@
                 document.getElementById('item-price').value = item.price;
                 document.getElementById('item-url').value = item.url || '';
                 document.getElementById('item-gift').checked = !!item.isGift;
-                data.tempImg = item.img;
+                tempTags = item.tags || [];
             } else {
                 document.getElementById('item-title').value = '';
                 document.getElementById('item-price').value = '';
                 document.getElementById('item-url').value = '';
                 document.getElementById('item-gift').checked = false;
             }
-            document.getElementById('modal').classList.remove('hidden'); 
+            renderModalTags();
+            document.getElementById('modal').classList.remove('hidden');
         };
 
-        window.openNote = (type, id) => {
-            document.getElementById('note-type').value = type;
-            document.getElementById('note-id').value = id;
-            const item = data[type].find(x => x.id === id);
-            document.getElementById('note-text').value = item.note || '';
-            document.getElementById('note-modal').classList.remove('hidden');
+        window.openTagsManager = () => {
+            renderManageTagsList();
+            document.getElementById('tags-manager-modal').classList.remove('hidden');
         };
 
-        window.saveNote = () => {
-            const type = document.getElementById('note-type').value;
-            const id = parseInt(document.getElementById('note-id').value);
-            const item = data[type].find(x => x.id === id);
-            item.note = document.getElementById('note-text').value;
+        window.renderManageTagsList = () => {
+            document.getElementById('manage-tags-list').innerHTML = data.availableTags.map(t => `
+                <div class="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                    <span class="px-2 py-1 rounded text-xs" style="background-color: ${t.color}">${t.text}</span>
+                    <button onclick="deleteTag('${t.text}')" class="text-red-500 hover:text-red-300">✕</button>
+                </div>
+            `).join('');
+        };
+
+        window.addGlobalTag = () => {
+            const text = document.getElementById('new-tag-text').value;
+            const color = document.getElementById('new-tag-color').value;
+            if(!text) return;
+            data.availableTags.push({ text, color });
+            document.getElementById('new-tag-text').value = '';
+            renderManageTagsList();
+            renderModalTags();
             save();
-            closeModal('note-modal');
+        };
+
+        window.deleteTag = (text) => {
+            data.availableTags = data.availableTags.filter(t => t.text !== text);
+            data.wishlists.forEach(item => {
+                if(item.tags) item.tags = item.tags.filter(t => t.text !== text);
+            });
+            save();
+            renderManageTagsList();
+            updateUI();
+        };
+
+        window.toggleTag = (tag) => {
+            const idx = tempTags.findIndex(t => t.text === tag.text);
+            if(idx > -1) tempTags.splice(idx, 1);
+            else tempTags.push(tag);
+            renderModalTags();
+        };
+
+        window.renderModalTags = () => {
+            document.getElementById('available-tags-list').innerHTML = data.availableTags.map(t => `
+                <button type="button" onclick='toggleTag(${JSON.stringify(t)})' class="px-2 py-1 rounded text-xs border ${tempTags.find(x => x.text === t.text) ? 'opacity-100 ring-2 ring-white' : 'opacity-40'}" style="background-color: ${t.color}">
+                    ${t.text}
+                </button>
+            `).join('');
         };
 
         window.saveItem = async () => {
             const type = document.getElementById('edit-type').value;
             const id = parseInt(document.getElementById('edit-id').value);
+            const fileInput = document.getElementById('item-img');
+            if (fileInput.files[0]) await processImage({target: fileInput}, 'item');
+            
             const title = document.getElementById('item-title').value;
             const price = parseFloat(document.getElementById('item-price').value) || 0;
             const url = document.getElementById('item-url').value;
@@ -251,13 +275,61 @@
             
             if(id) {
                 const item = data[type].find(x => x.id === id);
-                item.title = title; item.price = price; item.url = url; item.isGift = isGift;
-                if(data.tempImg) item.img = data.tempImg;
+                Object.assign(item, { title, price, url, isGift, tags: [...tempTags], img: data.tempImg || item.img });
             } else {
-                data[type].push({ id: Date.now(), title, price, url, note: '', img: data.tempImg || '', pos: 'center', isGift });
+                data[type].push({ id: Date.now(), title, price, url, isGift, tags: [...tempTags], img: data.tempImg || '', note: '' });
             }
-            save();
-            closeModal('modal');
+            data.xp = Math.floor((data.cds.reduce((s, i) => s + i.price, 0) + data.vinyls.reduce((s, i) => s + i.price, 0)) / 10);
+            save(); closeModal('modal');
+        };
+
+        window.saveNote = () => {
+            const id = parseInt(document.getElementById('note-id').value);
+            const type = document.getElementById('note-type').value;
+            data[type].find(x => x.id === id).note = document.getElementById('note-text').value;
+            save(); closeModal('note-modal');
+        };
+
+        window.openNote = (type, id) => {
+            document.getElementById('note-type').value = type; document.getElementById('note-id').value = id;
+            document.getElementById('note-text').value = data[type].find(x => x.id === id).note || '';
+            document.getElementById('note-modal').classList.remove('hidden');
+        };
+
+        window.saveQuickNote = () => {
+            const val = document.getElementById('new-quick-note').value;
+            if(!val) return;
+            if (editingNoteId) {
+                const note = data.quickNotes.find(n => n.id === editingNoteId);
+                if(note) note.text = val;
+                editingNoteId = null;
+            } else {
+                data.quickNotes.push({ id: Date.now(), text: val });
+            }
+            document.getElementById('new-quick-note').value = '';
+            save(); renderQuickNotes();
+        };
+
+        window.editQuickNote = (id) => {
+            editingNoteId = id;
+            document.getElementById('new-quick-note').value = data.quickNotes.find(n => n.id === id).text;
+        };
+
+        window.deleteQuickNote = (id) => {
+            data.quickNotes = data.quickNotes.filter(n => n.id !== id);
+            save(); renderQuickNotes();
+        };
+
+        window.renderQuickNotes = () => {
+            document.getElementById('quick-notes-list').innerHTML = data.quickNotes.map(n => `
+                <div class="bg-white/5 p-3 rounded-xl text-sm flex justify-between items-start gap-2">
+                    <span class="break-words w-full text-gray-200">${n.text}</span>
+                    <div class="flex gap-1 shrink-0">
+                        <button onclick="editQuickNote(${n.id})" class="text-gray-400">✏️</button>
+                        <button onclick="deleteQuickNote(${n.id})" class="text-red-400">✕</button>
+                    </div>
+                </div>
+            `).join('');
         };
 
         window.saveArtist = () => {
@@ -268,131 +340,83 @@
             save();
         };
 
-        window.deleteItem = (key, id) => { data[key] = data[key].filter(x => x.id !== id); save(); };
-        
-        window.changePos = (key, id) => {
-            const item = data[key].find(x => x.id === id);
-            const posMap = { 'top': 'center', 'center': 'bottom', 'bottom': 'top' };
-            item.pos = posMap[item.pos || 'center'];
-            save();
-        };
-
         window.saveProfile = () => { 
             data.name = document.getElementById('profile-name').value; 
             data.description = document.getElementById('profile-desc').value;
             save(); 
         };
 
-        window.openQuickNotes = () => document.getElementById('quick-notes-modal').classList.remove('hidden');
-        
-        window.saveQuickNote = () => {
-            const input = document.getElementById('new-quick-note');
-            if(!input.value) return;
-            if(editingQuickNoteId) {
-                const note = data.quickNotes.find(n => n.id === editingQuickNoteId);
-                note.text = input.value;
-                editingQuickNoteId = null;
-            } else {
-                data.quickNotes.push({ id: Date.now(), text: input.value });
-            }
-            input.value = '';
-            save();
-        };
-
-        window.editQuickNote = (id) => {
-            const note = data.quickNotes.find(n => n.id === id);
-            document.getElementById('new-quick-note').value = note.text;
-            editingQuickNoteId = id;
-        };
-
-        window.deleteQuickNote = (id) => {
-            data.quickNotes = data.quickNotes.filter(n => n.id !== id);
-            save();
-        };
-
-        window.exportData = () => { 
-            const a = document.createElement('a'); 
-            a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)); 
-            a.download = 'mirvel_data.json'; a.click(); 
-        };
-
+        window.exportData = () => { const a = document.createElement('a'); a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)); a.download = 'mirvel_data.json'; a.click(); };
         window.importData = (e) => { 
             const reader = new FileReader(); 
             reader.onload = (ev) => { 
                 try {
-                    const parsed = JSON.parse(ev.target.result);
-                    data = { ...defaults, ...parsed };
+                    const imported = JSON.parse(ev.target.result);
+                    data = { ...defaults, ...imported }; 
                     save();
-                } catch (err) { console.error(err); }
+                } catch(err) { alert("Ошибка файла!"); }
             }; 
             reader.readAsText(e.target.files[0]); 
         };
 
         window.updateUI = () => {
-            const { cdsVal, vinylsVal, wishVal, totalCol } = calculateStats();
+            if (!data) data = { ...defaults };
             
-            document.getElementById('display-name').innerText = data.name;
-            document.getElementById('display-desc').innerText = data.description || 'Нет описания.';
-            document.getElementById('user-xp').innerText = data.xp;
-            document.getElementById('user-lvl').innerText = data.lvl;
-            document.getElementById('stat-col-val').innerText = totalCol + ' ₴';
+            const cdsVal = (data.cds || []).reduce((s, i) => s + i.price, 0);
+            const vinylsVal = (data.vinyls || []).reduce((s, i) => s + i.price, 0);
+            const wishVal = (data.wishlists || []).reduce((s, i) => s + i.price, 0);
+            
+            document.getElementById('display-name').innerText = data.name || 'Коллекционер';
+            document.getElementById('display-desc').innerText = data.description || '';
+            document.getElementById('profile-name').value = data.name || '';
+            document.getElementById('profile-desc').value = data.description || '';
+            
+            document.getElementById('user-xp').innerText = data.xp || 0;
+            document.getElementById('user-lvl').innerText = Math.floor((data.xp || 0) / 500) + 1;
+            
+            document.getElementById('stat-col-val').innerText = (cdsVal + vinylsVal) + ' ₴';
             document.getElementById('stat-wish-val').innerText = wishVal + ' ₴';
             
             document.getElementById('total-cds').innerText = cdsVal;
             document.getElementById('total-vinyls').innerText = vinylsVal;
             document.getElementById('total-wishlists').innerText = wishVal;
+
+            document.getElementById('filter-tags').innerHTML = (data.availableTags || []).map(t => `
+                <button onclick="setFilter('${t.text}')" class="px-3 py-1 rounded-full text-xs ${currentFilter === t.text ? 'ring-2 ring-white' : ''}" style="background-color: ${t.color}">${t.text}</button>
+            `).join('');
+
+            const renderGrid = (key, id) => {
+                let items = data[key] || [];
+                if(key === 'wishlists' && currentFilter) items = items.filter(i => (i.tags || []).find(t => t.text === currentFilter));
+                
+                document.getElementById(id).innerHTML = items.map(i => `
+                    <div class="glass p-6 rounded-3xl card-hover relative group">
+                        <div class="w-full h-40 bg-white/5 rounded-2xl mb-4 overflow-hidden">
+                            ${i.img ? `<img src="${i.img}" class="w-full h-full object-cover">` : '<div class="h-full flex items-center justify-center opacity-20">Без фото</div>'}
+                        </div>
+                        <h3 class="font-bold truncate">${i.title} ${i.isGift ? '🎁' : ''}</h3>
+                        <p class="text-cyan-400 font-mono text-sm">${i.price} ₴</p>
+                        ${i.tags ? `<div class="flex flex-wrap gap-1 mt-2">${i.tags.map(t => `<span class="px-2 py-0.5 rounded text-[10px]" style="background-color: ${t.color}">${t.text}</span>`).join('')}</div>` : ''}
+                        <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                            <button onclick="openNote('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full">💬</button>
+                            <button onclick="openModal('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full">✏️</button>
+                            <button onclick="data['${key}'] = data['${key}'].filter(x => x.id !== ${i.id}); save();" class="bg-red-500/20 p-2 rounded-full">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            };
             
-            document.getElementById('profile-name').value = data.name;
-            document.getElementById('profile-desc').value = data.description;
+            document.getElementById('artists-grid').innerHTML = (data.artists || []).map(a => `
+                <div class="glass p-4 rounded-xl flex justify-between items-center text-sm">
+                    ${a.name} <button onclick="data.artists = data.artists.filter(x => x.id !== ${a.id}); save();" class="text-red-500">✕</button>
+                </div>
+            `).join('');
+
+            renderGrid('cds', 'cd-grid'); renderGrid('vinyls', 'vinyl-grid'); renderGrid('wishlists', 'wishlist-grid');
+            renderQuickNotes();
             
             const avatar = document.getElementById('main-avatar');
             if(data.avatar) { avatar.src = data.avatar; avatar.classList.remove('hidden'); }
-            
-            const renderGrid = (key, id) => {
-                document.getElementById(id).innerHTML = (data[key] || []).map(i => `
-                    <div class="glass p-6 rounded-3xl card-hover relative group">
-                        <div class="w-full h-40 bg-white/5 rounded-2xl mb-4 overflow-hidden">
-                            ${i.img ? `<img src="${i.img}" class="w-full h-full object-cover" style="object-position: ${i.pos}">` : '<div class="h-full flex items-center justify-center text-white/10">Без фото</div>'}
-                        </div>
-                        <h3 class="font-bold text-lg truncate">${i.title} ${i.isGift ? '🎁' : ''}</h3>
-                        <p class="text-cyan-400 font-mono mb-4">${i.price} ₴ ${i.url ? `<br><a href="${i.url}" target="_blank" class="text-xs text-white/50 hover:underline">Ссылка</a>` : ''}</p>
-                        
-                        <div class="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition">
-                            <button onclick="openNote('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full hover:bg-yellow-500">💬</button>
-                            <button onclick="openModal('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full hover:bg-cyan-500">✏️</button>
-                            <button onclick="changePos('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full hover:bg-purple-500">🖼️</button>
-                            <button onclick="deleteItem('${key}', ${i.id})" class="bg-red-500/20 p-2 rounded-full hover:bg-red-500">🗑️</button>
-                        </div>
-                    </div>
-                `).join('');
-            };
-
-            const renderQuickNotes = () => {
-                document.getElementById('quick-notes-list').innerHTML = (data.quickNotes || []).map(n => `
-                    <div class="bg-white/5 p-3 rounded-xl flex justify-between items-start text-sm gap-4">
-                        <span class="break-words w-full">${n.text}</span>
-                        <div class="flex gap-2 shrink-0">
-                            <button onclick="editQuickNote(${n.id})" class="text-white/20 hover:text-cyan-400">✏️</button>
-                            <button onclick="deleteQuickNote(${n.id})" class="text-white/20 hover:text-red-400">✕</button>
-                        </div>
-                    </div>
-                `).join('');
-            };
-
-            const renderArtists = () => {
-                document.getElementById('artists-grid').innerHTML = (data.artists || []).map(a => `
-                    <div class="glass p-4 rounded-2xl flex justify-between items-center">
-                        <span class="font-bold text-sm truncate">🎤 ${a.name}</span>
-                        <button onclick="deleteItem('artists', ${a.id})" class="text-white/20 hover:text-red-400 ml-2">✕</button>
-                    </div>
-                `).join('');
-            };
-
-            renderGrid('cds', 'cd-grid');
-            renderGrid('vinyls', 'vinyl-grid');
-            renderGrid('wishlists', 'wishlist-grid');
-            renderArtists();
-            renderQuickNotes();
         };
         updateUI();
     </script>
