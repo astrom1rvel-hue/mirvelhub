@@ -66,9 +66,19 @@
         <section id="profile" class="hidden animate-fade-in">
             <h2 class="text-4xl font-bold mb-10">Настройки</h2>
             <div class="glass p-8 rounded-3xl max-w-lg space-y-6">
+                <div>
+                    <label class="block text-xs text-gray-500 mb-2">АВАТАР</label>
+                    <input type="file" onchange="uploadAvatar(event)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
+                </div>
                 <input id="profile-name" placeholder="Ваш никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
-                <button onclick="saveProfile()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold">Сохранить</button>
-                <button onclick="exportData()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Экспорт бэкапа</button>
+                <button onclick="saveProfile()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold">Сохранить профиль</button>
+                <div class="pt-6 border-t border-white/10 space-y-4">
+                    <button onclick="exportData()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Экспорт бэкапа</button>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-2">ИМПОРТ БЭКАПА</label>
+                        <input type="file" onchange="importData(event)" class="w-full bg-white/5 p-4 rounded-xl border border-dashed border-white/10">
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -93,7 +103,7 @@
     </div>
 
     <script>
-        let data = JSON.parse(localStorage.getItem('mirvel_data')) || { cds: [], vinyls: [], name: 'Коллекционер', artists: [] };
+        let data = JSON.parse(localStorage.getItem('mirvel_data')) || { cds: [], vinyls: [], name: 'Коллекционер', artists: [], avatar: '' };
 
         function save() { localStorage.setItem('mirvel_data', JSON.stringify(data)); updateUI(); }
 
@@ -142,6 +152,25 @@
             save();
         };
 
+        window.uploadAvatar = (e) => {
+            const reader = new FileReader();
+            reader.onload = (ev) => { data.avatar = ev.target.result; save(); };
+            reader.readAsDataURL(e.target.files[0]);
+        };
+
+        window.exportData = () => {
+            const a = document.createElement('a');
+            a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
+            a.download = 'backup.json';
+            a.click();
+        };
+
+        window.importData = (e) => {
+            const reader = new FileReader();
+            reader.onload = (ev) => { data = JSON.parse(ev.result); save(); };
+            reader.readAsText(e.target.files[0]);
+        };
+
         function updateUI() {
             const renderGrid = (key, id) => {
                 document.getElementById(id).innerHTML = data[key].map(i => `
@@ -166,7 +195,6 @@
         window.addArtist = () => { const val = document.getElementById('artist-input').value; if(val) { data.artists.push(val); save(); renderArtists(); } };
         window.renderArtists = () => document.getElementById('artist-list').innerHTML = data.artists.map((a, i) => `<span class="bg-purple-600/30 px-4 py-2 rounded-2xl text-sm">${a} <button onclick="data.artists.splice(${i},1); save(); renderArtists();">×</button></span>`).join('');
         window.saveProfile = () => { data.name = document.getElementById('profile-name').value; save(); };
-        window.exportData = () => { const a = document.createElement('a'); a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)); a.download = 'backup.json'; a.click(); };
 
         updateUI(); renderArtists();
     </script>
