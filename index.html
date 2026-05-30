@@ -67,7 +67,7 @@
                 <div><h2 class="text-4xl font-bold">CD Коллекция</h2><p class="text-gray-500">Сумма: <span id="total-cds">0</span> ₴ | Предметов: <span id="count-cds">0</span></p></div>
                 <button onclick="openModal('cds')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button>
             </div>
-            <div id="cd-grid" class="grid grid-cols-4 gap-6"></div>
+            <div id="cd-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </section>
         
         <section id="vinyls" class="hidden fade-in">
@@ -75,7 +75,7 @@
                 <div><h2 class="text-4xl font-bold">Винил</h2><p class="text-gray-500">Сумма: <span id="total-vinyls">0</span> ₴ | Предметов: <span id="count-vinyls">0</span></p></div>
                 <button onclick="openModal('vinyls')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button>
             </div>
-            <div id="vinyl-grid" class="grid grid-cols-4 gap-6"></div>
+            <div id="vinyl-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </section>
         
         <section id="wishlists" class="hidden fade-in">
@@ -91,7 +91,7 @@
                 <button onclick="setFilter(null)" class="px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10">Все</button>
                 <div id="filter-tags" class="flex flex-wrap gap-2"></div>
             </div>
-            <div id="wishlist-grid" class="grid grid-cols-4 gap-6"></div>
+            <div id="wishlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </section>
 
         <section id="tracker" class="hidden fade-in">
@@ -108,19 +108,17 @@
         <section id="profile" class="hidden fade-in">
             <h2 class="text-4xl font-bold mb-10">Настройки</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <!-- Left: Account & Backup -->
                 <div class="glass p-8 rounded-3xl space-y-6">
                     <h3 class="font-bold text-xl">Аккаунт</h3>
                     <div class="flex gap-4">
-                        <button onclick="document.getElementById('avatar-input').click()" class="flex-1 bg-cyan-600 py-3 rounded-xl font-bold text-white hover:bg-cyan-500 transition">Аватар</button>
-                        <button onclick="document.getElementById('banner-input').click()" class="flex-1 bg-purple-600 py-3 rounded-xl font-bold text-white hover:bg-purple-500 transition">Баннер</button>
+                        <button onclick="document.getElementById('avatar-input').click()" class="flex-1 bg-cyan-600 py-3 rounded-xl font-bold text-white hover:bg-cyan-500 transition">Выбрать Аватар</button>
+                        <button onclick="document.getElementById('banner-input').click()" class="flex-1 bg-purple-600 py-3 rounded-xl font-bold text-white hover:bg-purple-500 transition">Выбрать Баннер</button>
                     </div>
                     <input type="file" id="avatar-input" accept="image/*" onchange="processImage(event, 'avatar')" class="hidden">
                     <input type="file" id="banner-input" accept="image/*" onchange="processImage(event, 'banner')" class="hidden">
                     <input id="profile-name" placeholder="Никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
                     <textarea id="profile-desc" placeholder="Описание" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
                     <textarea id="profile-artists" placeholder="Любимые исполнители" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
-                    
                     <div class="pt-6 border-t border-white/10 space-y-4">
                         <button onclick="saveProfile()" class="w-full bg-green-600 py-4 rounded-xl font-bold hover:bg-green-500 transition-all">Сохранить настройки</button>
                         <button onclick="exportData()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Экспорт (.json)</button>
@@ -129,7 +127,6 @@
                     </div>
                 </div>
                 
-                <!-- Right: Highlights -->
                 <div class="glass p-8 rounded-3xl space-y-6">
                     <h3 class="font-bold text-xl">Избранное</h3>
                     <div class="space-y-4">
@@ -150,7 +147,6 @@
         </section>
     </main>
 
-    <!-- Modals -->
     <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <h2 class="text-2xl font-bold">Редактор</h2>
@@ -166,7 +162,6 @@
         </div>
     </div>
 
-    <!-- Edit Tracker Item Modal -->
     <div id="tracker-edit-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-8 rounded-3xl w-96 space-y-4 shadow-2xl">
             <h2 class="text-2xl font-bold">Редактировать позицию</h2>
@@ -281,7 +276,6 @@
             save(); closeModal('modal');
         };
 
-        // TRACKER LOGIC
         window.addProgressArtist = () => {
             const val = document.getElementById('new-progress-artist').value;
             if(!val) return;
@@ -290,7 +284,6 @@
             document.getElementById('new-progress-artist').value = ''; save(); renderProgress();
         };
 
-        // Edit Tracker Item
         let editTrackerContext = { pId: null, idx: null };
         window.openEditTrackerItem = (pId, idx) => {
             const artistObj = data.progress.find(x => x.id === pId);
@@ -309,15 +302,25 @@
         };
 
         window.addProgressItem = (pId) => {
-            // Updated to prompt for type
             const input = document.getElementById(`new-album-${pId}`);
+            const addBoth = document.getElementById(`add-both-${pId}`)?.checked;
             if(!input || !input.value) return;
             const artistObj = data.progress.find(x => x.id === pId);
             if(!artistObj) return;
             if(!artistObj.items) artistObj.items = [];
-            // Default to CD for new items
+            
             artistObj.items.push({ text: input.value, checked: false, type: 'CD' });
+            if(addBoth) {
+                artistObj.items.push({ text: input.value, checked: false, type: 'VINYL' });
+            }
             input.value = '';
+            save(); renderProgress();
+        };
+
+        window.deleteProgressItem = (pId, idx) => {
+            const artistObj = data.progress.find(x => x.id === pId);
+            if(!artistObj) return;
+            artistObj.items.splice(idx, 1);
             save(); renderProgress();
         };
 
@@ -330,8 +333,6 @@
 
         window.renderProgress = () => {
             if (!data.progress) data.progress = [];
-            
-            // Filter logic
             const filteredProgress = data.progress.map(p => {
                 let items = p.items || [];
                 if (currentProgressFilter !== 'ALL') {
@@ -360,19 +361,26 @@
                                 </div>
                                 <span class="${i.checked ? 'line-through opacity-50' : ''} flex-1 text-sm">${i.text}</span>
                                 <span class="text-[10px] opacity-50 font-bold">${i.type || 'CD'}</span>
-                                <button onclick="event.stopPropagation(); openEditTrackerItem(${p.id}, ${idx})" class="opacity-0 group-hover:opacity-100 px-2 py-1 bg-white/10 rounded">✏️</button>
+                                <div class="opacity-0 group-hover:opacity-100 flex gap-1">
+                                    <button onclick="event.stopPropagation(); deleteProgressItem(${p.id}, ${idx})" class="px-2 py-1 bg-white/10 rounded text-red-400" title="Удалить">✕</button>
+                                    <button onclick="event.stopPropagation(); openEditTrackerItem(${p.id}, ${idx})" class="px-2 py-1 bg-white/10 rounded">✏️</button>
+                                </div>
                             </div>
                         `).join('')}
                     </div>
-                    <div class="flex gap-2 w-full mt-4">
-                        <input id="new-album-${p.id}" class="flex-1 bg-white/5 p-2 rounded-xl border border-white/10 min-w-0 text-sm" placeholder="Альбом...">
-                        <button onclick="addProgressItem(${p.id})" class="bg-cyan-600 px-4 rounded-xl font-bold shrink-0">+</button>
+                    <div class="flex flex-col gap-2 w-full mt-4">
+                        <div class="flex gap-2">
+                            <input id="new-album-${p.id}" class="flex-1 bg-white/5 p-2 rounded-xl border border-white/10 min-w-0 text-sm" placeholder="Альбом...">
+                            <button onclick="addProgressItem(${p.id})" class="bg-cyan-600 px-4 rounded-xl font-bold shrink-0">+</button>
+                        </div>
+                        <label class="flex items-center gap-2 text-xs text-gray-400 cursor-pointer">
+                            <input type="checkbox" id="add-both-${p.id}"> Добавить оба (CD + Винил)
+                        </label>
                     </div>
                 </div>
             `).join('')}`;
         };
 
-        // TAGS
         window.addGlobalTag = () => {
             const text = document.getElementById('new-tag-text').value; const color = document.getElementById('new-tag-color').value;
             if(!text) return; data.availableTags.push({ text, color }); renderManageTagsList(); renderModalTags(); save();
@@ -398,7 +406,6 @@
             `).join('');
         };
 
-        // NOTES
         window.openNote = (type, id) => {
             document.getElementById('note-text').dataset.type = type;
             document.getElementById('note-text').dataset.id = id;
@@ -416,10 +423,10 @@
             if(!val) return;
             if (editingNoteId) { data.quickNotes.find(n => n.id === editingNoteId).text = val; editingNoteId = null; }
             else { data.quickNotes.push({ id: Date.now(), text: val }); }
-            document.getElementById('new-quick-note').value = ''; save();
+            document.getElementById('new-quick-note').value = ''; save(); renderQuickNotes();
         };
         window.editQuickNote = (id) => { editingNoteId = id; document.getElementById('new-quick-note').value = data.quickNotes.find(n => n.id === id).text; };
-        window.deleteQuickNote = (id) => { data.quickNotes = data.quickNotes.filter(n => n.id !== id); save(); };
+        window.deleteQuickNote = (id) => { data.quickNotes = data.quickNotes.filter(n => n.id !== id); save(); renderQuickNotes(); };
         window.renderQuickNotes = () => {
             document.getElementById('quick-notes-list').innerHTML = data.quickNotes.map(n => `
                 <div class="bg-white/5 p-3 rounded-xl text-sm flex justify-between items-start gap-2">
@@ -466,11 +473,11 @@
             document.getElementById('stat-count-val').innerText = (data.cds?.length || 0) + (data.vinyls?.length || 0);
             
             document.getElementById('total-cds').innerText = cdsVal;
-            document.getElementById('count-cds').innerText = data.cds.length;
+            document.getElementById('count-cds').innerText = data.cds?.length || 0;
             document.getElementById('total-vinyls').innerText = vinylsVal;
-            document.getElementById('count-vinyls').innerText = data.vinyls.length;
+            document.getElementById('count-vinyls').innerText = data.vinyls?.length || 0;
             document.getElementById('total-wishlists').innerText = wishVal;
-            document.getElementById('count-wishlists').innerText = data.wishlists.length;
+            document.getElementById('count-wishlists').innerText = data.wishlists?.length || 0;
 
             document.getElementById('fav-artist-text').innerText = data.favArtist.name || '...';
             document.getElementById('fav-album-text').innerText = data.favAlbum.name || '...';
