@@ -11,7 +11,8 @@
         .glass { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
         .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .card-hover:hover { transform: translateY(-5px) scale(1.02); border-color: rgba(139, 92, 246, 0.5); }
-        img { transition: object-position 0.5s ease-in-out; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="flex min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black">
@@ -27,11 +28,13 @@
     </nav>
 
     <main class="flex-1 p-10 overflow-y-auto">
-        <section id="home" class="animate-fade-in">
+        <section id="home" class="fade-in">
             <div class="glass p-10 rounded-3xl mb-10 glow flex justify-between items-center">
                 <div>
                     <h2 class="text-5xl font-black mb-4">Привет, <span id="display-name" class="text-cyan-400">Коллекционер</span>!</h2>
+                    <p class="text-gray-400">Уровень: <span id="user-lvl" class="text-purple-400 font-bold">1</span></p>
                 </div>
+                <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
             </div>
             <div class="mb-10">
                 <h3 class="text-2xl font-bold mb-6">Любимые артисты</h3>
@@ -43,7 +46,7 @@
             </div>
         </section>
 
-        <section id="cds" class="hidden animate-fade-in">
+        <section id="cds" class="hidden fade-in">
             <div class="flex justify-between items-center mb-10">
                 <h2 class="text-4xl font-bold">CD Коллекция</h2>
                 <button onclick="openModal('cd')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button>
@@ -51,7 +54,7 @@
             <div id="cd-grid" class="grid grid-cols-4 gap-6"></div>
         </section>
 
-        <section id="vinyls" class="hidden animate-fade-in">
+        <section id="vinyls" class="hidden fade-in">
             <div class="flex justify-between items-center mb-10">
                 <h2 class="text-4xl font-bold">Винил</h2>
                 <button onclick="openModal('vinyl')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button>
@@ -59,64 +62,42 @@
             <div id="vinyl-grid" class="grid grid-cols-4 gap-6"></div>
         </section>
 
-        <section id="profile" class="hidden animate-fade-in">
+        <section id="profile" class="hidden fade-in">
             <h2 class="text-4xl font-bold mb-10">Настройки</h2>
             <div class="glass p-8 rounded-3xl max-w-lg space-y-6">
                 <div>
                     <label class="block text-xs text-gray-500 mb-2">АВАТАР</label>
                     <input type="file" onchange="uploadAvatar(event)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
+                    <img id="profile-preview" class="w-20 h-20 rounded-full mt-4 hidden object-cover">
                 </div>
-                <div>
-                    <label class="block text-xs text-gray-500 mb-2">НИКНЕЙМ</label>
-                    <input id="profile-name" placeholder="Ваш никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
-                </div>
+                <input id="profile-name" placeholder="Ваш никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
                 <button id="save-profile-btn" onclick="saveProfile()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold hover:bg-cyan-500 transition-all">Сохранить профиль</button>
                 
                 <div class="pt-6 border-t border-white/10 space-y-4">
                     <button onclick="exportData()" class="w-full bg-purple-600 py-4 rounded-xl font-bold hover:bg-purple-500 transition-all">Экспорт бэкапа</button>
-                    <div>
-                        <label class="block text-xs text-gray-500 mb-2">ИМПОРТ БЭКАПА</label>
-                        <input type="file" onchange="importData(event)" class="w-full bg-white/5 p-4 rounded-xl border border-dashed border-white/10">
-                    </div>
+                    <input type="file" onchange="importData(event)" class="w-full bg-white/5 p-4 rounded-xl border border-dashed border-white/10">
                 </div>
             </div>
         </section>
     </main>
 
-    <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-10 rounded-3xl w-96 space-y-6">
-            <h2 id="modal-title" class="text-2xl font-bold">Редактировать</h2>
-            <input type="hidden" id="edit-id">
-            <input type="hidden" id="edit-type">
-            <input id="item-title" placeholder="Название" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
-            <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
-            <select id="item-pos" class="w-full bg-white/5 p-4 rounded-xl border border-white/10">
-                <option value="center">Позиция: Центр</option>
-                <option value="top">Позиция: Верх</option>
-                <option value="bottom">Позиция: Низ</option>
-            </select>
-            <input type="file" id="item-img" class="w-full">
-            <button onclick="saveItem()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button>
-            <button onclick="closeModal()" class="w-full bg-white/10 py-4 rounded-xl">Отмена</button>
-        </div>
-    </div>
-
     <script>
         let data = JSON.parse(localStorage.getItem('mirvel_data')) || { cds: [], vinyls: [], name: 'Коллекционер', artists: [], avatar: '' };
 
-        function save() { 
-            localStorage.setItem('mirvel_data', JSON.stringify(data)); 
-            updateUI(); 
-        }
+        function save() { localStorage.setItem('mirvel_data', JSON.stringify(data)); updateUI(); }
 
         window.updateUI = () => {
             document.getElementById('display-name').innerText = data.name;
-            const profileInput = document.getElementById('profile-name');
-            if (profileInput) profileInput.value = data.name;
+            document.getElementById('profile-name').value = data.name;
+            
+            // Avatar Update Logic
+            const avatarElems = [document.getElementById('main-avatar'), document.getElementById('profile-preview')];
+            avatarElems.forEach(el => {
+                if(data.avatar) { el.src = data.avatar; el.classList.remove('hidden'); }
+            });
 
             const renderGrid = (key, id) => {
                 const container = document.getElementById(id);
-                if (!container) return;
                 container.innerHTML = data[key].map(i => `
                     <div class="glass p-6 rounded-3xl card-hover relative group">
                         <div class="w-full h-40 bg-white/5 rounded-2xl mb-4 overflow-hidden">
@@ -125,74 +106,33 @@
                         <h3 class="font-bold text-lg">${i.title}</h3>
                         <p class="text-cyan-400 font-mono mb-4">${i.price} ₴</p>
                         <div class="flex gap-2">
-                            <button onclick="openModal('${key.slice(0,-1)}', ${i.id})" class="text-xs bg-white/10 px-3 py-1 rounded hover:bg-white/20">✏️</button>
                             <button onclick="deleteItem('${key.slice(0,-1)}', ${i.id})" class="text-xs bg-red-500/20 text-red-400 px-3 py-1 rounded hover:bg-red-500/40">🗑️</button>
+                            <button onclick="changePos('${key.slice(0,-1)}', ${i.id})" class="text-xs bg-white/10 px-3 py-1 rounded hover:bg-white/20">🖼️</button>
                         </div>
                     </div>
                 `).join('');
             };
             renderGrid('cds', 'cd-grid');
             renderGrid('vinyls', 'vinyl-grid');
+            renderArtists();
         };
 
-        window.openModal = (type, id = null) => {
-            document.getElementById('edit-type').value = type;
-            document.getElementById('edit-id').value = id || '';
-            const modal = document.getElementById('modal');
-            if(id) {
-                const item = data[type + 's'].find(i => i.id === id);
-                document.getElementById('item-title').value = item.title;
-                document.getElementById('item-price').value = item.price;
-                document.getElementById('item-pos').value = item.pos || 'center';
-            } else {
-                document.getElementById('item-title').value = '';
-                document.getElementById('item-price').value = '';
-            }
-            modal.classList.remove('hidden');
-        };
-
-        window.closeModal = () => document.getElementById('modal').classList.add('hidden');
-
-        window.saveItem = () => {
-            const type = document.getElementById('edit-type').value;
-            const id = parseInt(document.getElementById('edit-id').value);
-            const title = document.getElementById('item-title').value;
-            const price = parseFloat(document.getElementById('item-price').value) || 0;
-            const pos = document.getElementById('item-pos').value;
-            const file = document.getElementById('item-img').files[0];
-            
-            const updateLogic = (img) => {
-                if(id) {
-                    const idx = data[type + 's'].findIndex(i => i.id === id);
-                    data[type + 's'][idx] = { ...data[type + 's'][idx], title, price, pos, img: img || data[type + 's'][idx].img };
-                } else {
-                    data[type + 's'].push({ id: Date.now(), title, price, pos, img: img || '' });
-                }
-                save(); closeModal();
-            };
-
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = (e) => updateLogic(e.target.result);
-                reader.readAsDataURL(file);
-            } else updateLogic();
-        };
-
-        window.deleteItem = (type, id) => {
-            data[type + 's'] = data[type + 's'].filter(i => i.id !== id);
+        window.changePos = (type, id) => {
+            const item = data[type+'s'].find(i => i.id === id);
+            const pos = ['center', 'top', 'bottom'];
+            const curIdx = pos.indexOf(item.pos || 'center');
+            item.pos = pos[(curIdx + 1) % pos.length];
             save();
         };
 
+        window.showPage = (id) => document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id));
+        
         window.saveProfile = () => {
-            const nameInput = document.getElementById('profile-name');
-            if (nameInput) {
-                data.name = nameInput.value;
-                save();
-                const btn = document.getElementById('save-profile-btn');
-                const originalText = btn.innerText;
-                btn.innerText = 'Сохранено! ✅';
-                setTimeout(() => btn.innerText = originalText, 2000);
-            }
+            data.name = document.getElementById('profile-name').value;
+            save();
+            const btn = document.getElementById('save-profile-btn');
+            btn.innerText = 'Сохранено! ✅';
+            setTimeout(() => btn.innerText = 'Сохранить профиль', 2000);
         };
 
         window.uploadAvatar = (e) => {
@@ -201,25 +141,25 @@
             reader.readAsDataURL(e.target.files[0]);
         };
 
-        window.exportData = () => {
-            const a = document.createElement('a');
-            a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
-            a.download = 'backup.json';
-            a.click();
-        };
-
-        window.importData = (e) => {
-            const reader = new FileReader();
-            reader.onload = (ev) => { data = JSON.parse(ev.target.result); save(); };
-            reader.readAsText(e.target.files[0]);
-        };
-        
-        window.showPage = (id) => document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id));
         window.addArtist = () => { const val = document.getElementById('artist-input').value; if(val) { data.artists.push(val); save(); renderArtists(); document.getElementById('artist-input').value = ''; } };
-        window.renderArtists = () => document.getElementById('artist-list').innerHTML = data.artists.map((a, i) => `<span class="bg-purple-600/30 px-4 py-2 rounded-2xl text-sm">${a} <button onclick="data.artists.splice(${i},1); save(); renderArtists();" class="ml-2 opacity-50 hover:opacity-100">×</button></span>`).join('');
+        window.renderArtists = () => document.getElementById('artist-list').innerHTML = data.artists.map((a, i) => `<span class="bg-purple-600/30 px-4 py-2 rounded-2xl text-sm">${a} <button onclick="data.artists.splice(${i},1); save();" class="ml-2 opacity-50 hover:opacity-100">×</button></span>`).join('');
 
-        updateUI(); 
-        renderArtists();
+        window.openModal = (type) => { document.getElementById('edit-type').value = type; document.getElementById('modal').classList.remove('hidden'); };
+        
+        window.saveItem = () => {
+            const type = document.getElementById('edit-type').value;
+            const title = document.getElementById('item-title').value;
+            const price = parseFloat(document.getElementById('item-price').value) || 0;
+            const file = document.getElementById('item-img').files[0];
+            const finalize = (img) => { data[type + 's'].push({ id: Date.now(), title, price, img, pos: 'center' }); save(); document.getElementById('modal').classList.add('hidden'); };
+            if(file) { const reader = new FileReader(); reader.onload = (e) => finalize(e.target.result); reader.readAsDataURL(file); } else finalize('');
+        };
+
+        window.deleteItem = (type, id) => { data[type + 's'] = data[type + 's'].filter(i => i.id !== id); save(); };
+        window.exportData = () => { const a = document.createElement('a'); a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)); a.download = 'backup.json'; a.click(); };
+        window.importData = (e) => { const reader = new FileReader(); reader.onload = (ev) => { data = JSON.parse(ev.target.result); save(); }; reader.readAsText(e.target.files[0]); };
+
+        updateUI();
     </script>
 </body>
 </html>
