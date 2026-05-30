@@ -33,7 +33,8 @@
             <div class="glass p-10 rounded-3xl mb-10 flex justify-between items-center">
                 <div>
                     <h2 class="text-5xl font-black mb-4">Привет, <span id="display-name" class="text-cyan-400">Коллекционер</span>!</h2>
-                    <p id="display-desc" class="text-gray-500 mb-6 italic"></p>
+                    <p id="display-desc" class="text-gray-500 mb-2 italic"></p>
+                    <p class="text-gray-400 text-sm mb-6">Любимые: <span id="display-artists" class="text-purple-300"></span></p>
                     <p class="text-gray-400 text-lg">Уровень: <span id="user-lvl" class="text-purple-400 font-bold">1</span> | XP: <span id="user-xp" class="text-cyan-400 font-bold">0</span></p>
                 </div>
                 <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
@@ -71,6 +72,7 @@
                 <input type="file" id="avatar-input" accept="image/*" onchange="processImage(event, 'avatar')" class="hidden">
                 <input id="profile-name" placeholder="Никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
                 <textarea id="profile-desc" placeholder="Описание" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
+                <textarea id="profile-artists" placeholder="Любимые исполнители" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
                 <button onclick="saveProfile()" class="w-full bg-cyan-600 py-4 rounded-xl font-bold hover:bg-cyan-500 transition-all">Сохранить</button>
                 <button onclick="exportData()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Экспорт данных (JSON)</button>
                 <input type="file" id="import-file" onchange="importData(event)" accept=".json" class="hidden">
@@ -107,7 +109,7 @@
     <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl text-3xl z-40 hover:scale-110 transition-transform">📝</button>
 
     <script>
-        const defaults = { cds: [], vinyls: [], wishlists: [], availableTags: [], name: 'Коллекционер', description: '', xp: 0, avatar: '', quickNotes: [] };
+        const defaults = { cds: [], vinyls: [], wishlists: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', quickNotes: [] };
         let data = JSON.parse(localStorage.getItem('mirvel_data')) || { ...defaults };
         data = { ...defaults, ...data };
         let tempTags = []; let tempImg = ''; let currentFilter = null; let editingNoteId = null;
@@ -255,7 +257,12 @@
         };
 
         window.setFilter = (tagText) => { currentFilter = tagText; updateUI(); };
-        window.saveProfile = () => { data.name = document.getElementById('profile-name').value; data.description = document.getElementById('profile-desc').value; save(); };
+        window.saveProfile = () => { 
+            data.name = document.getElementById('profile-name').value; 
+            data.description = document.getElementById('profile-desc').value; 
+            data.favoriteArtists = document.getElementById('profile-artists').value; 
+            save(); 
+        };
 
         function updateUI() {
             const cdsVal = (data.cds || []).reduce((s, i) => s + i.price, 0);
@@ -264,8 +271,10 @@
             
             document.getElementById('display-name').innerText = data.name || 'Коллекционер';
             document.getElementById('display-desc').innerText = data.description || '';
+            document.getElementById('display-artists').innerText = data.favoriteArtists || '-';
             document.getElementById('profile-name').value = data.name || '';
             document.getElementById('profile-desc').value = data.description || '';
+            document.getElementById('profile-artists').value = data.favoriteArtists || '';
             document.getElementById('user-xp').innerText = data.xp || 0;
             document.getElementById('user-lvl').innerText = Math.floor((data.xp || 0) / 500) + 1;
             document.getElementById('stat-col-val').innerText = (cdsVal + vinylsVal) + ' ₴';
@@ -288,7 +297,7 @@
                         </div>
                         <h3 class="font-bold truncate">${i.title} ${i.isGift ? '🎁' : ''}</h3>
                         <p class="text-cyan-400 font-mono text-sm">${i.price} ₴</p>
-                        ${i.url ? `<a href="${i.url}" target="_blank" class="text-xs text-blue-400 hover:underline">🔗 Ссылка</a>` : ''}
+                        ${i.url ? `<a href="${i.url}" target="_blank" class="text-xs text-blue-400 hover:underline block mt-1">🔗 Ссылка</a>` : ''}
                         <div class="flex flex-wrap gap-1 mt-2">${(i.tags || []).map(t => `<span class="px-2 py-0.5 rounded text-[10px]" style="background-color: ${t.color}">${t.text}</span>`).join('')}</div>
                         <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition">
                             <button onclick="cyclePos('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full">🔄</button>
