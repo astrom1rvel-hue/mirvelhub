@@ -76,7 +76,7 @@
             <button onclick="showPage('wishlists')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🎁 Желаемое</button>
             <button onclick="showPage('goals')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🎯 Цели по артистам</button>
             <button onclick="showPage('achievements')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🏆 Достижения</button>
-            <button onclick="showPage('profile')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">👤 Профиль</button>
+            <button onclick="showPage('profile')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">👤 Настройки</button>
         </div>
         
         <!-- Цветовые темы -->
@@ -109,14 +109,14 @@
                 </div>
             </div>
 
-            <!-- Сетка статистики на главной из 4 колонок -->
+            <!-- Сетка статистики на главной -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
                 <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Коллекция (CD + Винил)</p><h3 class="text-3xl font-black mt-2 text-purple-400" id="stat-col-val">0 ₴</h3></div>
                 <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Желаемое</p><h3 class="text-3xl font-black mt-2 text-cyan-400" id="stat-wish-val">0 ₴</h3></div>
-                <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Всего предметов (CD+Vinyl)</p><h3 class="text-3xl font-black mt-2 text-white" id="stat-count-val">0</h3></div>
+                <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Всего предметов</p><h3 class="text-3xl font-black mt-2 text-white" id="stat-count-val">0</h3></div>
                 <div class="glass p-8 rounded-3xl relative overflow-hidden group">
                     <p class="text-gray-500 text-sm">Самый дорогой релиз 💎</p>
-                    <h3 class="text-2xl font-black mt-2 text-yellow-400 truncate" id="stat-most-expensive">Нет релизов</h3>
+                    <h3 class="text-xl font-black mt-2 text-yellow-400 truncate" id="stat-most-expensive">Нет релизов</h3>
                 </div>
             </div>
 
@@ -138,6 +138,34 @@
                 <h3 class="text-gray-400 text-sm mb-4 uppercase tracking-wider font-bold">Статистика релизов по артистам</h3>
                 <div id="artist-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <!-- Заполняется динамически -->
+                </div>
+            </div>
+
+            <div class="glass p-8 rounded-3xl mt-10 relative overflow-hidden group">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h3 class="text-gray-400 text-sm uppercase tracking-wider font-bold">💬 Цитата дня</h3>
+                        <p class="text-xs text-gray-500">Музыкальная мудрость ваших любимых артистов</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="toggleQuoteLanguage()" class="bg-white/5 hover:bg-white/10 text-white text-xs px-3.5 py-2.5 rounded-xl border border-white/10 transition font-bold" title="Сменить язык (Оригинал / Перевод)">
+                            🌐 <span id="quote-lang-btn-text">Перевод</span>
+                        </button>
+                        <button onclick="getRandomQuote()" class="bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 text-xs px-3.5 py-2.5 rounded-xl border border-purple-500/20 transition font-bold">
+                            🎲 Случайная
+                        </button>
+                        <button onclick="openQuotePromptModal()" class="bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-300 text-xs px-3.5 py-2.5 rounded-xl border border-cyan-500/20 transition font-bold flex items-center gap-1">
+                            🤖 Промпт для ИИ
+                        </button>
+                        <button onclick="openQuotesManager()" class="bg-white/10 hover:bg-white/20 text-white text-xs px-3.5 py-2.5 rounded-xl border border-white/10 transition font-bold">
+                            ⚙️ Управление
+                        </button>
+                    </div>
+                </div>
+                <div id="quote-card-container" class="bg-white/5 p-6 rounded-2xl border border-white/10 min-h-[120px] flex flex-col justify-center relative transition-all duration-300">
+                    <span class="absolute top-2 left-3 text-white/5 text-7xl font-serif select-none pointer-events-none">“</span>
+                    <p id="quote-text" class="text-lg md:text-xl font-medium text-gray-100 italic relative z-10 leading-relaxed text-center">Нет добавленных цитат.</p>
+                    <p id="quote-author" class="text-right text-sm text-purple-300 font-bold mt-4 relative z-10">-</p>
                 </div>
             </div>
 
@@ -166,7 +194,6 @@
                 </div>
             </div>
             
-            <!-- Шкала прогресса открытий -->
             <div class="glass p-6 rounded-3xl mb-10">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-bold text-gray-300">Прогресс открытий</span>
@@ -177,7 +204,6 @@
                 </div>
             </div>
 
-            <!-- Сетка достижений -->
             <div id="achievements-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
@@ -192,7 +218,7 @@
                 </div>
                 <button onclick="openModal('cds')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button>
             </div>
-            <div id="cd-grid" class="grid grid-cols-4 gap-6"></div>
+            <div id="cd-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"></div>
         </section>
         
         <section id="vinyls" class="hidden fade-in">
@@ -206,7 +232,7 @@
                 </div>
                 <button onclick="openModal('vinyls')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button>
             </div>
-            <div id="vinyl-grid" class="grid grid-cols-4 gap-6"></div>
+            <div id="vinyl-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"></div>
         </section>
         
         <section id="wishlists" class="hidden fade-in">
@@ -228,7 +254,7 @@
                 <button onclick="setFilter(null)" class="px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10">Все</button>
                 <div id="filter-tags" class="flex flex-wrap gap-2"></div>
             </div>
-            <div id="wishlist-grid" class="grid grid-cols-4 gap-6"></div>
+            <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"></div>
         </section>
 
         <section id="goals" class="hidden fade-in">
@@ -256,40 +282,52 @@
             <div id="goals-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
+        <!-- Раздел настроек профиля -->
         <section id="profile" class="hidden fade-in">
-            <h2 class="text-4xl font-bold mb-10">Настройки</h2>
+            <h2 class="text-4xl font-bold mb-10">Настройки профиля</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <div class="glass p-8 rounded-3xl space-y-6">
                     <h3 class="font-bold text-xl">Аккаунт</h3>
                     <div class="flex gap-4">
-                        <button onclick="document.getElementById('avatar-input').click()" class="flex-1 bg-cyan-600 py-3 rounded-xl font-bold text-white hover:bg-cyan-500 transition">Аватар</button>
-                        <button onclick="document.getElementById('banner-input').click()" class="flex-1 bg-purple-600 py-3 rounded-xl font-bold text-white hover:bg-purple-500 transition">Баннер</button>
+                        <button onclick="document.getElementById('avatar-input').click()" class="flex-1 bg-cyan-600 py-3 rounded-xl font-bold text-white hover:bg-cyan-500 transition text-sm">Выбрать Аватар</button>
+                        <button onclick="document.getElementById('banner-input').click()" class="flex-1 bg-purple-600 py-3 rounded-xl font-bold text-white hover:bg-purple-500 transition text-sm">Выбрать Баннер</button>
                     </div>
                     <input type="file" id="avatar-input" accept="image/*" onchange="processImage(event, 'avatar')" class="hidden">
                     <input type="file" id="banner-input" accept="image/*" onchange="processImage(event, 'banner')" class="hidden">
-                    <input id="profile-name" placeholder="Никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
-                    <textarea id="profile-desc" placeholder="Описание" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
-                    <textarea id="profile-artists" placeholder="Любимые исполнители" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
+                    <div>
+                        <label class="text-xs text-gray-400 font-bold block mb-1 uppercase">Никнейм</label>
+                        <input id="profile-name" placeholder="Никнейм" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 font-bold block mb-1 uppercase">Статус / Описание профиля</label>
+                        <textarea id="profile-desc" placeholder="Описание" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-24"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 font-bold block mb-1 uppercase">Любимые исполнители (через запятую)</label>
+                        <textarea id="profile-artists" placeholder="Любимые исполнители" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white h-20"></textarea>
+                    </div>
                     <div class="pt-6 border-t border-white/10 space-y-4">
-                        <button onclick="saveProfile()" class="w-full bg-green-600 py-4 rounded-xl font-bold hover:bg-green-500 transition-all">Сохранить</button>
-                        <button onclick="exportData()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Экспорт (.json)</button>
-                        <input type="file" id="import-file" onchange="importData(event)" accept=".json" class="hidden">
-                        <button onclick="document.getElementById('import-file').click()" class="w-full bg-white/10 py-4 rounded-xl font-bold">Импорт (.json)</button>
+                        <button onclick="saveProfile()" class="w-full bg-green-600 py-4 rounded-xl font-bold hover:bg-green-500 transition-all shadow-lg">Сохранить изменения</button>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="exportData()" class="w-full bg-purple-600/40 border border-purple-500/20 py-3 rounded-xl text-sm font-bold hover:bg-purple-600/60 transition">Экспорт (.json)</button>
+                            <input type="file" id="import-file" onchange="importData(event)" accept=".json" class="hidden">
+                            <button onclick="document.getElementById('import-file').click()" class="w-full bg-white/5 border border-white/10 py-3 rounded-xl text-sm font-bold hover:bg-white/10 transition">Импорт (.json)</button>
+                        </div>
                     </div>
                 </div>
                 <div class="space-y-6">
                     <div class="glass p-8 rounded-3xl space-y-4">
-                        <h3 class="font-bold text-xl">Артист месяца</h3>
-                        <input id="fav-input-artist" placeholder="Артист" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white">
-                        <input id="fav-input-artist-url" placeholder="URL" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white">
-                        <button onclick="document.getElementById('fav-artist-img-input').click()" class="w-full bg-white/5 py-2 rounded-lg border border-white/10">Фото артиста</button>
+                        <h3 class="font-bold text-xl">🏅 Артист месяца</h3>
+                        <input id="fav-input-artist" placeholder="Имя артиста" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white text-sm">
+                        <input id="fav-input-artist-url" placeholder="Ссылка (например, Spotify / Discogs)" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white text-sm">
+                        <button onclick="document.getElementById('fav-artist-img-input').click()" class="w-full bg-white/5 py-2 rounded-lg border border-white/10 text-sm">Загрузить фото артиста</button>
                         <input type="file" id="fav-artist-img-input" accept="image/*" onchange="processImage(event, 'fav-artist')" class="hidden">
                     </div>
                     <div class="glass p-8 rounded-3xl space-y-4">
-                        <h3 class="font-bold text-xl">Альбом месяца</h3>
-                        <input id="fav-input-album" placeholder="Альбом" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white">
-                        <input id="fav-input-album-url" placeholder="URL" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white">
-                        <button onclick="document.getElementById('fav-album-img-input').click()" class="w-full bg-white/5 py-2 rounded-lg border border-white/10">Обложка</button>
+                        <h3 class="font-bold text-xl">💿 Альбом месяца</h3>
+                        <input id="fav-input-album" placeholder="Название альбома" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white text-sm">
+                        <input id="fav-input-album-url" placeholder="Ссылка (например, Spotify / Apple Music)" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white text-sm">
+                        <button onclick="document.getElementById('fav-album-img-input').click()" class="w-full bg-white/5 py-2 rounded-lg border border-white/10 text-sm">Загрузить обложку альбома</button>
                         <input type="file" id="fav-album-img-input" accept="image/*" onchange="processImage(event, 'fav-album')" class="hidden">
                     </div>
                 </div>
@@ -297,21 +335,23 @@
         </section>
     </main>
 
+    <!-- Модалка редактора релиза -->
     <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <h2 class="text-2xl font-bold">Редактор</h2>
+            <h2 class="text-2xl font-bold">Редактор релиза</h2>
             <input type="hidden" id="edit-type"><input type="hidden" id="edit-id">
             <input id="item-artist" placeholder="Исполнитель / Артист" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
             <input id="item-title" placeholder="Название альбома" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
             <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
-            <input id="item-url" placeholder="Ссылка (URL)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 hidden">
+            <input id="item-url" placeholder="Ссылка на маркетплейс (URL)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 hidden">
+            
             <div id="gift-container" class="flex items-center gap-2"><input type="checkbox" id="item-gift"> <label>Подарок 🎁</label></div>
             <div id="custom-cd-container" class="flex items-center gap-2 hidden"><input type="checkbox" id="item-custom-cd"> <label>Кастомный CD 💿✨</label></div>
             
             <div id="tags-selector" class="hidden space-y-2"><div class="text-sm text-gray-400">Выберите теги:</div><div id="available-tags-list" class="flex flex-wrap gap-2"></div></div>
             
             <div class="space-y-1">
-                <button type="button" onclick="document.getElementById('item-img').click()" class="w-full bg-cyan-600 hover:bg-cyan-500 py-3.5 rounded-xl font-bold text-white transition-all duration-300 shadow-md flex items-center justify-center gap-2">
+                <button type="button" onclick="document.getElementById('item-img').click()" class="w-full bg-cyan-600 hover:bg-cyan-500 py-3.5 rounded-xl font-bold text-white transition-all duration-300 shadow-md flex items-center justify-center gap-2 text-sm">
                     📷 Выбрать обложку релиза
                 </button>
                 <input type="file" id="item-img" accept="image/*" class="hidden" onchange="document.getElementById('item-img-status').innerText = 'Выбран файл: ' + this.files[0].name; document.getElementById('item-img-status').classList.remove('hidden')">
@@ -339,9 +379,42 @@
     <!-- Уведомления Toast -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <div id="tags-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Управление тэгами</h2><div id="manage-tags-list" class="space-y-2"></div><div class="flex gap-2 pt-4"><input id="new-tag-text" placeholder="Имя" class="flex-1 bg-white/5 p-2 rounded-lg text-sm"><input type="color" id="new-tag-color" class="w-8 h-8"><button onclick="addGlobalTag()" class="bg-white/10 px-3 rounded-lg">+</button></div><button onclick="closeModal('tags-manager-modal')" class="w-full bg-white/10 py-4 rounded-xl mt-4">Закрыть</button></div></div>
-    <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Примечание</h2><textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea><button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button><button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button></div></div>
-    <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Быстрые заметки</h2><div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div><div class="flex gap-2"><input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10" placeholder="Заметка..."> <button onclick="saveQuickNote()" class="bg-purple-600 px-4 py-3 rounded-xl font-bold">+</button></div><button onclick="closeModal('quick-notes-modal')" class="w-full bg-white/30 py-3 rounded-xl mt-2">Закрыть</button></div></div>
+    <!-- Модалка тегов -->
+    <div id="tags-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl">
+            <h2 class="text-2xl font-bold">Управление тэгами</h2>
+            <div id="manage-tags-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
+            <div class="flex gap-2 pt-4">
+                <input id="new-tag-text" placeholder="Имя тега" class="flex-1 bg-white/5 p-2 rounded-lg text-sm text-white">
+                <input type="color" id="new-tag-color" class="w-8 h-8 rounded border-none cursor-pointer">
+                <button onclick="addGlobalTag()" class="bg-white/10 px-3 rounded-lg text-white">+</button>
+            </div>
+            <button onclick="closeModal('tags-manager-modal')" class="w-full bg-white/10 py-4 rounded-xl mt-4">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модалка Примечания / Рецензии -->
+    <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl">
+            <h2 class="text-2xl font-bold">Рецензия / Примечание 📝</h2>
+            <textarea id="note-text" placeholder="Поделитесь вашими мыслями об этом альбоме..." class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50"></textarea>
+            <button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button>
+            <button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button>
+        </div>
+    </div>
+
+    <!-- Модалка быстрых заметок -->
+    <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl">
+            <h2 class="text-2xl font-bold">Быстрые заметки</h2>
+            <div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div>
+            <div class="flex gap-2">
+                <input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10 text-white" placeholder="Заметка..."> 
+                <button onclick="saveQuickNote()" class="bg-purple-600 px-4 py-3 rounded-xl font-bold text-white">+</button>
+            </div>
+            <button onclick="closeModal('quick-notes-modal')" class="w-full bg-white/30 py-3 rounded-xl mt-2">Закрыть</button>
+        </div>
+    </div>
     
     <!-- Модалка детальной статистики артиста -->
     <div id="artist-stats-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
@@ -387,14 +460,142 @@
             <button onclick="closeModal('music-site-modal')" class="w-full bg-white/10 py-4 rounded-xl">Отмена</button>
         </div>
     </div>
+
+    <!-- Модалка Промпта для ИИ -->
+    <div id="quote-prompt-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-8 rounded-3xl w-full max-w-lg space-y-6 shadow-2xl fade-in max-h-[90vh] overflow-y-auto">
+            <div class="text-4xl">🤖</div>
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Генерация промпта для ИИ</h2>
+            <p class="text-gray-400 text-xs">Скопируйте промпт ниже, вставьте его в любую ИИ-модель (ChatGPT, Claude, Gemini, DeepSeek и др.), а затем вставьте сгенерированный JSON в раздел импорта в «Управлении».</p>
+            
+            <div class="space-y-2">
+                <label class="text-[10px] text-gray-500 uppercase font-black block tracking-widest">Артисты для промпта:</label>
+                <input id="prompt-artists-input" oninput="generatePromptText()" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50" placeholder="Артисты">
+                <p class="text-[10px] text-gray-500 italic">По умолчанию берутся артисты из настроек вашего профиля.</p>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-[10px] text-gray-500 uppercase font-black block tracking-widest">Готовый промпт:</label>
+                <textarea id="ai-prompt-textarea" readonly class="w-full h-44 bg-white/5 p-4 rounded-xl border border-white/10 text-gray-300 text-xs font-mono focus:outline-none focus:border-purple-500/50 cursor-default select-all"></textarea>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="copyAIPrompt()" class="flex-1 bg-purple-600 hover:bg-purple-500 py-3 rounded-xl font-bold text-sm transition-all shadow-lg flex items-center justify-center gap-2">
+                    📋 Скопировать промпт
+                </button>
+                <button onclick="closeModal('quote-prompt-modal')" class="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl font-bold text-sm transition">
+                    Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка Управления Цитатами -->
+    <div id="quotes-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-8 rounded-3xl w-full max-w-xl space-y-6 shadow-2xl fade-in max-h-[95vh] flex flex-col">
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 shrink-0">Управление Цитатами</h2>
+            
+            <!-- Табы внутри менеджера -->
+            <div class="flex border-b border-white/10 shrink-0">
+                <button onclick="switchQuoteTab('list')" id="tab-quote-list" class="flex-1 py-2 text-sm font-bold border-b-2 border-purple-500 text-white">Список цитат</button>
+                <button onclick="switchQuoteTab('add')" id="tab-quote-add" class="flex-1 py-2 text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-white transition">Добавить вручную</button>
+                <button onclick="switchQuoteTab('import')" id="tab-quote-import" class="flex-1 py-2 text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-white transition">Импорт из ИИ</button>
+            </div>
+
+            <!-- Вкладка: Список цитат -->
+            <div id="quote-section-list" class="flex-grow overflow-y-auto space-y-3 min-h-[300px]">
+                <div id="quotes-list-container" class="space-y-3 pr-1">
+                    <!-- Заполняется динамически -->
+                </div>
+            </div>
+
+            <!-- Вкладка: Добавить вручную -->
+            <div id="quote-section-add" class="hidden space-y-4 flex-grow overflow-y-auto">
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Артист / Автор:</label>
+                    <input id="manual-quote-author" placeholder="Например: Lana Del Rey" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Песня (необязательно):</label>
+                    <input id="manual-quote-song" placeholder="Например: Born to Die" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Оригинал цитаты (на английском):</label>
+                    <textarea id="manual-quote-original" placeholder="Live fast. Die young. Be wild..." class="w-full h-16 bg-white/5 p-3 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Перевод цитаты (на русском):</label>
+                    <textarea id="manual-quote-translation" placeholder="Живи быстро. Умри молодым. Будь диким..." class="w-full h-16 bg-white/5 p-3 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50"></textarea>
+                </div>
+                <button onclick="saveManualQuote()" class="w-full bg-purple-600 hover:bg-purple-500 py-3.5 rounded-xl font-bold text-white transition-all duration-300">
+                    💾 Добавить цитату
+                </button>
+            </div>
+
+            <!-- Вкладка: Импорт из ИИ (JSON) -->
+            <div id="quote-section-import" class="hidden space-y-4 flex-grow flex flex-col justify-between">
+                <div class="space-y-2 flex-grow flex flex-col">
+                    <label class="text-xs text-gray-400 block">Вставьте сгенерированный ИИ JSON-код:</label>
+                    <textarea id="ai-import-textarea" placeholder='[{"author": "Kurt Cobain", "textOriginal": "...", "textTranslation": "...", "song": ""}]' class="w-full flex-grow h-56 bg-white/5 p-4 rounded-xl border border-white/10 text-gray-300 text-xs font-mono focus:outline-none focus:border-purple-500/50"></textarea>
+                    <p class="text-[10px] text-gray-500 italic mt-1">Приложение автоматически уберет лишние символы вроде ```json ... ```</p>
+                </div>
+                <button onclick="importQuotesFromAI()" class="w-full bg-cyan-600 hover:bg-cyan-500 py-3.5 rounded-xl font-bold text-white transition-all duration-300 shrink-0">
+                    ⚡ Импортировать массив цитат
+                </button>
+            </div>
+
+            <button onclick="closeModal('quotes-manager-modal')" class="w-full bg-white/10 py-4 rounded-xl shrink-0">Закрыть</button>
+        </div>
+    </div>
     
+    <!-- Кнопка быстрых заметок -->
     <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl text-3xl z-40 hover:scale-110 transition-transform">📝</button>
 
     <script>
-        const defaults = { cds: [], vinyls: [], wishlists: [], goals: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', bannerImg: '', favArtist: {name:'', url:'', img:''}, favAlbum: {name:'', url:'', img:''}, quickNotes: [], selectedTheme: '', musicSites: [], unlockedAchievements: [] };
+        // Предустановленные цитаты при первом запуске
+        const defaultQuotes = [
+            { id: 1, author: "Kurt Cobain", textOriginal: "Wanting to be someone else is a waste of the person you are.", textTranslation: "Желание быть кем-то другим — это растрата того, кто ты есть.", song: "" },
+            { id: 2, author: "Lana Del Rey", textOriginal: "Live fast. Die young. Be wild. And have fun.", textTranslation: "Живи быстро. Умри молодым. Будь диким. И веселись.", song: "Ride" },
+            { id: 3, author: "Tyler, The Creator", textOriginal: "I'm a step-by-step person.", textTranslation: "Я человек, который идет шаг за шагом.", song: "" },
+            { id: 4, author: "Eminem", textOriginal: "You only get one shot, do not miss your chance to blow.", textTranslation: "У тебя есть только один шанс, не упусти возможность заявить о себе.", song: "Lose Yourself" },
+            { id: 5, author: "Kanye West", textOriginal: "My greatest pain in life is that I will never be able to see myself perform live.", textTranslation: "Моя самая большая боль в жизни заключается в том, что я никогда не смогу увидеть свое собственное живое выступление.", song: "" }
+        ];
+
+        const defaults = { 
+            cds: [], 
+            vinyls: [], 
+            wishlists: [], 
+            goals: [], 
+            availableTags: [], 
+            name: 'Коллекционер', 
+            description: '', 
+            favoriteArtists: '', 
+            xp: 0, 
+            avatar: '', 
+            bannerImg: '', 
+            favArtist: {name:'', url:'', img:''}, 
+            favAlbum: {name:'', url:'', img:''}, 
+            quickNotes: [], 
+            selectedTheme: '', 
+            musicSites: [], 
+            unlockedAchievements: [],
+            quotes: defaultQuotes,
+            quoteLanguage: 'ru',
+            currentQuoteId: 1
+        };
+
         let data = JSON.parse(localStorage.getItem('mirvel_data')) || { ...defaults };
         data = { ...defaults, ...data };
-        let tempTags = []; let currentFilter = null; let editingNoteId = null;
+        
+        // Гарантия наличия массива цитат
+        if (!data.quotes || data.quotes.length === 0) {
+            data.quotes = [...defaultQuotes];
+            data.currentQuoteId = 1;
+        }
+
+        let tempTags = []; 
+        let currentFilter = null; 
+        let editingNoteId = null;
 
         const ACHIEVEMENTS_LIST = [
             // МНОГОУРОВНЕВЫЕ ДОСТИЖЕНИЯ (TIERED)
@@ -539,6 +740,7 @@
             data.musicSites = [...defaultSites];
         }
 
+        // Звуковое оповещение о достижении
         function playUnlockSound() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -630,14 +832,324 @@
                 localStorage.setItem('mirvel_data', JSON.stringify(data));
             }
         }
+    </script>
 
+    <script>
+        // Функция копирования в буфер обмена, оптимизированная для работы во фреймах
+        function copyTextToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed'; // Избегаем прыжка страницы вниз
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast("Промпт успешно скопирован в буфер обмена! 📋");
+                } else {
+                    showToast("Не удалось скопировать. Пожалуйста, выделите текст вручную.");
+                }
+            } catch (err) {
+                showToast("Ошибка копирования в буфер обмена.");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // Обновление отображения Цитаты дня на главной
+        function updateQuoteUI() {
+            const quoteTextEl = document.getElementById('quote-text');
+            const quoteAuthorEl = document.getElementById('quote-author');
+            const langBtnText = document.getElementById('quote-lang-btn-text');
+            if (!quoteTextEl || !quoteAuthorEl) return;
+
+            const list = data.quotes || [];
+            if (list.length === 0) {
+                quoteTextEl.innerText = "Нет добавленных цитат. Нажмите «Управление», чтобы добавить новые!";
+                quoteAuthorEl.innerText = "-";
+                return;
+            }
+
+            // Находим текущую выбранную цитату
+            let current = list.find(q => q.id === data.currentQuoteId);
+            if (!current) {
+                current = list[0];
+                data.currentQuoteId = current.id;
+            }
+
+            const isRu = (data.quoteLanguage === 'ru');
+            
+            // Если выбран перевод, но он пустой, выводим оригинал
+            let textToDisplay = isRu ? current.textTranslation : current.textOriginal;
+            if (!textToDisplay) {
+                textToDisplay = current.textOriginal || current.textTranslation || "Пустая цитата";
+            }
+
+            quoteTextEl.innerText = textToDisplay;
+            
+            let authorStr = current.author || "Неизвестный исполнитель";
+            if (current.song) {
+                authorStr += ` (песня: «${current.song}»)`;
+            }
+            quoteAuthorEl.innerText = `— ${authorStr}`;
+            
+            if (langBtnText) {
+                langBtnText.innerText = isRu ? "Оригинал" : "Перевод";
+            }
+        }
+
+        // Кнопка: Переключение языка (Оригинал / Перевод)
+        window.toggleQuoteLanguage = () => {
+            data.quoteLanguage = (data.quoteLanguage === 'ru') ? 'en' : 'ru';
+            save();
+            
+            // Добавим легкий эффект анимации при переключении языка
+            const card = document.getElementById('quote-card-container');
+            if (card) {
+                card.classList.add('scale-[0.98]', 'opacity-80');
+                setTimeout(() => {
+                    updateQuoteUI();
+                    card.classList.remove('scale-[0.98]', 'opacity-80');
+                }, 150);
+            }
+        };
+
+        // Кнопка: Случайная цитата
+        window.getRandomQuote = () => {
+            const list = data.quotes || [];
+            if (list.length === 0) {
+                showToast("Список цитат пуст! Добавьте новые цитаты в меню «Управление».");
+                return;
+            }
+            
+            // Выбираем случайную цитату, отличную от текущей, если их больше одной
+            let availableQuotes = list;
+            if (list.length > 1) {
+                availableQuotes = list.filter(q => q.id !== data.currentQuoteId);
+            }
+            
+            const randomQuote = availableQuotes[Math.floor(Math.random() * availableQuotes.length)];
+            data.currentQuoteId = randomQuote.id;
+            save();
+
+            // Эффект смены цитаты
+            const card = document.getElementById('quote-card-container');
+            if (card) {
+                card.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    updateQuoteUI();
+                    card.classList.remove('opacity-0', 'translate-y-2');
+                }, 200);
+            }
+        };
+
+        // Открытие модалки генерации промпта для ИИ
+        window.openQuotePromptModal = () => {
+            const artistsInput = document.getElementById('prompt-artists-input');
+            const artistsFromProfile = (data.favoriteArtists || "").trim();
+            
+            // Заполняем поле артистов списком из настроек профиля (если есть)
+            artistsInput.value = artistsFromProfile ? artistsFromProfile : "Tyler, The Creator, Lana Del Rey, Kanye West, Nirvana";
+            
+            generatePromptText();
+            document.getElementById('quote-prompt-modal').classList.remove('hidden');
+        };
+
+        // Динамическая сборка текста промпта для ИИ в зависимости от заполненных артистов
+        window.generatePromptText = () => {
+            const artists = document.getElementById('prompt-artists-input').value.trim();
+            const textarea = document.getElementById('ai-prompt-textarea');
+            
+            const formattedPrompt = `Generate a list of 5 iconic quotes or song lyrics from these artists: ${artists ? artists : 'your favorite artists'}.
+For each quote, you MUST provide both the original English version and its high-quality Russian translation.
+Output the quotes strictly as a raw valid JSON array of objects, without any markdown backticks formatting (no code block styling), matching this exact schema:
+
+[
+  {
+    "author": "Artist Name",
+    "textOriginal": "The quote or lyric in English",
+    "textTranslation": "Качественный перевод цитаты или текста песни на русский язык",
+    "song": "Song title (optional, leave empty if it's a general quote)"
+  }
+]`;
+            textarea.value = formattedPrompt;
+        };
+
+        // Скопировать готовый промпт в буфер обмена
+        window.copyAIPrompt = () => {
+            const promptText = document.getElementById('ai-prompt-textarea').value;
+            copyTextToClipboard(promptText);
+        };
+
+        // Переключение вкладок в модалке Управления цитатами
+        window.switchQuoteTab = (tab) => {
+            const sections = ['list', 'add', 'import'];
+            sections.forEach(s => {
+                const btn = document.getElementById(`tab-quote-${s}`);
+                const sec = document.getElementById(`quote-section-${s}`);
+                
+                if (s === tab) {
+                    btn.className = "flex-1 py-2 text-sm font-bold border-b-2 border-purple-500 text-white";
+                    sec.classList.remove('hidden');
+                } else {
+                    btn.className = "flex-1 py-2 text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-white transition";
+                    sec.classList.add('hidden');
+                }
+            });
+
+            if (tab === 'list') {
+                renderQuotesList();
+            }
+        };
+
+        // Открытие Менеджера Цитат
+        window.openQuotesManager = () => {
+            switchQuoteTab('list');
+            document.getElementById('quotes-manager-modal').classList.remove('hidden');
+        };
+
+        // Отрисовка списка цитат внутри Менеджера Цитат
+        window.renderQuotesList = () => {
+            const container = document.getElementById('quotes-list-container');
+            const list = data.quotes || [];
+            
+            if (list.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-500 py-8 text-sm italic">Список цитат пуст. Добавьте новые вручную или импортируйте через ИИ!</p>`;
+                return;
+            }
+
+            container.innerHTML = list.map(q => `
+                <div class="bg-white/5 p-4 rounded-xl border border-white/5 flex justify-between items-start gap-3 hover:bg-white/10 transition-colors text-xs">
+                    <div class="space-y-1 w-11/12">
+                        <p class="font-bold text-purple-300">${q.author} ${q.song ? `<span class="text-gray-500 font-normal">(песня: ${q.song})</span>` : ''}</p>
+                        <p class="text-gray-200 italic">🇬🇧 "${q.textOriginal || '-'}"</p>
+                        <p class="text-gray-400 italic">🇷🇺 "${q.textTranslation || '-'}"</p>
+                    </div>
+                    <button onclick="deleteQuote(${q.id})" class="text-red-400 hover:text-red-300 p-1 shrink-0 transition" title="Удалить">
+                        ✕
+                    </button>
+                </div>
+            `).join('');
+        };
+
+        // Удаление конкретной цитаты
+        window.deleteQuote = (id) => {
+            const list = data.quotes || [];
+            data.quotes = list.filter(q => q.id !== id);
+            
+            // Если удалили активную цитату, выберем первую доступную
+            if (data.currentQuoteId === id) {
+                data.currentQuoteId = data.quotes.length > 0 ? data.quotes[0].id : null;
+            }
+            
+            save();
+            renderQuotesList();
+            showToast("Цитата успешно удалена");
+        };
+
+        // Сохранение цитаты, добавленной вручную
+        window.saveManualQuote = () => {
+            const author = document.getElementById('manual-quote-author').value.trim();
+            const song = document.getElementById('manual-quote-song').value.trim();
+            const original = document.getElementById('manual-quote-original').value.trim();
+            const translation = document.getElementById('manual-quote-translation').value.trim();
+
+            if (!original && !translation) {
+                showToast("Заполните хотя бы одно из полей цитаты (Оригинал или Перевод)!");
+                return;
+            }
+
+            const newQuote = {
+                id: Date.now(),
+                author: author || "Неизвестный исполнитель",
+                song: song,
+                textOriginal: original,
+                textTranslation: translation
+            };
+
+            data.quotes.push(newQuote);
+            
+            // Делаем добавленную цитату текущей
+            data.currentQuoteId = newQuote.id;
+            
+            save();
+
+            // Очистка полей ввода
+            document.getElementById('manual-quote-author').value = '';
+            document.getElementById('manual-quote-song').value = '';
+            document.getElementById('manual-quote-original').value = '';
+            document.getElementById('manual-quote-translation').value = '';
+
+            showToast("Цитата добавлена вручную! 🎉");
+            switchQuoteTab('list');
+        };
+
+        // Умный парсер импортируемого из ИИ JSON-кода
+        window.importQuotesFromAI = () => {
+            const textareaValue = document.getElementById('ai-import-textarea').value.trim();
+            if (!textareaValue) {
+                showToast("Пожалуйста, вставьте JSON-код из ответа ИИ!");
+                return;
+            }
+
+            try {
+                // Очистка от возможных markdown разметчиков ИИ (```json ... ```)
+                const cleanedText = textareaValue
+                    .replace(/^```json\s*/i, '') // Убираем начальные ```json
+                    .replace(/^```\s*/, '')      // Убираем просто ```
+                    .replace(/```$/, '')          // Убираем конечные ```
+                    .trim();
+
+                const parsed = JSON.parse(cleanedText);
+
+                if (!Array.isArray(parsed)) {
+                    showToast("Неверный формат: ИИ должен вернуть массив объектов JSON!");
+                    return;
+                }
+
+                let importedCount = 0;
+                parsed.forEach((item, index) => {
+                    if (item.textOriginal || item.textTranslation) {
+                        data.quotes.push({
+                            id: Date.now() + index, // Уникальный id
+                            author: item.author || "Неизвестный артист",
+                            textOriginal: item.textOriginal || "",
+                            textTranslation: item.textTranslation || "",
+                            song: item.song || ""
+                        });
+                        importedCount++;
+                    }
+                });
+
+                if (importedCount > 0) {
+                    save();
+                    document.getElementById('ai-import-textarea').value = '';
+                    showToast(`Успешно импортировано ${importedCount} цитат из ИИ! 🤖✨`);
+                    switchQuoteTab('list');
+                } else {
+                    showToast("Не удалось импортировать. Проверьте структуру JSON объектов.");
+                }
+
+            } catch (err) {
+                showToast("Ошибка импорта! Пожалуйста, убедитесь, что вставили валидный JSON массив.");
+                console.error("JSON parse error: ", err);
+            }
+        };
+    </script>
+
+    <script>
         function save() { 
             checkAchievements();
             localStorage.setItem('mirvel_data', JSON.stringify(data)); 
             updateUI(); 
         }
+        
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function showPage(id) { document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id)); updateUI(); }
+        
+        function showPage(id) { 
+            document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id)); 
+            updateUI(); 
+        }
 
         function showToast(message) {
             const container = document.getElementById('toast-container');
@@ -1279,6 +1791,7 @@
             renderGrid('vinyls', 'vinyl-grid'); 
             renderGrid('wishlists', 'wishlist-grid');
             renderQuickNotes();
+            updateQuoteUI(); // Рендерим текущую цитату дня
             
             // Рендер целей по артистам
             const goalsGrid = document.getElementById('goals-grid');
