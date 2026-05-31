@@ -65,6 +65,15 @@
         body.theme-pink .border-purple-500\/30 { border-color: rgba(236, 72, 153, 0.3) !important; }
         body.theme-pink .from-purple-400 { --tw-gradient-from: #f472b6 !important; --tw-gradient-to: rgb(244 114 182 / 0) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
         body.theme-pink .to-cyan-400 { --tw-gradient-to: #f43f5e !important; }
+
+        /* Анимация пульсации для загрузки */
+        .pulse-loader {
+            animation: pulseBg 1.5s infinite ease-in-out;
+        }
+        @keyframes pulseBg {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body class="flex min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black">
@@ -102,16 +111,22 @@
                     <p class="text-gray-500 text-sm mb-6">Любимые: <span id="display-artists" class="text-purple-300"></span></p>
                     <p class="text-gray-400 text-lg">Уровень: <span id="user-lvl" class="text-purple-400 font-bold">1</span> | XP: <span id="user-xp" class="text-cyan-400 font-bold">0</span></p>
                 </div>
-                <div class="flex flex-col items-end gap-4 relative z-10">
-                    <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
-                    <!-- Кнопка "Что послушать" -->
-                    <button onclick="getRandomRelease()" class="bg-purple-600 hover:bg-purple-500 text-white border border-white/10 px-4 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center gap-2">
-                        🎲 Что послушать?
-                    </button>
+                <div class="flex flex-col items-end gap-3 relative z-10 shrink-0">
+                    <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden mb-2">
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <!-- Кнопка "Что послушать" -->
+                        <button onclick="getRandomRelease()" class="bg-purple-600 hover:bg-purple-500 text-white border border-white/10 px-4 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center gap-2">
+                            🎲 Что послушать?
+                        </button>
+                        <!-- Кнопка ИИ-рекомендаций -->
+                        <button onclick="openAIAdvisorModal()" class="bg-gradient-to-r from-amber-500 to-pink-500 hover:from-amber-400 hover:to-pink-400 text-white px-4 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center gap-2">
+                            ✨ AI Музыкальный Гид
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Сетка статистики на главной из 4 колонок (добавлен самый дорогой релиз) -->
+            <!-- Сетка статистики на главной из 4 колонок -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
                 <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Коллекция (CD + Винил)</p><h3 class="text-3xl font-black mt-2 text-purple-400" id="stat-col-val">0 ₴</h3></div>
                 <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Желаемое</p><h3 class="text-3xl font-black mt-2 text-cyan-400" id="stat-wish-val">0 ₴</h3></div>
@@ -231,9 +246,15 @@
                     <label class="text-xs text-gray-400 block mb-1.5 font-bold uppercase tracking-wider">Альбом</label>
                     <input id="goal-album" placeholder="Например: IGOR" class="w-full bg-white/5 p-4 rounded-2xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50">
                 </div>
-                <button onclick="addArtistGoal()" class="w-full md:w-auto bg-white text-black px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-all text-sm shrink-0">
-                    Добавить цель
-                </button>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button onclick="addArtistGoal()" class="flex-1 md:flex-none bg-white text-black px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-all text-sm shrink-0">
+                        Добавить
+                    </button>
+                    <!-- Кнопка автозаполнения дискографии с помощью Gemini -->
+                    <button onclick="generateAIGoals()" id="ai-goal-btn" class="flex-1 md:flex-none bg-gradient-to-r from-amber-500 to-pink-500 hover:from-amber-400 hover:to-pink-400 text-white px-6 py-4 rounded-2xl font-bold transition-all text-sm shrink-0 flex items-center gap-1.5">
+                        ✨ ИИ Авто-цели
+                    </button>
+                </div>
             </div>
 
             <!-- Сетка карточек целей -->
@@ -311,7 +332,7 @@
         </div>
     </div>
 
-    <!-- Модалка Рандомайзера (замена alert) -->
+    <!-- Модалка Рандомайзера -->
     <div id="random-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-8 rounded-3xl w-96 space-y-6 shadow-2xl text-center fade-in">
             <div class="text-5xl">🎲</div>
@@ -324,6 +345,39 @@
         </div>
     </div>
 
+    <!-- Модалка AI Музыкального Советника (Gemini Recommendations) -->
+    <div id="ai-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-8 rounded-3xl w-full max-w-2xl space-y-6 shadow-2xl fade-in max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-pink-500 flex items-center gap-2">
+                    ✨ AI Музыкальный Навигатор
+                </h2>
+                <button onclick="closeModal('ai-modal')" class="text-gray-400 hover:text-white text-lg">✕</button>
+            </div>
+            
+            <p class="text-sm text-gray-400">
+                Gemini проанализирует твоих любимых артистов (<span class="text-purple-300 italic" id="ai-context-artists"></span>) и порекомендует эксклюзивные издания для твоей коллекции. Вы можете скорректировать запрос (например: <span class="text-cyan-400 italic">"хочу темный эмбиент"</span> или <span class="text-cyan-400 italic">"энергичный хип-хоп"</span>).
+            </p>
+
+            <div class="flex gap-2">
+                <input id="ai-style-refinement" placeholder="Уточнить музыкальное настроение (необязательно)..." class="flex-grow bg-white/5 p-4 rounded-2xl border border-white/10 text-white text-sm focus:outline-none focus:border-pink-500/50">
+                <button onclick="getAIRecommendations()" id="ai-generate-btn" class="bg-gradient-to-r from-amber-500 to-pink-500 text-white font-bold px-6 py-4 rounded-2xl text-sm transition-all hover:scale-105 shadow-md flex items-center gap-1.5 shrink-0">
+                    🔮 Найти релизы
+                </button>
+            </div>
+
+            <!-- Зона вывода рекомендаций -->
+            <div id="ai-loading" class="hidden py-12 flex flex-col items-center justify-center space-y-3">
+                <div class="w-12 h-12 rounded-full border-4 border-t-pink-500 border-white/10 animate-spin"></div>
+                <p class="text-gray-400 text-sm italic pulse-loader">Gemini подбирает идеальные альбомы на виниле и дисках...</p>
+            </div>
+
+            <div id="ai-results" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+                <!-- Карточки рекомендаций будут генерироваться здесь -->
+            </div>
+        </div>
+    </div>
+
     <!-- Уведомления Toast -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
@@ -331,11 +385,26 @@
     <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Примечание</h2><textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea><button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button><button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button></div></div>
     <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Быстрые заметки</h2><div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div><div class="flex gap-2"><input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10" placeholder="Заметка..."> <button onclick="saveQuickNote()" class="bg-purple-600 px-4 py-3 rounded-xl font-bold">+</button></div><button onclick="closeModal('quick-notes-modal')" class="w-full bg-white/30 py-3 rounded-xl mt-2">Закрыть</button></div></div>
     
-    <!-- Модалка детальной статистики артиста (УВЕЛИЧЕНА с w-96 до w-full max-w-xl) -->
+    <!-- Модалка детальной статистики артиста (С ИНТЕГРАЦИЕЙ ИИ-БИОГРАФИИ) -->
     <div id="artist-stats-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-10 rounded-3xl w-full max-w-xl space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <h2 id="artist-stats-title" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic truncate">Статистика артиста</h2>
+            <div class="flex justify-between items-center">
+                <h2 id="artist-stats-title" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic truncate">Статистика артиста</h2>
+                <!-- Кнопка ИИ био -->
+                <button onclick="getAIArtistBio()" id="ai-bio-btn" class="bg-gradient-to-r from-amber-500 to-pink-500 hover:from-amber-400 hover:to-pink-400 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow flex items-center gap-1">
+                    ✨ ИИ Справка
+                </button>
+            </div>
             <div class="space-y-4">
+                <!-- Зона ИИ Справки (изначально скрыта) -->
+                <div id="ai-bio-container" class="hidden bg-white/5 p-5 rounded-2xl border border-pink-500/20 relative overflow-hidden">
+                    <div id="ai-bio-loading" class="hidden flex flex-col items-center justify-center py-4">
+                        <div class="w-6 h-6 rounded-full border-2 border-t-pink-500 border-white/10 animate-spin mb-2"></div>
+                        <p class="text-xs text-gray-400 italic pulse-loader">Gemini пишет музыкальное досье...</p>
+                    </div>
+                    <div id="ai-bio-content" class="text-xs text-gray-300 leading-relaxed max-h-48 overflow-y-auto pr-1"></div>
+                </div>
+
                 <div class="bg-white/5 p-5 rounded-2xl border border-white/10 flex justify-between items-center">
                     <div>
                         <p class="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Всего релизов</p>
@@ -398,6 +467,39 @@
         function save() { localStorage.setItem('mirvel_data', JSON.stringify(data)); updateUI(); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         function showPage(id) { document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id)); updateUI(); }
+
+        // Универсальный клиент вызова Gemini API с экспоненциальной задержкой в случае перегрузки
+        async function callGemini(promptText, systemPrompt = "") {
+            const apiKey = ""; // Среда разработки сама заменит пустую строку на рабочий ключ во время выполнения
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: promptText }] }]
+            };
+            if (systemPrompt) {
+                payload.systemInstruction = { parts: [{ text: systemPrompt }] };
+            }
+
+            let delay = 1000;
+            for (let attempt = 0; attempt < 5; attempt++) {
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        const result = await response.json();
+                        return result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                    }
+                } catch (e) {
+                    // Игнорируем логирование ошибок в консоль по гайдлайнам
+                }
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+            throw new Error("Не удалось подключиться к Gemini API. Попробуйте снова чуть позже.");
+        }
 
         // Показ тоста вместо alert
         function showToast(message) {
@@ -572,6 +674,212 @@
             showToast("Цель удалена");
         };
 
+        // Интеграция Gemini: Генерация коллекционных целей на основе дискографии
+        async function generateAIGoals() {
+            const artist = document.getElementById('goal-artist').value.trim();
+            if (!artist) {
+                showToast("Введите имя артиста в поле 'Исполнитель' для ИИ-анализа!");
+                return;
+            }
+
+            const btn = document.getElementById('ai-goal-btn');
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span>⏳</span> <span>Думает...</span>`;
+
+            const systemPrompt = "Вы музыкальный эксперт. Выдайте 5 ключевых (самых знаковых) альбомов артиста в строгом текстовом виде. Каждый альбом на новой строке в формате: Альбом.";
+            const prompt = `Назови 5 самых значимых, культовых или популярных студийных альбомов исполнителя или группы: "${artist}". Выведи только названия альбомов, по одному на строке, без порядковых номеров и кавычек.`;
+
+            try {
+                const responseText = await callGemini(prompt, systemPrompt);
+                const albums = responseText.split('\n')
+                    .map(a => a.trim().replace(/^-\s*/, '').replace(/^\d+\.\s*/, '').trim())
+                    .filter(a => a.length > 0)
+                    .slice(0, 5);
+
+                if (albums.length === 0) {
+                    showToast("Не удалось распознать альбомы. Попробуйте еще раз.");
+                    return;
+                }
+
+                if (!data.goals) data.goals = [];
+                
+                albums.forEach(album => {
+                    // Проверим дубликат
+                    const exists = data.goals.some(g => g.artist.toLowerCase() === artist.toLowerCase() && g.album.toLowerCase() === album.toLowerCase());
+                    if (!exists) {
+                        data.goals.push({
+                            id: Date.now() + Math.random(),
+                            artist: artist,
+                            album: album,
+                            hasCd: false,
+                            hasVinyl: false
+                        });
+                    }
+                });
+
+                save();
+                showToast(`✨ ИИ добавил ${albums.length} лучших релизов для ${artist}!`);
+                document.getElementById('goal-artist').value = '';
+            } catch (err) {
+                showToast("Ошибка работы ИИ: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+            }
+        }
+
+        // Интеграция Gemini: Модалка ИИ-Музыкального гида
+        function openAIAdvisorModal() {
+            const favText = data.favoriteArtists || "пока не заполнены";
+            document.getElementById('ai-context-artists').innerText = favText;
+            document.getElementById('ai-style-refinement').value = '';
+            document.getElementById('ai-results').classList.add('hidden');
+            document.getElementById('ai-results').innerHTML = '';
+            document.getElementById('ai-loading').classList.add('hidden');
+            
+            document.getElementById('ai-modal').classList.remove('hidden');
+        }
+
+        // Поиск рекомендаций с помощью Gemini API
+        async function getAIRecommendations() {
+            const loading = document.getElementById('ai-loading');
+            const resultsDiv = document.getElementById('ai-results');
+            const btn = document.getElementById('ai-generate-btn');
+            
+            loading.classList.remove('hidden');
+            resultsDiv.classList.add('hidden');
+            resultsDiv.innerHTML = '';
+            btn.disabled = true;
+
+            const favArtists = data.favoriteArtists || "разные жанры";
+            const refinement = document.getElementById('ai-style-refinement').value.trim();
+
+            const prompt = `У меня в коллекции любимые артисты: "${favArtists}". ${refinement ? `Дополнительное пожелание: "${refinement}".` : ""}
+            Порекомендуй мне 4 отличных музыкальных альбома для покупки на физических носителях. 
+            Ответ предоставь строго на русском языке в формате валидного JSON. 
+            Формат должен быть объектом с массивом "recommendations", содержащим объекты со следующими строковыми ключами:
+            - "artist" (имя исполнителя)
+            - "album" (название альбома)
+            - "year" (год выхода)
+            - "reason" (причина рекомендации, емко и интересно)
+            - "estimated_price" (примерная стоимость на рынке коллекционирования в гривнах (₴), только цифра)`;
+
+            const systemPrompt = "Вы музыкальный гид-коллекционер. Общайтесь увлекательно. Возвращайте строго валидный JSON без разметки markdown.";
+
+            try {
+                const responseText = await callGemini(prompt, systemPrompt);
+                
+                // Очистка от возможных markdown тегов ```json
+                let cleanJson = responseText.trim();
+                if (cleanJson.startsWith("```json")) {
+                    cleanJson = cleanJson.slice(7);
+                }
+                if (cleanJson.endsWith("```")) {
+                    cleanJson = cleanJson.slice(0, -3);
+                }
+                cleanJson = cleanJson.trim();
+
+                const parsed = JSON.parse(cleanJson);
+                const items = parsed.recommendations || [];
+
+                if (items.length === 0) {
+                    resultsDiv.innerHTML = `<p class="col-span-full text-center text-gray-500 italic">ИИ не вернул рекомендаций. Попробуйте обновить запрос.</p>`;
+                } else {
+                    resultsDiv.innerHTML = items.map((item, idx) => `
+                        <div class="bg-white/5 border border-white/5 rounded-2xl p-5 flex flex-col justify-between hover:border-pink-500/40 transition-all duration-300">
+                            <div>
+                                <div class="flex justify-between items-start gap-2">
+                                    <h4 class="font-black text-white text-base truncate">${item.album}</h4>
+                                    <span class="text-xs text-pink-400 font-mono shrink-0">${item.year}</span>
+                                </div>
+                                <p class="text-xs text-purple-300 italic mb-2 font-bold truncate">${item.artist}</p>
+                                <p class="text-xs text-gray-400 leading-relaxed">${item.reason}</p>
+                            </div>
+                            <div class="flex justify-between items-center pt-4 mt-3 border-t border-white/5">
+                                <span class="text-xs font-mono font-bold text-green-400">~${item.estimated_price} ₴</span>
+                                <button onclick="addAIRecommendationToWishlist('${item.artist.replace(/'/g, "\\'")}', '${item.album.replace(/'/g, "\\'")}', ${item.estimated_price})" class="bg-pink-600 hover:bg-pink-500 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition">
+                                    ✨ В желаемое
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                resultsDiv.classList.remove('hidden');
+            } catch (err) {
+                resultsDiv.innerHTML = `
+                    <div class="col-span-full p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs text-center">
+                        Произошла ошибка при генерации. Пожалуйста, попробуйте сформулировать уточнение иначе.
+                    </div>
+                `;
+                resultsDiv.classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+                btn.disabled = false;
+            }
+        }
+
+        // Интерактивное добавление рекомендации ИИ в список желаемого
+        function addAIRecommendationToWishlist(artist, album, price) {
+            if (!data.wishlists) data.wishlists = [];
+            
+            // Автоматически создаем тег AI Рекомендация если его нет
+            if (!data.availableTags.some(t => t.text === "AI ✨")) {
+                data.availableTags.push({ text: "AI ✨", color: "#ec4899" });
+            }
+
+            data.wishlists.push({
+                id: Date.now(),
+                title: album,
+                artist: artist,
+                price: parseFloat(price) || 0,
+                isGift: false,
+                tags: [{ text: "AI ✨", color: "#ec4899" }],
+                img: "",
+                imgPos: 'center',
+                note: 'Рекомендовано музыкальным навигатором Gemini'
+            });
+
+            save();
+            showToast(`«${album}» добавлен в список желаемого! 🎁`);
+        }
+
+        // Интеграция Gemini: Генерация ИИ справки об артисте
+        async function getAIArtistBio() {
+            const container = document.getElementById('ai-bio-container');
+            const loading = document.getElementById('ai-bio-loading');
+            const content = document.getElementById('ai-bio-content');
+            const btn = document.getElementById('ai-bio-btn');
+            const artistName = document.getElementById('artist-stats-title').innerText;
+
+            container.classList.remove('hidden');
+            loading.classList.remove('hidden');
+            content.classList.add('hidden');
+            content.innerHTML = '';
+            btn.disabled = true;
+
+            const prompt = `Расскажи кратко и интересно об исполнителе или группе "${artistName}". 
+            Напиши:
+            1. В каком стиле/жанре играет.
+            2. 3 его самых знаменитых хита/песни.
+            3. Один малоизвестный или удивительный факт из карьеры/жизни.
+            Пиши емко, увлекательно, без лишней воды.`;
+
+            const systemPrompt = "Вы музыкальный архивариус и знаток редких фактов. Отвечайте лаконично, в стиле киберпанк-дайджеста.";
+
+            try {
+                const text = await callGemini(prompt, systemPrompt);
+                content.innerHTML = text.replace(/\n/g, '<br>');
+                content.classList.remove('hidden');
+            } catch (err) {
+                content.innerHTML = `<span class="text-red-400">Не удалось загрузить досье: ${err.message}</span>`;
+                content.classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+                btn.disabled = false;
+            }
+        }
+
         // Функции для музыкальных сайтов
         window.openMusicSiteModal = () => {
             document.getElementById('site-name').value = '';
@@ -645,6 +953,10 @@
         };
 
         window.showArtistStats = (artistName) => {
+            // Сбрасываем ИИ-блок при каждом открытии модалки статистики
+            document.getElementById('ai-bio-container').classList.add('hidden');
+            document.getElementById('ai-bio-content').innerHTML = '';
+
             const artistCds = (data.cds || []).filter(i => (i.artist || '').trim().toLowerCase() === artistName.trim().toLowerCase());
             const artistVinyls = (data.vinyls || []).filter(i => (i.artist || '').trim().toLowerCase() === artistName.trim().toLowerCase());
             const allReleases = [...artistCds, ...artistVinyls];
