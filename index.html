@@ -270,6 +270,36 @@
     <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Примечание</h2><textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea><button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button><button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button></div></div>
     <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Быстрые заметки</h2><div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div><div class="flex gap-2"><input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10" placeholder="Заметка..."> <button onclick="saveQuickNote()" class="bg-purple-600 px-4 py-3 rounded-xl font-bold">+</button></div><button onclick="closeModal('quick-notes-modal')" class="w-full bg-white/30 py-3 rounded-xl mt-2">Закрыть</button></div></div>
     
+    <!-- Модалка детальной статистики артиста -->
+    <div id="artist-stats-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h2 id="artist-stats-title" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic truncate">Статистика артиста</h2>
+            <div class="space-y-4">
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/10 flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Всего релизов</p>
+                        <h4 id="artist-stats-count" class="text-3xl font-black mt-1">0</h4>
+                    </div>
+                    <div class="text-right text-xs text-gray-400 space-y-1">
+                        <div>CDs: <span id="artist-stats-cds" class="text-purple-400 font-bold">0</span></div>
+                        <div>Винилы: <span id="artist-stats-vinyls" class="text-cyan-400 font-bold">0</span></div>
+                    </div>
+                </div>
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <p class="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Всего потрачено</p>
+                    <h4 id="artist-stats-spent" class="text-2xl font-black text-green-400 mt-1">0 ₴</h4>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Релизы в коллекции:</p>
+                    <div id="artist-releases-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                        <!-- Сюда вставляется список релизов -->
+                    </div>
+                </div>
+            </div>
+            <button onclick="closeModal('artist-stats-modal')" class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold transition-all mt-2">Закрыть</button>
+        </div>
+    </div>
+    
     <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl text-3xl z-40 hover:scale-110 transition-transform">📝</button>
 
     <script>
@@ -443,6 +473,38 @@
             document.getElementById('note-text').value = data[type].find(x => x.id === id).note || '';
             document.getElementById('note-modal').classList.remove('hidden');
         };
+
+        window.showArtistStats = (artistName) => {
+            const artistCds = (data.cds || []).filter(i => (i.artist || '').trim().toLowerCase() === artistName.trim().toLowerCase());
+            const artistVinyls = (data.vinyls || []).filter(i => (i.artist || '').trim().toLowerCase() === artistName.trim().toLowerCase());
+            const allReleases = [...artistCds, ...artistVinyls];
+            
+            const totalSpent = allReleases.reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
+            
+            document.getElementById('artist-stats-title').innerText = artistName;
+            document.getElementById('artist-stats-count').innerText = allReleases.length;
+            document.getElementById('artist-stats-cds').innerText = artistCds.length;
+            document.getElementById('artist-stats-vinyls').innerText = artistVinyls.length;
+            document.getElementById('artist-stats-spent').innerText = totalSpent + ' ₴';
+            
+            const listEl = document.getElementById('artist-releases-list');
+            if (allReleases.length === 0) {
+                listEl.innerHTML = '<p class="text-gray-500 text-xs italic">Релизов нет</p>';
+            } else {
+                listEl.innerHTML = allReleases.map(i => {
+                    const icon = artistCds.includes(i) ? '💿' : '💽';
+                    return `
+                        <div class="bg-white/5 p-3 rounded-xl text-xs flex justify-between items-center border border-white/5">
+                            <span class="truncate font-medium text-gray-200">${icon} ${i.title}</span>
+                            <span class="text-cyan-400 font-mono font-bold shrink-0">${i.price} ₴</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            document.getElementById('artist-stats-modal').classList.remove('hidden');
+        };
+
         window.saveNote = () => {
             const type = document.getElementById('note-text').dataset.type;
             const id = parseInt(document.getElementById('note-text').dataset.id);
@@ -589,7 +651,7 @@
                     statsEl.innerHTML = `<p class="text-gray-500 text-sm italic col-span-full">Добавьте релизы с указанием артиста, чтобы увидеть топ...</p>`;
                 } else {
                     statsEl.innerHTML = sortedStats.map(([artist, count]) => `
-                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex justify-between items-center">
+                        <div onclick="showArtistStats('${artist.replace(/'/g, "\\'")}')" class="bg-white/5 p-4 rounded-2xl border border-white/5 flex justify-between items-center cursor-pointer hover:border-[var(--theme-btn)] hover:bg-white/10 hover:scale-[1.02] transition-all">
                             <span class="font-medium truncate mr-2 text-sm" title="${artist}">${artist}</span>
                             <span class="bg-purple-500/20 text-purple-300 text-xs font-bold px-2 py-0.5 rounded-lg shrink-0">${count} рел.</span>
                         </div>
