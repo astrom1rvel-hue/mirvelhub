@@ -20,7 +20,6 @@
             overflow-x: hidden;
         }
         
-        /* Плавный скроллбар */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
         ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
@@ -33,7 +32,6 @@
             box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
         }
 
-        /* Анимация выдвижения диска */
         .release-container {
             perspective: 1000px;
         }
@@ -47,16 +45,14 @@
             opacity: 1;
         }
 
-        /* Вращение винила */
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
         .spin-slow {
-            animation: spin 6s linear infinite;
+            animation: spin 8s linear infinite;
         }
 
-        /* Свечение кнопок */
         .btn-neon {
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             transition: all 0.3s ease;
@@ -113,24 +109,52 @@
         body.theme-pink .border-purple-500\/30 { border-color: rgba(236, 72, 153, 0.3) !important; }
         body.theme-pink .from-purple-400 { --tw-gradient-from: #f472b6 !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
         body.theme-pink .to-cyan-400 { --tw-gradient-to: #f43f5e !important; }
+
+        .crate-view {
+            perspective: 1200px;
+        }
+        .crate-card {
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes vinylFlash {
+            0% { transform: scale(1) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.4) rotate(180deg); opacity: 0.9; }
+            100% { transform: scale(2) rotate(360deg); opacity: 0; }
+        }
+        .play-animation-layer {
+            animation: vinylFlash 0.9s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
     </style>
 </head>
-<body class="flex min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-950 via-black to-black">
+<body class="flex flex-col md:flex-row min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-950 via-black to-black">
 
-    <nav class="w-64 p-8 flex flex-col gap-6 border-r border-white/5 shrink-0 bg-black/40 backdrop-blur-md">
-        <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic tracking-wider select-none">MIRVEL HUB</h1>
-        <div class="flex flex-col gap-1.5 flex-grow">
-            <button onclick="showPage('home')" id="nav-home" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3">🏠 <span>Главная</span></button>
-            <button onclick="showPage('cds')" id="nav-cds" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3">💿 <span>CD Коллекция</span></button>
-            <button onclick="showPage('vinyls')" id="nav-vinyls" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3">💽 <span>Винил</span></button>
-            <button onclick="showPage('wishlists')" id="nav-wishlists" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3">🎁 <span>Желаемое</span></button>
-            <button onclick="showPage('goals')" id="nav-goals" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3">🎯 <span>Цели по артистам</span></button>
-            <button onclick="showPage('achievements')" id="nav-achievements" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3">🏆 <span>Достижения</span></button>
-            <button onclick="showPage('profile')" id="nav-profile" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3">👤 <span>Настройки</span></button>
+    <nav class="w-full md:w-64 p-4 md:p-8 flex flex-col gap-4 md:gap-6 border-b md:border-b-0 md:border-r border-white/5 shrink-0 bg-black/40 backdrop-blur-md">
+        <div class="flex items-center justify-between md:flex-col md:items-start md:gap-6 w-full">
+            <h1 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic tracking-wider select-none shrink-0">MIRVEL HUB</h1>
+            
+            <div class="md:hidden flex gap-2">
+                <button onclick="setTheme('')" class="w-5 h-5 rounded-full bg-purple-500 border border-white/20 hover:scale-110 transition-all duration-300" title="Стандартная"></button>
+                <button onclick="setTheme('theme-blue')" class="w-5 h-5 rounded-full bg-blue-500 border border-white/20 hover:scale-110 transition-all duration-300" title="Синяя"></button>
+                <button onclick="setTheme('theme-green')" class="w-5 h-5 rounded-full bg-green-500 border border-white/20 hover:scale-110 transition-all duration-300" title="Зеленая"></button>
+                <button onclick="setTheme('theme-pink')" class="w-5 h-5 rounded-full bg-pink-500 border border-white/20 hover:scale-110 transition-all duration-300" title="Розовая"></button>
+            </div>
+        </div>
+
+        <div class="flex flex-row md:flex-col gap-1.5 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 scrollbar-none md:flex-grow">
+            <button onclick="showPage('home')" id="nav-home" class="nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0">🏠 <span>Главная</span></button>
+            <button onclick="showPage('cds')" id="nav-cds" class="nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0">💿 <span>CD</span></button>
+            <button onclick="showPage('vinyls')" id="nav-vinyls" class="nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0">💽 <span>Винил</span></button>
+            <button onclick="showPage('stuff')" id="nav-stuff" class="nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0">📦 <span>Вещи</span></button>
+            <button onclick="showPage('wishlists')" id="nav-wishlists" class="nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0">🎁 <span>Желаемое</span></button>
+            <button onclick="showPage('goals')" id="nav-goals" class="nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0">🎯 <span>Цели</span></button>
+            <button onclick="showPage('analytics')" id="nav-analytics" class="nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0">📊 <span>Статистика</span></button>
+            <button onclick="showPage('achievements')" id="nav-achievements" class="nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0">🏆 <span>Награды</span></button>
+            <button onclick="showPage('profile')" id="nav-profile" class="nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0">👤 <span>Настройки</span></button>
         </div>
         
-        <!-- Цветовые темы -->
-        <div class="mt-auto pt-4 border-t border-white/5">
+        <div class="hidden md:block mt-auto pt-4 border-t border-white/5">
             <p class="text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-2">Цветовая тема</p>
             <div class="flex gap-2">
                 <button onclick="setTheme('')" class="w-6 h-6 rounded-full bg-purple-500 border border-white/20 hover:scale-110 transition-all duration-300" title="Стандартная"></button>
@@ -141,93 +165,100 @@
         </div>
     </nav>
 
-    <main class="flex-1 p-10 overflow-y-auto relative">
+    <main class="flex-grow p-4 md:p-10 overflow-y-auto relative">
         
         <!-- СТРАНИЦА: ГЛАВНАЯ -->
         <section id="home" class="fade-in transition-all duration-500 transform translate-y-0">
-            <div id="greeting-banner" class="glass p-10 rounded-3xl mb-10 flex justify-between items-center relative overflow-hidden transition-all duration-500">
+            <div id="greeting-banner" class="glass p-6 md:p-10 rounded-3xl mb-10 flex flex-col md:flex-row justify-between items-start md:items-center relative overflow-hidden transition-all duration-500 gap-6">
                 <div id="banner-bg" class="absolute inset-0 opacity-15 blur-xl pointer-events-none bg-cover bg-center"></div>
-                <div class="relative z-10">
-                    <h2 class="text-5xl font-black mb-4"><span id="display-name">Коллекционер</span></h2>
-                    <p id="display-desc" class="text-gray-400 mb-2 italic"></p>
-                    <p class="text-gray-500 text-sm mb-6">Любимые: <span id="display-artists" class="text-purple-300"></span></p>
-                    <p class="text-gray-400 text-lg">Уровень: <span id="user-lvl" class="text-purple-400 font-bold">1</span> | XP: <span id="user-xp" class="text-cyan-400 font-bold">0</span></p>
+                <div class="relative z-10 flex-grow w-full md:w-auto">
+                    <h2 class="text-4xl md:text-5xl font-black mb-3"><span id="display-name">Коллекционер</span></h2>
+                    <p id="display-desc" class="text-gray-400 mb-2 italic text-sm"></p>
+                    <p class="text-gray-500 text-xs mb-4">Любимые: <span id="display-artists" class="text-purple-300"></span></p>
+                    
+                    <div class="mt-4 flex flex-col gap-1.5 w-full max-w-sm">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-gray-400 uppercase font-black tracking-wider">Уровень <span id="user-lvl" class="text-purple-400 font-black">1</span></span>
+                            <span class="font-mono text-cyan-400 font-bold"><span id="user-xp-display">0</span> / 500 XP</span>
+                        </div>
+                        <div class="w-full bg-white/5 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/5 shadow-inner">
+                            <div id="xp-progress-bar" class="bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-col items-end gap-4 relative z-10">
-                    <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
-                    <button onclick="getRandomRelease()" class="bg-purple-600 hover:bg-purple-500 text-white border border-white/10 px-5 py-3 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center gap-2 btn-neon">
-                        🎲 Что послушать?
-                    </button>
+                <div class="flex flex-col md:items-end gap-4 relative z-10 shrink-0 self-stretch justify-between w-full md:w-auto">
+                    <img id="main-avatar" class="w-20 h-20 rounded-full border-4 border-purple-500/30 object-cover hidden md:block">
+                    <div class="flex flex-wrap gap-2 mt-auto w-full md:w-auto">
+                        <button onclick="openCrateDigger()" class="flex-1 md:flex-none bg-cyan-600 hover:bg-cyan-500 text-white border border-white/10 px-5 py-3 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center justify-center gap-2 btn-neon">
+                            📦 Перебрать полки
+                        </button>
+                        <button onclick="getRandomRelease()" class="flex-1 md:flex-none bg-purple-600 hover:bg-purple-500 text-white border border-white/10 px-5 py-3 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center justify-center gap-2 btn-neon">
+                            🎲 Что послушать?
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Сетка статистики на главной (Добавлена средняя оценка) -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-5 mb-10">
-                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Коллекция</p><h3 class="text-2xl font-black mt-2 text-purple-400" id="stat-col-val">0 ₴</h3></div>
-                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Желаемое</p><h3 class="text-2xl font-black mt-2 text-cyan-400" id="stat-wish-val">0 ₴</h3></div>
-                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Всего предметов</p><h3 class="text-2xl font-black mt-2 text-white" id="stat-count-val">0</h3></div>
-                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Средняя Оценка ⭐</p><h3 class="text-2xl font-black mt-2 text-yellow-400" id="stat-avg-rating">0.0</h3></div>
-                <div class="glass p-6 rounded-3xl relative overflow-hidden group">
+            <!-- Grid: Оптимизирована адаптивность колонок -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mb-10">
+                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Коллекция</p><h3 class="text-xl md:text-2xl font-black mt-2 text-purple-400 truncate" id="stat-col-val">0 ₴</h3></div>
+                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Желаемое</p><h3 class="text-xl md:text-2xl font-black mt-2 text-cyan-400 truncate" id="stat-wish-val">0 ₴</h3></div>
+                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Всего вещей</p><h3 class="text-xl md:text-2xl font-black mt-2 text-white truncate" id="stat-count-val">0</h3></div>
+                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Ср. Оценка ⭐</p><h3 class="text-xl md:text-2xl font-black mt-2 text-yellow-400 truncate" id="stat-avg-rating">0.0</h3></div>
+                <div class="glass p-6 rounded-3xl relative overflow-hidden group col-span-2 md:col-span-1">
                     <p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Самый дорогой релиз 💎</p>
                     <h3 class="text-sm font-black mt-2 text-yellow-400 truncate" id="stat-most-expensive">Нет релизов</h3>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                <!-- Артист месяца -->
-                <div class="glass p-6 rounded-3xl flex items-center gap-5 relative overflow-hidden group hover:border-purple-500/40 transition-all duration-300 min-h-[120px]">
-                    <div id="fav-artist-img-wrapper" class="w-20 h-20 bg-white/5 border border-white/10 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center">
+                <div class="glass p-4 rounded-2xl flex items-center gap-4 relative overflow-hidden group hover:border-purple-500/40 transition-all duration-300">
+                    <div id="fav-artist-img-wrapper" class="w-14 h-14 bg-gradient-to-tr from-purple-500/20 to-cyan-500/10 border border-white/10 rounded-xl overflow-hidden shrink-0 flex items-center justify-center">
                         <img id="fav-artist-img" class="w-full h-full object-cover hidden">
-                        <span id="fav-artist-placeholder" class="text-3xl select-none">🎤</span>
+                        <span id="fav-artist-placeholder" class="text-xl select-none">🎤</span>
                     </div>
                     <div class="flex-grow min-w-0">
-                        <span class="text-[10px] text-purple-400 font-bold uppercase tracking-widest block mb-1">Артист месяца 🏅</span>
-                        <a id="fav-link-artist" href="#" target="_blank" class="text-xl font-black hover:text-cyan-400 transition-colors block truncate">
+                        <span class="text-[9px] text-purple-400 font-bold uppercase tracking-widest block mb-0.5">Артист месяца 🏅</span>
+                        <a id="fav-link-artist" href="#" target="_blank" class="text-base font-black hover:text-cyan-400 transition-colors block truncate">
                             <span id="fav-artist-text">Не указан</span>
                         </a>
-                        <p class="text-xs text-gray-500 truncate mt-1">Перейти на страницу артиста</p>
                     </div>
                 </div>
 
-                <!-- Альбом месяца -->
-                <div class="glass p-6 rounded-3xl flex items-center gap-5 relative overflow-hidden group hover:border-cyan-500/40 transition-all duration-300 min-h-[120px]">
-                    <div id="fav-album-img-wrapper" class="w-20 h-20 bg-white/5 border border-white/10 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center">
+                <div class="glass p-4 rounded-2xl flex items-center gap-4 relative overflow-hidden group hover:border-cyan-500/40 transition-all duration-300">
+                    <div id="fav-album-img-wrapper" class="w-14 h-14 bg-gradient-to-tr from-cyan-500/20 to-purple-500/10 border border-white/10 rounded-xl overflow-hidden shrink-0 flex items-center justify-center">
                         <img id="fav-album-img" class="w-full h-full object-cover hidden">
-                        <span id="fav-album-placeholder" class="text-3xl select-none">💿</span>
+                        <span id="fav-album-placeholder" class="text-xl select-none">💿</span>
                     </div>
                     <div class="flex-grow min-w-0">
-                        <span class="text-[10px] text-cyan-400 font-bold uppercase tracking-widest block mb-1">Альбом месяца 💿</span>
-                        <a id="fav-link-album" href="#" target="_blank" class="text-xl font-black hover:text-purple-400 transition-colors block truncate">
+                        <span class="text-[9px] text-cyan-400 font-bold uppercase tracking-widest block mb-0.5">Альбом месяца 💿</span>
+                        <a id="fav-link-album" href="#" target="_blank" class="text-base font-black hover:text-purple-400 transition-colors block truncate">
                             <span id="fav-album-text">Не указан</span>
                         </a>
-                        <p class="text-xs text-gray-500 truncate mt-1">Слушать альбом месяца</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Блок статистики артистов -->
-            <div class="glass p-8 rounded-3xl">
+            <div class="glass p-6 md:p-8 rounded-3xl">
                 <h3 class="text-gray-400 text-sm mb-4 uppercase tracking-wider font-bold">Статистика релизов по артистам</h3>
-                <div id="artist-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Заполняется динамически -->
-                </div>
+                <div id="artist-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
             </div>
 
-            <div class="glass p-8 rounded-3xl mt-10 relative overflow-hidden group">
+            <div class="glass p-6 md:p-8 rounded-3xl mt-10 relative overflow-hidden group">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                     <div>
                         <h3 class="text-gray-400 text-sm uppercase tracking-wider font-bold">💬 Цитата дня</h3>
                         <p class="text-xs text-gray-500">Музыкальная мудрость ваших любимых артистов</p>
                     </div>
                     <div class="flex flex-wrap gap-2 relative z-20">
-                        <button onclick="toggleQuoteLanguage()" class="bg-white/5 hover:bg-white/10 text-white text-xs px-3.5 py-2.5 rounded-xl border border-white/10 transition font-bold" title="Сменить язык (Оригинал / Перевод)">
+                        <button onclick="toggleQuoteLanguage()" class="bg-white/5 hover:bg-white/10 text-white text-xs px-3.5 py-2.5 rounded-xl border border-white/10 transition font-bold">
                             🌐 <span id="quote-lang-btn-text">Перевод</span>
                         </button>
                         <button onclick="getRandomQuote()" class="bg-purple-600/30 hover:bg-purple-600/50 text-purple-300 text-xs px-3.5 py-2.5 rounded-xl border border-purple-500/20 transition font-bold">
                             🎲 Случайная
                         </button>
                         <button onclick="openQuotePromptModal()" class="bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-300 text-xs px-3.5 py-2.5 rounded-xl border border-cyan-500/20 transition font-bold flex items-center gap-1">
-                            🤖 Промпт для ИИ
+                            🤖 Промпт
                         </button>
                         <button onclick="openQuotesManager()" class="bg-white/10 hover:bg-white/20 text-white text-xs px-3.5 py-2.5 rounded-xl border border-white/10 transition font-bold">
                             ⚙️ Управление
@@ -236,13 +267,12 @@
                 </div>
                 <div id="quote-card-container" class="bg-white/5 p-6 rounded-2xl border border-white/10 min-h-[120px] flex flex-col justify-center relative transition-all duration-300">
                     <span class="absolute top-2 left-3 text-white/5 text-7xl font-serif select-none pointer-events-none">“</span>
-                    <p id="quote-text" class="text-lg md:text-xl font-medium text-gray-100 italic relative z-10 leading-relaxed text-center">Нет добавленных цитат.</p>
+                    <p id="quote-text" class="text-base md:text-lg font-medium text-gray-100 italic relative z-10 leading-relaxed text-center">Нет добавленных цитат.</p>
                     <p id="quote-author" class="text-right text-sm text-purple-300 font-bold mt-4 relative z-10">-</p>
                 </div>
             </div>
 
-            <!-- Любимые маркетплейсы -->
-            <div class="glass p-8 rounded-3xl mt-10">
+            <div class="glass p-6 md:p-8 rounded-3xl mt-10">
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h3 class="text-gray-400 text-sm uppercase tracking-wider font-bold">🛒 Любимые музыкальные сайты</h3>
@@ -252,8 +282,55 @@
                         + Добавить сайт
                     </button>
                 </div>
-                <div id="music-sites-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <!-- Заполняется динамически -->
+                <div id="music-sites-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"></div>
+            </div>
+        </section>
+
+        <!-- СТРАНИЦА: АНАЛИТИКА -->
+        <section id="analytics" class="hidden fade-in transition-all duration-500 transform translate-y-0">
+            <div class="mb-8">
+                <h2 class="text-4xl font-bold">Аналитика коллекции 📊</h2>
+                <p class="text-gray-500">Глубокие инсайты, статистика трат и форматы ваших предметов.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                <div class="glass p-6 rounded-3xl lg:col-span-2 space-y-6">
+                    <h3 class="text-lg font-black text-gray-200">Распределение бюджета по категориям</h3>
+                    <div id="analytics-categories" class="space-y-4"></div>
+                </div>
+
+                <div class="glass p-6 rounded-3xl flex flex-col justify-between">
+                    <h3 class="text-lg font-black text-gray-200 mb-4">Соотношение CD и Винила</h3>
+                    <div class="flex-grow flex flex-col justify-center items-center relative">
+                        <div class="relative w-36 h-36 rounded-full flex items-center justify-center border-4 border-white/5 bg-black/40">
+                            <div class="text-center">
+                                <span class="text-gray-500 text-xs block uppercase">Носители</span>
+                                <span id="analytics-total-music" class="text-2xl font-black text-white">0</span>
+                            </div>
+                        </div>
+                        <div class="w-full mt-6 space-y-2">
+                            <div class="flex justify-between text-xs text-purple-300">
+                                <span class="flex items-center gap-1.5">💿 Компакт-диски (CD)</span>
+                                <span id="analytics-cd-pct" class="font-bold">0%</span>
+                            </div>
+                            <div class="flex justify-between text-xs text-cyan-400">
+                                <span class="flex items-center gap-1.5">💽 Виниловые пластинки</span>
+                                <span id="analytics-vinyl-pct" class="font-bold">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass p-6 rounded-3xl space-y-4">
+                    <h3 class="text-lg font-black text-gray-200">💎 Топ самых дорогих приобретений</h3>
+                    <div id="analytics-top-expensive" class="space-y-3"></div>
+                </div>
+
+                <div class="glass p-6 rounded-3xl space-y-4">
+                    <h3 class="text-lg font-black text-gray-200">🎧 Часто прослушиваемые альбомы</h3>
+                    <div id="analytics-top-played" class="space-y-3"></div>
                 </div>
             </div>
         </section>
@@ -280,58 +357,86 @@
             <div id="achievements-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
+        <!-- СТРАНИЦА: CD КОЛЛЕКЦИЯ -->
         <section id="cds" class="hidden fade-in transition-all duration-500 transform translate-y-0">
-            <div class="flex justify-between items-center mb-10">
-                <div class="flex items-center gap-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 w-full md:w-auto">
                     <div>
                         <h2 class="text-4xl font-bold">CD Коллекция</h2>
                         <p class="text-gray-500">Сумма: <span id="total-cds">0</span> ₴ | Предметов: <span id="count-cds">0</span></p>
                     </div>
-                    <input type="text" id="search-cds" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-64">
+                    <input type="text" id="search-cds" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-full md:w-64">
                 </div>
-                <button onclick="openModal('cds')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button>
+                <button onclick="openModal('cds')" class="w-full md:w-auto bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all shrink-0">+ Новый CD</button>
             </div>
-            <div id="cd-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 overflow-visible p-2"></div>
+            <div id="cd-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 overflow-visible p-2"></div>
         </section>
         
+        <!-- СТРАНИЦА: ВИНИЛ -->
         <section id="vinyls" class="hidden fade-in transition-all duration-500 transform translate-y-0">
-            <div class="flex justify-between items-center mb-10">
-                <div class="flex items-center gap-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 w-full md:w-auto">
                     <div>
                         <h2 class="text-4xl font-bold">Винил</h2>
                         <p class="text-gray-500">Сумма: <span id="total-vinyls">0</span> ₴ | Предметов: <span id="count-vinyls">0</span></p>
                     </div>
-                    <input type="text" id="search-vinyls" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-64">
+                    <input type="text" id="search-vinyls" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-full md:w-64">
                 </div>
-                <button onclick="openModal('vinyls')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button>
+                <button onclick="openModal('vinyls')" class="w-full md:w-auto bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all shrink-0">+ Новая пластинка</button>
             </div>
-            <div id="vinyl-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 overflow-visible p-2"></div>
+            <div id="vinyl-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 overflow-visible p-2"></div>
+        </section>
+
+        <!-- СТРАНИЦА: МЕРЧ И ВЕЩИ -->
+        <section id="stuff" class="hidden fade-in transition-all duration-500 transform translate-y-0">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 w-full md:w-auto">
+                    <div>
+                        <h2 class="text-4xl font-bold">Мерч и Вещи 📦</h2>
+                        <p class="text-gray-500">Сумма: <span id="total-stuff">0</span> ₴ | Предметов: <span id="count-stuff">0</span></p>
+                    </div>
+                    <input type="text" id="search-stuff" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-full md:w-64">
+                </div>
+                <button onclick="openModal('stuff')" class="w-full md:w-auto bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all shrink-0">+ Новый предмет</button>
+            </div>
+            <div id="stuff-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 overflow-visible p-2"></div>
         </section>
         
-        <!-- Желаемое -->
+        <!-- СТРАНИЦА: ЖЕЛАЕМОЕ -->
         <section id="wishlists" class="hidden fade-in transition-all duration-500 transform translate-y-0">
-            <div class="flex justify-between items-center mb-10">
-                <div class="flex items-center gap-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 w-full md:w-auto">
                     <div>
                         <h2 class="text-4xl font-bold">Желаемое</h2>
                         <p class="text-gray-500">Сумма: <span id="total-wishlists">0</span> ₴ | Предметов: <span id="count-wishlists">0</span></p>
                     </div>
-                    <input type="text" id="search-wishlists" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-64">
+                    <input type="text" id="search-wishlists" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-full md:w-64">
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="openTagsManager()" class="bg-white/10 text-white px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">Тэги</button>
-                    <button onclick="openModal('wishlists')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Добавить</button>
+                <div class="flex gap-2 w-full md:w-auto shrink-0">
+                    <button onclick="openTagsManager()" class="flex-1 md:flex-none bg-white/10 text-white px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all text-sm">Тэги</button>
+                    <button onclick="openModal('wishlists')" class="flex-1 md:flex-none bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all text-sm">+ Добавить</button>
                 </div>
             </div>
-            <div id="filter-bar" class="flex flex-wrap gap-2 mb-6 p-4 glass rounded-2xl">
-                <span class="text-sm text-gray-500 self-center mr-2">Фильтр:</span>
-                <button onclick="setFilter(null)" class="px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10">Все</button>
-                <div id="filter-tags" class="flex flex-wrap gap-2"></div>
+            
+            <div id="filter-bar" class="flex flex-col gap-3 mb-6 p-4 glass rounded-2xl">
+                <div class="flex flex-wrap gap-2 items-center">
+                    <span class="text-xs text-gray-400 uppercase font-bold tracking-wider mr-2">Категории:</span>
+                    <button onclick="setFilter(null)" id="filter-cat-all" class="px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10 transition-all">Все</button>
+                    <button onclick="setFilter('music')" id="filter-cat-music" class="px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10 transition-all">💿 Музыка</button>
+                    <button onclick="setFilter('clothing')" id="filter-cat-clothing" class="px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10 transition-all">👕 Одежда</button>
+                    <button onclick="setFilter('gear')" id="filter-cat-gear" class="px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10 transition-all">🔌 Техника</button>
+                    <button onclick="setFilter('other')" id="filter-cat-other" class="px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10 transition-all">🎁 Другое</button>
+                </div>
+                <div class="w-full border-t border-white/5"></div>
+                <div class="flex flex-wrap gap-2 items-center">
+                    <span class="text-xs text-gray-400 uppercase font-bold tracking-wider mr-2">Теги:</span>
+                    <div id="filter-tags" class="flex flex-wrap gap-2"></div>
+                </div>
             </div>
-            <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 overflow-visible p-2"></div>
+            <div id="wishlist-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 overflow-visible p-2"></div>
         </section>
 
-        <!-- Коллекционные цели -->
+        <!-- СТРАНИЦА: КОЛЛЕКЦИОННЫЕ ЦЕЛИ -->
         <section id="goals" class="hidden fade-in transition-all duration-500 transform translate-y-0">
             <div class="flex justify-between items-center mb-8">
                 <div>
@@ -357,15 +462,15 @@
             <div id="goals-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- Настройки профиля -->
+        <!-- СТРАНИЦА: НАСТРОЙКИ -->
         <section id="profile" class="hidden fade-in transition-all duration-500 transform translate-y-0">
-            <h2 class="text-4xl font-bold mb-10">Настройки профиля</h2>
+            <h2 class="text-4xl font-bold mb-10">Настройки хаба</h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 <div class="glass p-8 rounded-3xl space-y-6">
                     <h3 class="font-bold text-xl">Аккаунт</h3>
-                    <div class="flex gap-4">
-                        <button onclick="document.getElementById('avatar-input').click()" class="flex-1 bg-cyan-600 py-3 rounded-xl font-bold text-white hover:bg-cyan-500 transition text-sm">Выбрать Аватар</button>
-                        <button onclick="document.getElementById('banner-input').click()" class="flex-1 bg-purple-600 py-3 rounded-xl font-bold text-white hover:bg-purple-500 transition text-sm">Выбрать Баннер</button>
+                    <div class="flex gap-4 flex-wrap">
+                        <button onclick="document.getElementById('avatar-input').click()" class="flex-1 bg-cyan-600 py-3 rounded-xl font-bold text-white hover:bg-cyan-500 transition text-sm min-w-[120px]">Выбрать Аватар</button>
+                        <button onclick="document.getElementById('banner-input').click()" class="flex-1 bg-purple-600 py-3 rounded-xl font-bold text-white hover:bg-purple-500 transition text-sm min-w-[120px]">Выбрать Баннер</button>
                     </div>
                     <input type="file" id="avatar-input" accept="image/*" onchange="processImage(event, 'avatar')" class="hidden">
                     <input type="file" id="banner-input" accept="image/*" onchange="processImage(event, 'banner')" class="hidden">
@@ -391,6 +496,20 @@
                     </div>
                 </div>
                 <div class="space-y-6">
+                    <!-- НАСТРОЙКА АТМОСФЕРЫ ПРОИГРЫВАТЕЛЯ -->
+                    <div class="glass p-8 rounded-3xl space-y-4">
+                        <h3 class="font-bold text-xl">📻 Уютная атмосфера проигрывателя</h3>
+                        <p class="text-xs text-gray-400">Выберите тип фонового шума, воспроизводимого при клике на проигрыватель в правом нижнем углу:</p>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <button onclick="setAtmosphereMode('vinyl')" id="atm-btn-vinyl" class="p-3 rounded-xl border font-bold hover:scale-105 transition duration-300">💽 Виниловый треск (+Гул)</button>
+                            <button onclick="setAtmosphereMode('vinyl_pure')" id="atm-btn-vinyl_pure" class="p-3 rounded-xl border font-bold hover:scale-105 transition duration-300">✨ Винил (Без баса)</button>
+                            <button onclick="setAtmosphereMode('vinyl_old')" id="atm-btn-vinyl_old" class="p-3 rounded-xl border font-bold hover:scale-105 transition duration-300">📻 Ретро патефон (78s)</button>
+                            <button onclick="setAtmosphereMode('rain')" id="atm-btn-rain" class="p-3 rounded-xl border font-bold hover:scale-105 transition duration-300">🌧️ Летний дождь</button>
+                            <button onclick="setAtmosphereMode('space')" id="atm-btn-space" class="p-3 rounded-xl border font-bold hover:scale-105 transition duration-300">🌌 Космический гул</button>
+                            <button onclick="setAtmosphereMode('tape')" id="atm-btn-tape" class="p-3 rounded-xl border font-bold hover:scale-105 transition duration-300">📼 Кассетный шум</button>
+                        </div>
+                    </div>
+
                     <div class="glass p-8 rounded-3xl space-y-4">
                         <h3 class="font-bold text-xl">🏅 Артист месяца</h3>
                         <input id="fav-input-artist" placeholder="Имя артиста" class="w-full bg-white/5 p-3 rounded-lg border border-white/10 text-white text-sm">
@@ -410,19 +529,72 @@
         </section>
     </main>
 
-    <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto border border-white/10">
-            <h2 class="text-2xl font-bold">Редактор релиза</h2>
+    <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="glass p-8 rounded-3xl w-full max-w-[450px] space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto border border-white/10">
+            <h2 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Редактор релиза</h2>
             <input type="hidden" id="edit-type"><input type="hidden" id="edit-id">
             
-            <input id="item-artist" placeholder="Исполнитель / Артист" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
-            <input id="item-title" placeholder="Название альбома" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
-            <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
-            <input id="item-url" placeholder="Ссылка на маркетплейс (URL)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm hidden">
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[10px] text-gray-400 font-bold block uppercase tracking-wider mb-1">Категория</label>
+                    <select id="item-category" onchange="toggleCategoryFields()" class="w-full bg-[#0d0d14] p-3 rounded-xl border border-white/10 text-gray-300 focus:outline-none focus:border-purple-500/50 text-sm">
+                        <option value="music">💿 Музыка (CD / Винил)</option>
+                        <option value="clothing">👕 Мерч / Одежда</option>
+                        <option value="gear">🔌 Аудиотехника / Девайсы</option>
+                        <option value="other">🎁 Другое</option>
+                    </select>
+                </div>
+
+                <input id="item-artist" placeholder="Исполнитель / Артист (опционально)" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                <input id="item-title" placeholder="Название альбома / Товара" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                    <input id="item-where-bought" placeholder="Магазин / Покупка" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                </div>
+
+                <div id="music-fields-container" class="space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input id="item-year" type="number" placeholder="Год (напр. 2007)" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                        <input id="item-label" placeholder="Лейбл (напр. Warp)" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <select id="item-condition" class="w-full bg-[#0d0d14] p-3.5 rounded-xl border border-white/10 text-gray-300 focus:outline-none focus:border-purple-500/50 text-sm">
+                            <option value="">Состояние носителя</option>
+                            <option value="M">Mint (M) — Идеальное</option>
+                            <option value="NM">Near Mint (NM)</option>
+                            <option value="VG+">Very Good+ (VG+)</option>
+                            <option value="VG">Very Good (VG)</option>
+                            <option value="G">Good (G) — С дефектами</option>
+                        </select>
+                        <input id="item-format-details" placeholder="Цвет винила / Тип бокса" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                    </div>
+                </div>
+
+                <div id="clothing-fields-container" class="grid grid-cols-2 gap-3 hidden">
+                    <input id="item-size" placeholder="Размер (напр. L, XL, M)" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                    <input id="item-style" placeholder="Цвет / Крой" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                </div>
+
+                <div id="gear-fields-container" class="hidden">
+                    <input id="item-brand" placeholder="Бренд / Модель устройства" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 gap-3">
+                    <select id="item-priority" class="w-full bg-[#0d0d14] p-3.5 rounded-xl border border-white/10 text-gray-300 focus:outline-none focus:border-cyan-500/50 text-sm hidden">
+                        <option value="">Приоритет покупки</option>
+                        <option value="🔥 Высокий">🔥 Высокий</option>
+                        <option value="⚡ Средний">⚡ Средний</option>
+                        <option value="⏳ Низкий">⏳ Низкий</option>
+                    </select>
+                </div>
+
+                <input id="item-url" placeholder="Ссылка на маркетплейс (URL)" class="w-full bg-white/5 p-3.5 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 text-sm hidden">
+            </div>
             
-            <!-- Оценка (Звезды) -->
-            <div class="space-y-2">
-                <label class="text-xs text-gray-400 font-bold block uppercase tracking-wider">Оценка релиза ⭐</label>
+            <div id="rating-stars-wrapper" class="space-y-1 pt-1">
+                <label class="text-[10px] text-gray-400 font-bold block uppercase tracking-wider">Оценка релиза ⭐</label>
                 <div class="flex gap-2 text-2xl justify-center" id="rating-stars-container">
                     <button type="button" onclick="setRatingValue(1)" class="star-rating text-gray-600 hover:scale-110 transition">★</button>
                     <button type="button" onclick="setRatingValue(2)" class="star-rating text-gray-600 hover:scale-110 transition">★</button>
@@ -446,14 +618,69 @@
                 <p id="item-img-status" class="text-[11px] text-gray-400 text-center italic mt-1 hidden"></p>
             </div>
 
-            <button onclick="saveItem()" class="w-full bg-purple-600 hover:bg-purple-500 py-4 rounded-xl font-bold transition">Сохранить</button>
-            <button onclick="closeModal('modal')" class="w-full bg-white/10 hover:bg-white/15 py-4 rounded-xl transition">Отмена</button>
+            <button onclick="saveItem()" class="w-full bg-purple-600 hover:bg-purple-500 py-3.5 rounded-xl font-bold transition">Сохранить</button>
+            <button onclick="closeModal('modal')" class="w-full bg-white/10 hover:bg-white/15 py-3.5 rounded-xl transition">Отмена</button>
         </div>
     </div>
 
+    <div id="buy-confirm-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="glass p-8 rounded-3xl w-full max-w-sm space-y-4 border border-white/10 shadow-2xl">
+            <h3 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">📥 Куплено! Перенести в коллекцию</h3>
+            <p class="text-xs text-gray-400">Поздравляем с покупкой! Пожалуйста, укажите куда именно добавить предмет, а также фактические детали приобретения.</p>
+            <input type="hidden" id="buy-confirm-id">
+            
+            <div class="space-y-3 pt-2">
+                <div>
+                    <label class="text-[10px] text-gray-400 font-bold block uppercase tracking-wider mb-1">Формат носителя / Размещение</label>
+                    <select id="buy-confirm-format" class="w-full bg-[#0d0d14] p-3 rounded-xl border border-white/10 text-white focus:outline-none text-xs">
+                        <option value="cds">💿 CD Коллекция</option>
+                        <option value="vinyls">💽 Виниловая полка</option>
+                        <option value="stuff">📦 Мерч и Вещи</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-400 font-bold block uppercase tracking-wider mb-1">Фактическая цена (₴)</label>
+                    <input id="buy-confirm-price" type="number" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white text-xs">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-400 font-bold block uppercase tracking-wider mb-1">Магазин / Место покупки</label>
+                    <input id="buy-confirm-where" placeholder="Напр. Дискотека, eBay" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 text-white text-xs">
+                </div>
+            </div>
+            
+            <div class="flex gap-3 pt-2">
+                <button onclick="confirmPurchaseMove()" class="flex-1 bg-green-600 hover:bg-green-500 py-3 rounded-xl text-xs font-bold transition">Да, перенести!</button>
+                <button onclick="closeModal('buy-confirm-modal')" class="flex-1 bg-white/10 hover:bg-white/15 py-3 rounded-xl text-xs transition">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА: КРЕЙТ-ДИГГЕР -->
+    <div id="crate-modal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-xl flex flex-col items-center justify-center z-50 p-6">
+        <div class="absolute top-6 right-6 flex gap-4 z-50">
+            <span class="text-sm font-bold bg-white/10 px-4 py-2 rounded-xl text-gray-300 border border-white/5 flex items-center">
+                💿 <span id="crate-index-tracker" class="ml-1 text-cyan-400">0 / 0</span>
+            </span>
+            <button onclick="closeCrateDigger()" class="w-12 h-12 bg-white/10 hover:bg-white/20 border border-white/10 text-white rounded-full flex items-center justify-center font-bold text-lg transition-all">✕</button>
+        </div>
+
+        <div class="w-full max-w-lg h-[460px] flex flex-col justify-center items-center relative select-none">
+            <div id="crate-cards-container" class="crate-view w-80 h-80 relative flex justify-center items-center"></div>
+        </div>
+
+        <div id="crate-item-details" class="text-center max-w-md space-y-2 mt-8 z-10"></div>
+
+        <div class="flex gap-4 mt-8 z-10">
+            <button onclick="shiftCrate(-1)" class="w-14 h-14 bg-white/5 border border-white/10 hover:border-cyan-500 text-white rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 text-xl">◀</button>
+            <button onclick="flipCrateCard()" class="bg-purple-600 hover:bg-purple-500 border border-white/10 text-white px-8 rounded-full font-bold transition-all hover:scale-105 active:scale-95 text-sm btn-neon flex items-center gap-2">🔄 Перевернуть конверт</button>
+            <button onclick="shiftCrate(1)" class="w-14 h-14 bg-white/5 border border-white/10 hover:border-cyan-500 text-white rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 text-xl">▶</button>
+        </div>
+        <p class="text-[11px] text-gray-500 mt-4">Можно использовать стрелочки на клавиатуре (◀ ▶) или свайпы</p>
+    </div>
+
     <!-- Модалка Рандомайзера -->
-    <div id="random-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-8 rounded-3xl w-96 space-y-6 shadow-2xl text-center fade-in border border-white/10">
+    <div id="random-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="glass p-8 rounded-3xl w-full max-w-sm space-y-6 shadow-2xl text-center fade-in border border-white/10">
             <div class="text-5xl">🎲</div>
             <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Что послушать?</h2>
             <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
@@ -468,8 +695,8 @@
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- Модалка тегов -->
-    <div id="tags-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl border border-white/10">
+    <div id="tags-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="glass p-10 rounded-3xl w-full max-w-sm space-y-4 shadow-2xl border border-white/10">
             <h2 class="text-2xl font-bold">Управление тэгами</h2>
             <div id="manage-tags-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
             <div class="flex gap-2 pt-4">
@@ -482,18 +709,18 @@
     </div>
 
     <!-- Модалка Примечания / Рецензии -->
-    <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl border border-white/10">
+    <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="glass p-10 rounded-3xl w-full max-w-sm space-y-4 shadow-2xl border border-white/10">
             <h2 class="text-2xl font-bold">Рецензия / Примечание 📝</h2>
-            <textarea id="note-text" placeholder="Поделитесь вашими мыслями об этом альбоме..." class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50"></textarea>
+            <textarea id="note-text" placeholder="Поделитесь вашими мыслями..." class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50"></textarea>
             <button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button>
             <button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button>
         </div>
     </div>
 
     <!-- Модалка быстрых заметок -->
-    <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl border border-white/10">
+    <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="glass p-8 rounded-3xl w-full max-w-sm max-h-[80vh] flex flex-col space-y-4 shadow-2xl border border-white/10">
             <h2 class="text-2xl font-bold">Быстрые заметки</h2>
             <div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div>
             <div class="flex gap-2">
@@ -505,7 +732,7 @@
     </div>
     
     <!-- Модалка детальной статистики артиста -->
-    <div id="artist-stats-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+    <div id="artist-stats-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
         <div class="glass p-10 rounded-3xl w-full max-w-xl space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto border border-white/10">
             <h2 id="artist-stats-title" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic truncate">Статистика артиста</h2>
             <div class="space-y-4">
@@ -525,9 +752,7 @@
                 </div>
                 <div class="space-y-3">
                     <p class="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Релизы в коллекции:</p>
-                    <div id="artist-releases-list" class="space-y-2 max-h-56 overflow-y-auto pr-1">
-                        <!-- Сюда вставляется список релизов -->
-                    </div>
+                    <div id="artist-releases-list" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
                 </div>
             </div>
             <button onclick="closeModal('artist-stats-modal')" class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold transition-all mt-2">Закрыть</button>
@@ -535,8 +760,8 @@
     </div>
 
     <!-- Модалка для добавления музыкальных сайтов -->
-    <div id="music-site-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
-        <div class="glass p-8 rounded-3xl w-96 space-y-4 shadow-2xl border border-white/10">
+    <div id="music-site-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="glass p-8 rounded-3xl w-full max-w-sm space-y-4 shadow-2xl border border-white/10">
             <h2 class="text-2xl font-bold">Добавить маркетплейс</h2>
             <input id="site-name" placeholder="Название (например: Discogs)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
             <input id="site-url" placeholder="Ссылка (например: discogs.com)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
@@ -550,11 +775,11 @@
     </div>
 
     <!-- Модалка Промпта для ИИ -->
-    <div id="quote-prompt-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+    <div id="quote-prompt-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
         <div class="glass p-8 rounded-3xl w-full max-w-lg space-y-6 shadow-2xl fade-in max-h-[90vh] overflow-y-auto border border-white/10">
             <div class="text-4xl">🤖</div>
             <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Генерация промпта для ИИ</h2>
-            <p class="text-gray-400 text-xs font-medium leading-relaxed">Скопируйте промпт ниже, вставьте его в любую ИИ-модель (ChatGPT, Claude, Gemini, DeepSeek и др.), а затем вставьте сгенерированный JSON в раздел импорта в «Управлении».</p>
+            <p class="text-gray-400 text-xs font-medium leading-relaxed">Скопируйте промпт ниже, вставьте его в любую ИИ-модель, а затем вставьте сгенерированный JSON в раздел импорта в «Управлении».</p>
             
             <div class="space-y-2">
                 <label class="text-[10px] text-gray-500 uppercase font-black block tracking-widest">Артисты для промпта:</label>
@@ -571,33 +796,26 @@
                 <button onclick="copyAIPrompt()" class="flex-1 bg-purple-600 hover:bg-purple-500 py-3 rounded-xl font-bold text-sm transition-all shadow-lg flex items-center justify-center gap-2 btn-neon">
                     📋 Скопировать промпт
                 </button>
-                <button onclick="closeModal('quote-prompt-modal')" class="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl font-bold text-sm transition">
-                    Закрыть
-                </button>
+                <button onclick="closeModal('quote-prompt-modal')" class="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl font-bold text-sm transition">Закрыть</button>
             </div>
         </div>
     </div>
 
     <!-- Модалка Управления Цитатами -->
-    <div id="quotes-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+    <div id="quotes-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
         <div class="glass p-8 rounded-3xl w-full max-w-xl space-y-6 shadow-2xl fade-in max-h-[95vh] flex flex-col border border-white/10">
             <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 shrink-0">Управление Цитатами</h2>
             
-            <!-- Табы внутри менеджера -->
             <div class="flex border-b border-white/10 shrink-0">
                 <button onclick="switchQuoteTab('list')" id="tab-quote-list" class="flex-1 py-2 text-sm font-bold border-b-2 border-purple-500 text-white">Список цитат</button>
                 <button onclick="switchQuoteTab('add')" id="tab-quote-add" class="flex-1 py-2 text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-white transition">Добавить вручную</button>
                 <button onclick="switchQuoteTab('import')" id="tab-quote-import" class="flex-1 py-2 text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-white transition">Импорт из ИИ</button>
             </div>
 
-            <!-- Вкладка: Список цитат -->
             <div id="quote-section-list" class="flex-grow overflow-y-auto space-y-3 min-h-[300px]">
-                <div id="quotes-list-container" class="space-y-3 pr-1">
-                    <!-- Заполняется динамически -->
-                </div>
+                <div id="quotes-list-container" class="space-y-3 pr-1"></div>
             </div>
 
-            <!-- Вкладка: Добавить вручную -->
             <div id="quote-section-add" class="hidden space-y-4 flex-grow overflow-y-auto">
                 <div>
                     <label class="text-xs text-gray-400 block mb-1">Артист / Автор:</label>
@@ -615,39 +833,33 @@
                     <label class="text-xs text-gray-400 block mb-1">Перевод цитаты (на русском):</label>
                     <textarea id="manual-quote-translation" placeholder="Живи быстро. Умри молодым. Будь диким..." class="w-full h-16 bg-white/5 p-3 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50"></textarea>
                 </div>
-                <button onclick="saveManualQuote()" class="w-full bg-purple-600 hover:bg-purple-500 py-3.5 rounded-xl font-bold text-white transition-all duration-300">
-                    💾 Добавить цитату
-                </button>
+                <button onclick="saveManualQuote()" class="w-full bg-purple-600 hover:bg-purple-500 py-3.5 rounded-xl font-bold text-white transition-all duration-300">💾 Добавить цитату</button>
             </div>
 
-            <!-- Вкладка: Импорт из ИИ (JSON) -->
             <div id="quote-section-import" class="hidden space-y-4 flex-grow flex flex-col justify-between">
                 <div class="space-y-2 flex-grow flex flex-col">
                     <label class="text-xs text-gray-400 block">Вставьте сгенерированный ИИ JSON-код:</label>
                     <textarea id="ai-import-textarea" placeholder='[{"author": "Kurt Cobain", "textOriginal": "...", "textTranslation": "...", "song": ""}]' class="w-full flex-grow h-56 bg-white/5 p-4 rounded-xl border border-white/10 text-gray-300 text-xs font-mono focus:outline-none focus:border-purple-500/50"></textarea>
                     <p class="text-[10px] text-gray-500 italic mt-1">Приложение автоматически уберет лишние символы вроде ```json ... ```</p>
                 </div>
-                <button onclick="importQuotesFromAI()" class="w-full bg-cyan-600 hover:bg-cyan-500 py-3.5 rounded-xl font-bold text-white transition-all duration-300 shrink-0">
-                    ⚡ Импортировать массив цитат
-                </button>
+                <button onclick="importQuotesFromAI()" class="w-full bg-cyan-600 hover:bg-cyan-500 py-3.5 rounded-xl font-bold text-white transition-all duration-300 shrink-0">⚡ Импортировать массив цитат</button>
             </div>
 
             <button onclick="closeModal('quotes-manager-modal')" class="w-full bg-white/10 py-4 rounded-xl shrink-0">Закрыть</button>
         </div>
     </div>
     
-    <!-- Кнопки быстрого вызова: заметки и виниловый шум -->
-    <div class="fixed bottom-8 right-8 flex flex-col gap-3 z-40">
-        <button id="crackle-btn" onclick="toggleCrackle()" class="w-14 h-14 bg-zinc-900 border border-white/10 hover:border-cyan-500/50 text-white rounded-full shadow-2xl text-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95" title="Включить аналоговый виниловый шум">
-            🔊
+    <div class="fixed bottom-8 right-8 flex flex-col items-end gap-3 z-40">
+        <button id="crackle-btn" onclick="toggleCozyAtmosphere()" class="w-14 h-14 bg-[#0a0a10] border border-white/10 hover:border-cyan-500/50 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95" title="Включить уютную атмосферу">
+            <div id="vinyl-icon-player" class="text-2xl transition-transform duration-[1500ms]">💽</div>
         </button>
-        <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="w-14 h-14 bg-purple-600 rounded-full shadow-2xl text-2xl hover:scale-110 flex items-center justify-center transition-transform" title="Открыть заметки">
+
+        <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="w-14 h-14 bg-purple-600 rounded-full shadow-2xl text-2xl hover:scale-110 flex items-center justify-center transition-transform border border-white/10" title="Открыть заметки">
             📝
         </button>
     </div>
 
     <script>
-        // Предустановленные цитаты
         const defaultQuotes = [
             { id: 1, author: "Kurt Cobain", textOriginal: "Wanting to be someone else is a waste of the person you are.", textTranslation: "Желание быть кем-то другим — это растрата того, кто ты есть.", song: "" },
             { id: 2, author: "Lana Del Rey", textOriginal: "Live fast. Die young. Be wild. And have fun.", textTranslation: "Живи быстро. Умри молодым. Будь диким. И веселись.", song: "Ride" },
@@ -659,6 +871,7 @@
         const defaults = { 
             cds: [], 
             vinyls: [], 
+            stuff: [], 
             wishlists: [], 
             goals: [], 
             availableTags: [], 
@@ -676,94 +889,307 @@
             unlockedAchievements: [],
             quotes: defaultQuotes,
             quoteLanguage: 'ru',
-            currentQuoteId: 1
+            currentQuoteId: 1,
+            cozyAtmosphereMode: 'vinyl' 
         };
 
         let data = JSON.parse(localStorage.getItem('mirvel_data')) || { ...defaults };
         data = { ...defaults, ...data };
         
+        if (!data.stuff) data.stuff = [];
         if (!data.quotes || data.quotes.length === 0) {
             data.quotes = [...defaultQuotes];
             data.currentQuoteId = 1;
         }
+        if (!data.cozyAtmosphereMode) data.cozyAtmosphereMode = 'vinyl';
 
         let tempTags = []; 
         let currentFilter = null; 
         let editingNoteId = null;
 
-        // Полноценная логика Web Audio API для процедурной генерации теплого винилового треска
         let audioCtx = null;
-        let crackleNode = null;
-        let isPlayingCrackle = false;
+        let isSoundPlaying = false;
+        let cozyNodes = []; 
+    </script>
 
-        function toggleCrackle() {
-            const btn = document.getElementById('crackle-btn');
-            if (isPlayingCrackle) {
-                if (crackleNode) {
-                    try { crackleNode.stop(); } catch(e){}
-                }
-                isPlayingCrackle = false;
-                btn.innerHTML = '🔊';
-                btn.classList.remove('border-cyan-500/60');
-                showToast("Проигрыватель винилового шума выключен");
-            } else {
-                try {
-                    if (!audioCtx) {
-                        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    }
-                    if (audioCtx.state === 'suspended') {
-                        audioCtx.resume();
-                    }
-
-                    // Генерация мягкого шума + потрескиваний иглы
-                    const bufferSize = 2 * audioCtx.sampleRate;
-                    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                    const output = noiseBuffer.getChannelData(0);
-                    
-                    for (let i = 0; i < bufferSize; i++) {
-                        let rand = Math.random() * 2 - 1;
-                        // Низкочастотный фоновый гул
-                        output[i] = rand * 0.015; 
-                        
-                        // Случайные потрескивания иглы (импульсы)
-                        if (Math.random() < 0.00008) {
-                            output[i] += (Math.random() > 0.5 ? 1 : -1) * 0.25;
-                        }
-                    }
-
-                    const source = audioCtx.createBufferSource();
-                    source.buffer = noiseBuffer;
-                    source.loop = true;
-
-                    // Фильтр низких частот (Lowpass) для придания теплого, аналогового тона
-                    const filter = audioCtx.createBiquadFilter();
-                    filter.type = 'lowpass';
-                    filter.frequency.value = 1000;
-
-                    const gainNode = audioCtx.createGain();
-                    gainNode.gain.value = 0.3;
-
-                    source.connect(filter);
-                    filter.connect(gainNode);
-                    gainNode.connect(audioCtx.destination);
-
-                    source.start();
-                    crackleNode = source;
-                    isPlayingCrackle = true;
-                    btn.innerHTML = '🔇';
-                    btn.classList.add('border-cyan-500/60');
-                    showToast("Приятного аналогового прослушивания! 💽🍃");
-                } catch (e) {
-                    console.error('Ошибка Web Audio API:', e);
-                    showToast("Ваш браузер заблокировал аудио или Web Audio API не поддерживается.");
+    <script>
+        function createCrackleBuffer(ctx, density = 0.00018, crackleAmp = 0.22) {
+            const sampleRate = ctx.sampleRate;
+            const bufferSize = sampleRate * 2.5;
+            const buffer = ctx.createBuffer(1, bufferSize, sampleRate);
+            const dataArr = buffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                let rand = Math.random() * 2 - 1;
+                dataArr[i] = rand * 0.008; 
+                
+                if (Math.random() < density) {
+                    dataArr[i] += (Math.random() > 0.5 ? 1 : -1) * crackleAmp;
                 }
             }
+            return buffer;
+        }
+
+        function initCozyAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            stopCozyAudio(); 
+
+            const mode = data.cozyAtmosphereMode || 'vinyl';
+
+            if (mode === 'vinyl' || mode === 'vinyl_pure' || mode === 'vinyl_old') {
+                const crackleSource = audioCtx.createBufferSource();
+                
+                let density = mode === 'vinyl_old' ? 0.00045 : 0.00018;
+                let crackleVol = mode === 'vinyl_old' ? 0.35 : 0.22;
+                
+                crackleSource.buffer = createCrackleBuffer(audioCtx, density, crackleVol);
+                crackleSource.loop = true;
+                
+                const crackleGain = audioCtx.createGain();
+                const crackleFilter = audioCtx.createBiquadFilter();
+                
+                if (mode === 'vinyl_old') {
+                    crackleFilter.type = 'bandpass';
+                    crackleFilter.frequency.value = 1000;
+                    crackleFilter.Q.value = 1.0;
+                } else {
+                    crackleFilter.type = 'lowpass';
+                    crackleFilter.frequency.value = 1200;
+                }
+                
+                crackleSource.connect(crackleFilter);
+                crackleFilter.connect(crackleGain);
+                crackleGain.connect(audioCtx.destination);
+                crackleGain.gain.setValueAtTime(mode === 'vinyl_old' ? 0.22 : 0.18, audioCtx.currentTime);
+
+                crackleSource.start(0);
+                cozyNodes.push(crackleSource);
+
+                if (mode === 'vinyl') {
+                    const humOsc1 = audioCtx.createOscillator();
+                    humOsc1.type = 'sine';
+                    humOsc1.frequency.value = 50; 
+                    
+                    const humOsc2 = audioCtx.createOscillator();
+                    humOsc2.type = 'sine';
+                    humOsc2.frequency.value = 100; 
+
+                    const humGain = audioCtx.createGain();
+                    const humLP = audioCtx.createBiquadFilter();
+                    humLP.type = 'lowpass';
+                    humLP.frequency.value = 75;
+
+                    humOsc1.connect(humLP);
+                    humOsc2.connect(humLP);
+                    humLP.connect(humGain);
+                    humGain.connect(audioCtx.destination);
+                    humGain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+
+                    humOsc1.start(0);
+                    humOsc2.start(0);
+                    cozyNodes.push(humOsc1, humOsc2);
+                }
+
+            } else if (mode === 'rain') {
+                const bufferSize = audioCtx.sampleRate * 2;
+                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+                
+                const noiseSource = audioCtx.createBufferSource();
+                noiseSource.buffer = noiseBuffer;
+                noiseSource.loop = true;
+                
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(450, audioCtx.currentTime);
+                filter.Q.setValueAtTime(1, audioCtx.currentTime);
+                
+                const rainGain = audioCtx.createGain();
+                rainGain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                
+                noiseSource.connect(filter);
+                filter.connect(rainGain);
+                rainGain.connect(audioCtx.destination);
+                
+                noiseSource.start(0);
+                cozyNodes.push(noiseSource);
+                
+                const lfo = audioCtx.createOscillator();
+                lfo.type = 'sine';
+                lfo.frequency.setValueAtTime(0.08, audioCtx.currentTime); 
+                
+                const lfoGain = audioCtx.createGain();
+                lfoGain.gain.setValueAtTime(180, audioCtx.currentTime); 
+                
+                lfo.connect(lfoGain);
+                lfoGain.connect(filter.frequency);
+                
+                lfo.start(0);
+                cozyNodes.push(lfo);
+
+            } else if (mode === 'space') {
+                const osc1 = audioCtx.createOscillator();
+                osc1.type = 'sawtooth';
+                osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+                
+                const osc2 = audioCtx.createOscillator();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(55.4, audioCtx.currentTime); 
+                
+                const osc3 = audioCtx.createOscillator();
+                osc3.type = 'sine';
+                osc3.frequency.setValueAtTime(110, audioCtx.currentTime);
+                
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(90, audioCtx.currentTime);
+                
+                const spaceGain = audioCtx.createGain();
+                spaceGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                
+                osc1.connect(filter);
+                osc2.connect(filter);
+                osc3.connect(filter);
+                filter.connect(spaceGain);
+                spaceGain.connect(audioCtx.destination);
+                
+                osc1.start(0);
+                osc2.start(0);
+                osc3.start(0);
+                cozyNodes.push(osc1, osc2, osc3);
+                
+                const sweepLfo = audioCtx.createOscillator();
+                sweepLfo.type = 'sine';
+                sweepLfo.frequency.setValueAtTime(0.05, audioCtx.currentTime);
+                
+                const sweepGain = audioCtx.createGain();
+                sweepGain.gain.setValueAtTime(35, audioCtx.currentTime);
+                
+                sweepLfo.connect(sweepGain);
+                sweepGain.connect(filter.frequency);
+                
+                sweepLfo.start(0);
+                cozyNodes.push(sweepLfo);
+
+            } else if (mode === 'tape') {
+                const bufferSize = audioCtx.sampleRate * 2;
+                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+                
+                const hissSource = audioCtx.createBufferSource();
+                hissSource.buffer = noiseBuffer;
+                hissSource.loop = true;
+                
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(5500, audioCtx.currentTime);
+                filter.Q.setValueAtTime(0.7, audioCtx.currentTime);
+                
+                const hissGain = audioCtx.createGain();
+                hissGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                
+                hissSource.connect(filter);
+                filter.connect(hissGain);
+                hissGain.connect(audioCtx.destination);
+                
+                hissSource.start(0);
+                cozyNodes.push(hissSource);
+                
+                const flutterLfo = audioCtx.createOscillator();
+                flutterLfo.type = 'sine';
+                flutterLfo.frequency.setValueAtTime(6, audioCtx.currentTime); 
+                
+                const flutterGain = audioCtx.createGain();
+                flutterGain.gain.setValueAtTime(0.006, audioCtx.currentTime);
+                
+                flutterLfo.connect(flutterGain);
+                flutterGain.connect(hissGain.gain);
+                
+                flutterLfo.start(0);
+                cozyNodes.push(flutterLfo);
+                
+                const hum = audioCtx.createOscillator();
+                hum.type = 'sine';
+                hum.frequency.setValueAtTime(60, audioCtx.currentTime);
+                
+                const humGainNode = audioCtx.createGain();
+                humGainNode.gain.setValueAtTime(0.008, audioCtx.currentTime);
+                
+                hum.connect(humGainNode);
+                humGainNode.connect(audioCtx.destination);
+                
+                hum.start(0);
+                cozyNodes.push(hum);
+            }
+        }
+
+        function setAtmosphereMode(mode) {
+            data.cozyAtmosphereMode = mode;
+            save();
+            if (isSoundPlaying) {
+                initCozyAudio();
+            }
+            updateUI();
+            showToast(`Атмосфера проигрывателя изменена: <strong>${getAtmosphereName(mode)}</strong>!`);
+        }
+
+        function getAtmosphereName(mode) {
+            if (mode === 'vinyl') return 'Виниловый треск (+Гул) 💽';
+            if (mode === 'vinyl_pure') return 'Винил (Без баса) ✨';
+            if (mode === 'vinyl_old') return 'Ретро патефон (78s) 📻';
+            if (mode === 'rain') return 'Летний дождь 🌧️';
+            if (mode === 'space') return 'Космический гул 🌌';
+            if (mode === 'tape') return 'Кассетный шум 📻';
+            return 'Виниловый треск 💽';
+        }
+
+        function toggleCozyAtmosphere() {
+            const btn = document.getElementById('crackle-btn');
+            const icon = document.getElementById('vinyl-icon-player');
+
+            if (isSoundPlaying) {
+                stopCozyAudio();
+                isSoundPlaying = false;
+                btn.className = "w-14 h-14 bg-[#0a0a10] border border-white/10 hover:border-cyan-500/50 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95";
+                icon.classList.remove('spin-slow');
+                showToast("Ламповая атмосфера выключена 🔇");
+            } else {
+                try {
+                    initCozyAudio();
+                    isSoundPlaying = true;
+                    btn.className = "w-14 h-14 bg-purple-950/40 border-2 border-cyan-500 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-[0_0_15px_rgba(6,182,212,0.4)]";
+                    icon.classList.add('spin-slow');
+                    showToast(`Атмосфера «${getAtmosphereName(data.cozyAtmosphereMode)}» запущена! 🌧️🎧`);
+                } catch(e) {
+                    console.error('AudioContext error:', e);
+                    showToast("Нажмите еще раз для активации звука.");
+                }
+            }
+        }
+
+        function stopCozyAudio() {
+            cozyNodes.forEach(node => {
+                try { node.stop(); } catch(e){}
+                try { node.disconnect(); } catch(e){}
+            });
+            cozyNodes = [];
         }
     </script>
 
     <script>
         const ACHIEVEMENTS_LIST = [
-            // МНОГОУРОВНЕВЫЕ ДОСТИЖЕНИЯ
             { 
                 id: 'cd_collector', 
                 title: 'CD-Магнат', 
@@ -791,11 +1217,23 @@
                 ]
             },
             { 
+                id: 'stuff_collector', 
+                title: 'Ценитель Вещей', 
+                icon: '📦', 
+                isTiered: true, 
+                getVal: d => d.stuff?.length || 0,
+                tiers: [
+                    { req: 1, label: 'Lvl 1', xp: 40, desc: 'Собрать 1 предмет мерча или техники' },
+                    { req: 4, label: 'Lvl 2', xp: 100, desc: 'Собрать 4 предмета мерча или девайсов' },
+                    { req: 10, label: 'Lvl 3', xp: 200, desc: 'Собрать 10 предметов мерча в коллекции' }
+                ]
+            },
+            { 
                 id: 'rich_collector', 
                 title: 'Драгоценный Стек', 
                 icon: '💎', 
                 isTiered: true, 
-                getVal: d => ((d.cds?.reduce((s, i) => s + i.price, 0) || 0) + (d.vinyls?.reduce((s, i) => s + i.price, 0) || 0)),
+                getVal: d => ((d.cds?.reduce((s, i) => s + i.price, 0) || 0) + (d.vinyls?.reduce((s, i) => s + i.price, 0) || 0) + (d.stuff?.reduce((s, i) => s + i.price, 0) || 0)),
                 tiers: [
                     { req: 1500, label: 'Lvl 1', xp: 50, desc: 'Общая стоимость коллекции превышает 1 500 ₴' },
                     { req: 5000, label: 'Lvl 2', xp: 150, desc: 'Общая стоимость коллекции превышает 5 000 ₴' },
@@ -803,34 +1241,23 @@
                 ]
             },
             { 
-                id: 'ultimate_artist_fan', 
-                title: 'Преданный Фанатик', 
-                icon: '👑', 
+                id: 'music_listener', 
+                title: 'Аудиофил-Практик', 
+                icon: '🎧', 
                 isTiered: true, 
-                getVal: d => {
-                    const s = {};
-                    [...(d.cds || []), ...(d.vinyls || [])].forEach(i => {
-                        const a = (i.artist || '').trim().toLowerCase();
-                        if (a) s[a] = (s[a] || 0) + 1;
-                    });
-                    return Object.values(s).length > 0 ? Math.max(...Object.values(s)) : 0;
-                },
+                getVal: d => [...(d.cds || []), ...(d.vinyls || [])].reduce((acc, i) => acc + (i.playCount || 0), 0),
                 tiers: [
-                    { req: 3, label: 'Lvl 1', xp: 40, desc: 'Собрать 3 релиза одного артиста' },
-                    { req: 5, label: 'Lvl 2', xp: 80, desc: 'Собрать 5 релизов одного артиста' },
-                    { req: 10, label: 'Lvl 3', xp: 180, desc: 'Собрать 10 релизов одного артиста' }
+                    { req: 5, label: 'Lvl 1', xp: 40, desc: 'Запустить проигрывание релиза 5 раз' },
+                    { req: 20, label: 'Lvl 2', xp: 100, desc: 'Запустить проигрывание релиза 20 раз' },
+                    { req: 50, label: 'Lvl 3', xp: 250, desc: 'Запустить проигрывание релиза 50 раз' }
                 ]
             },
-
-            // СТАНДАРТНЫЕ СИНГЛОВЫЕ ДОСТИЖЕНИЯ
             { id: 'first_item', title: 'Первая игла / Луч', desc: 'Добавьте ваш первый музыкальный релиз в коллекцию (CD или Винил)', icon: '⭐', xp: 50, cond: d => ((d.cds?.length || 0) + (d.vinyls?.length || 0)) >= 1 },
             { id: 'goal_completed', title: 'Целеустремлённый', desc: 'Отметьте хотя бы одну выполненную коллекционную цель (CD или Винил)', icon: '🎯', xp: 100, cond: d => (d.goals || []).some(g => g.hasCd || g.hasVinyl) },
             { id: 'theme_customizer', title: 'Стиляга', desc: 'Переключите стандартную цветовую тему хаба на любую другую', icon: '🎨', xp: 30, cond: d => !!d.selectedTheme },
             { id: 'custom_cd', title: 'Особый ценитель', desc: 'Добавьте в хаб хотя бы один кастомный CD диск ✨', icon: '✨', xp: 75, cond: d => (d.cds || []).some(c => c.isCustom) },
             { id: 'free_music', title: 'Сладкая халява', desc: 'Добавьте бесплатный релиз (0 ₴) или подарок в коллекцию', icon: '🎈', xp: 50, cond: d => [...(d.cds || []), ...(d.vinyls || [])].some(i => i.price === 0 || i.isGift) },
-            { id: 'super_wish', title: 'Элитное желание', desc: 'Добавьте в Wishlist вещь стоимостью 5000 ₴ или выше', icon: '💸', xp: 100, cond: d => (d.wishlists || []).some(i => i.price >= 5000) },
-            { id: 'tag_master', title: 'Генерал тегов', desc: 'Создайте не менее 5 различных кастомных тегов для классификации', icon: '🏷️', xp: 75, cond: d => (d.availableTags || []).length >= 5 },
-            { id: 'custom_market', title: 'Торговый эксперт', desc: 'Добавьте не менее 6 любимых музыкальных сайтов или маркетплейсов', icon: '🏪', xp: 70, cond: d => (d.musicSites || []).length >= 6 }
+            { id: 'super_wish', title: 'Элитное желание', desc: 'Добавьте в Wishlist вещь стоимостью 5000 ₴ или выше', icon: '💸', xp: 100, cond: d => (d.wishlists || []).some(i => i.price >= 5000) }
         ];
 
         const defaultSites = [
@@ -858,31 +1285,38 @@
                 osc.frequency.setValueAtTime(783.99, now + 0.16); 
                 osc.frequency.setValueAtTime(1046.50, now + 0.24); 
                 
-                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.setValueAtTime(0.08, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
                 
                 osc.start(now);
                 osc.stop(now + 0.5);
-            } catch (e) { console.error('AudioContext блокируется браузером', e); }
+            } catch (e) { console.error('AudioContext error:', e); }
         }
 
-        function getAchievementXPRewards() {
-            if (!data.unlockedAchievements) return 0;
-            let totalXp = 0;
-            ACHIEVEMENTS_LIST.forEach(ach => {
-                if (ach.isTiered) {
-                    ach.tiers.forEach((tier, idx) => {
-                        if (data.unlockedAchievements.includes(`${ach.id}_${idx}`)) {
-                            totalXp += tier.xp;
-                        }
-                    });
-                } else {
-                    if (data.unlockedAchievements.includes(ach.id)) {
-                        totalXp += ach.xp;
-                    }
-                }
-            });
-            return totalXp;
+        function playLevelUpSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                const now = ctx.currentTime;
+                osc.frequency.setValueAtTime(261.63, now); 
+                osc.frequency.setValueAtTime(329.63, now + 0.1); 
+                osc.frequency.setValueAtTime(392.00, now + 0.2); 
+                osc.frequency.setValueAtTime(523.25, now + 0.3); 
+                osc.frequency.setValueAtTime(659.25, now + 0.4); 
+                osc.frequency.setValueAtTime(783.99, now + 0.5); 
+                osc.frequency.setValueAtTime(1046.50, now + 0.6); 
+                
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+                
+                osc.start(now);
+                osc.stop(now + 1.2);
+            } catch (e) { console.error(e); }
         }
 
         function getTotalAchievementsCount() {
@@ -897,9 +1331,27 @@
             return count;
         }
 
+        function addXP(amount, reason) {
+            if (!amount || amount <= 0) return;
+            const oldLvl = Math.floor((data.xp || 0) / 500) + 1;
+            data.xp = (data.xp || 0) + amount;
+            const newLvl = Math.floor(data.xp / 500) + 1;
+            
+            if (newLvl > oldLvl) {
+                playLevelUpSound();
+                showToast(`🎉 <strong>УРОВЕНЬ ПОВЫШЕН!</strong> Теперь вы на <strong>${newLvl} уровне</strong>! 🚀`);
+            } else if (reason) {
+                showToast(`✨ Получено <strong>+${amount} XP</strong> (${reason})`);
+            }
+            save();
+        }
+
+        let isCheckingAchievements = false;
         function checkAchievements() {
+            if (isCheckingAchievements) return;
+            isCheckingAchievements = true;
+
             if (!data.unlockedAchievements) data.unlockedAchievements = [];
-            let newlyUnlocked = false;
 
             ACHIEVEMENTS_LIST.forEach(ach => {
                 if (ach.isTiered) {
@@ -909,27 +1361,23 @@
                         const isAlreadyUnlocked = data.unlockedAchievements.includes(tierId);
                         if (!isAlreadyUnlocked && currentVal >= tier.req) {
                             data.unlockedAchievements.push(tierId);
-                            newlyUnlocked = true;
                             playUnlockSound();
-                            showToast(`🏆 Открыт новый уровень в <strong>${ach.title}</strong> (${tier.label}) (+${tier.xp} XP)!`);
+                            data.xp = (data.xp || 0) + tier.xp;
+                            showToast(`🏆 Достигнут уровень ${idx + 1} в "${ach.title}" (+${tier.xp} XP)!`);
                         }
                     });
                 } else {
                     const isAlreadyUnlocked = data.unlockedAchievements.includes(ach.id);
                     if (!isAlreadyUnlocked && ach.cond(data)) {
                         data.unlockedAchievements.push(ach.id);
-                        newlyUnlocked = true;
                         playUnlockSound();
-                        showToast(`🏆 Открыто достижение: <strong>${ach.title}</strong> (+${ach.xp} XP)!`);
+                        data.xp = (data.xp || 0) + ach.xp;
+                        showToast(`🏆 Открыто достижение: "${ach.title}" (+${ach.xp} XP)!`);
                     }
                 }
             });
 
-            if (newlyUnlocked) {
-                const colSum = ((data.cds?.reduce((s, i) => s + i.price, 0) || 0) + (data.vinyls?.reduce((s, i) => s + i.price, 0) || 0));
-                data.xp = Math.floor(colSum / 10) + getAchievementXPRewards();
-                localStorage.setItem('mirvel_data', JSON.stringify(data));
-            }
+            isCheckingAchievements = false;
         }
     </script>
 
@@ -944,7 +1392,7 @@
             try {
                 const successful = document.execCommand('copy');
                 if (successful) {
-                    showToast("Промпт скопирован! Вставьте его в ИИ (ChatGPT/Claude/DeepSeek) 📋");
+                    showToast("Промпт скопирован! Вставьте его в ИИ (ChatGPT/Claude/Gemini) 📋");
                 } else {
                     showToast("Ошибка копирования. Выделите текст вручную.");
                 }
@@ -1181,7 +1629,228 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
     </script>
 
     <script>
-        // Функция изменения звезд в модальном окне
+        let crateItems = [];
+        let crateCurrentIndex = 0;
+        let isCrateCardFlipped = false;
+
+        function openCrateDigger() {
+            crateItems = [...data.cds, ...data.vinyls];
+            if (crateItems.length === 0) {
+                showToast("В вашей коллекции пока нет компакт-дисков или пластинок!");
+                return;
+            }
+            crateCurrentIndex = 0;
+            isCrateCardFlipped = false;
+            document.getElementById('crate-modal').classList.remove('hidden');
+            renderCrateCards();
+            updateCrateDetails();
+        }
+
+        function closeCrateDigger() {
+            document.getElementById('crate-modal').classList.add('hidden');
+        }
+
+        function renderCrateCards() {
+            const container = document.getElementById('crate-cards-container');
+            container.innerHTML = '';
+
+            const maxVisible = 5;
+            for (let i = 0; i < maxVisible; i++) {
+                const itemIndex = (crateCurrentIndex + i) % crateItems.length;
+                const item = crateItems[itemIndex];
+                if (!item) continue;
+
+                const card = document.createElement('div');
+                card.className = "crate-card absolute w-64 h-64 rounded-3xl overflow-hidden glass shadow-2xl border border-white/10 flex flex-col justify-center items-center p-2 cursor-pointer";
+                
+                const offset = i;
+                const scale = 1 - (offset * 0.06);
+                const translateY = -offset * 12;
+                const translateZ = -offset * 40;
+                const rotateX = -offset * 2;
+                const opacity = 1 - (offset * 0.2);
+
+                card.style.transform = `translate3d(0, ${translateY}px, ${translateZ}px) rotateX(${rotateX}deg) scale(${scale})`;
+                card.style.opacity = opacity;
+                card.style.zIndex = 100 - offset;
+
+                const inner = document.createElement('div');
+                inner.className = "w-full h-full relative transition-transform duration-500 ease-out preserve-3d";
+                inner.style.transformStyle = "preserve-3d";
+
+                if (i === 0 && isCrateCardFlipped) {
+                    inner.style.transform = "rotateY(180deg)";
+                }
+
+                const front = document.createElement('div');
+                front.className = "absolute inset-0 w-full h-full rounded-2xl overflow-hidden backface-hidden bg-black/50";
+                front.style.backfaceVisibility = "hidden";
+                if (item.img) {
+                    front.innerHTML = `<img src="${item.img}" class="w-full h-full object-cover rounded-2xl">`;
+                } else {
+                    front.innerHTML = `
+                        <div class="w-full h-full bg-gradient-to-tr from-purple-900/30 to-cyan-900/20 flex flex-col items-center justify-center text-center p-4">
+                            <span class="text-4xl mb-2">${crateItems[crateCurrentIndex] === item && data.cds.includes(item) ? '💿' : '💽'}</span>
+                            <span class="text-xs text-gray-400 font-bold truncate w-full">${item.artist || 'Разные'}</span>
+                            <span class="text-sm font-black text-white w-full leading-tight mt-1 line-clamp-2">${item.title}</span>
+                        </div>
+                    `;
+                }
+
+                const back = document.createElement('div');
+                back.className = "absolute inset-0 w-full h-full rounded-2xl glass border border-white/10 p-5 flex flex-col justify-between backface-hidden bg-[#0d0d14]";
+                back.style.backfaceVisibility = "hidden";
+                back.style.transform = "rotateY(180deg)";
+                
+                const stars = "⭐".repeat(item.rating || 0);
+                back.innerHTML = `
+                    <div class="space-y-1.5 min-w-0 flex-1">
+                        <p class="text-[9px] uppercase font-bold text-cyan-400 truncate">${item.artist || 'Разные исполнители'}</p>
+                        <h4 class="font-black text-sm text-white truncate">${item.title}</h4>
+                        <div class="text-yellow-400 text-xs mt-0.5">${stars || 'Без оценки'}</div>
+                        <div class="text-[10px] text-gray-500 font-medium space-y-0.5 pt-1">
+                            ${item.year ? `<div>📅 Год: <span class="text-gray-300 font-bold">${item.year}</span></div>` : ''}
+                            ${item.label ? `<div>🏷️ Лейбл: <span class="text-gray-300 font-bold">${item.label}</span></div>` : ''}
+                            ${item.condition ? `<div>🎨 Состояние: <span class="text-cyan-400 font-bold">${item.condition}</span></div>` : ''}
+                            ${item.whereBought ? `<div>🏪 Куплено: <span class="text-purple-300 font-bold">${item.whereBought}</span></div>` : ''}
+                        </div>
+                        <p class="text-[11px] text-gray-400 italic line-clamp-4 mt-2 border-t border-white/5 pt-1.5 leading-relaxed">
+                            ${item.note ? `💬 ${item.note}` : 'Нет рецензии к этому релизу.'}
+                        </p>
+                    </div>
+                `;
+
+                inner.appendChild(front);
+                inner.appendChild(back);
+                card.appendChild(inner);
+
+                if (i === 0) {
+                    card.onclick = () => flipCrateCard();
+                }
+
+                container.appendChild(card);
+            }
+        }
+
+        function updateCrateDetails() {
+            const item = crateItems[crateCurrentIndex];
+            if (!item) return;
+
+            const labelEl = document.getElementById('crate-item-details');
+            labelEl.innerHTML = `
+                <h3 class="text-2xl font-black text-white truncate">${item.title}</h3>
+                <p class="text-purple-400 font-bold tracking-wide italic text-sm truncate">${item.artist || 'Разные исполнители'}</p>
+                <div class="flex justify-center gap-2 mt-2">
+                    <span class="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/5 text-gray-300">
+                        ${data.cds.includes(item) ? '💿 CD' : '💽 Винил'}
+                    </span>
+                    ${item.condition ? `
+                        <span class="text-xs px-2.5 py-1 rounded-full bg-cyan-900/20 border border-cyan-500/20 text-cyan-300 font-bold">
+                            Состояние: ${item.condition}
+                        </span>
+                    ` : ''}
+                </div>
+            `;
+
+            document.getElementById('crate-index-tracker').innerText = `${crateCurrentIndex + 1} / ${crateItems.length}`;
+        }
+
+        function shiftCrate(direction) {
+            isCrateCardFlipped = false;
+            crateCurrentIndex = (crateCurrentIndex + direction + crateItems.length) % crateItems.length;
+            renderCrateCards();
+            updateCrateDetails();
+        }
+
+        function flipCrateCard() {
+            isCrateCardFlipped = !isCrateCardFlipped;
+            renderCrateCards();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('crate-modal');
+            if (modal && !modal.classList.contains('hidden')) {
+                if (e.key === 'ArrowRight') {
+                    shiftCrate(1);
+                } else if (e.key === 'ArrowLeft') {
+                    shiftCrate(-1);
+                } else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    flipCrateCard();
+                }
+            }
+        });
+    </script>
+
+    <script>
+        window.openPurchaseMoveModal = (id) => {
+            const item = data.wishlists.find(w => w.id === id);
+            if (!item) return;
+            
+            document.getElementById('buy-confirm-id').value = id;
+            document.getElementById('buy-confirm-price').value = item.price || 0;
+            document.getElementById('buy-confirm-where').value = item.whereBought || '';
+            
+            const selectEl = document.getElementById('buy-confirm-format');
+            if (item.category === 'clothing' || item.category === 'gear' || item.category === 'other') {
+                selectEl.value = 'stuff';
+            } else if (item.formatDetails?.toLowerCase().includes('винил')) {
+                selectEl.value = 'vinyls';
+            } else {
+                selectEl.value = 'cds';
+            }
+            
+            document.getElementById('buy-confirm-modal').classList.remove('hidden');
+        };
+
+        window.confirmPurchaseMove = () => {
+            const id = parseInt(document.getElementById('buy-confirm-id').value);
+            const targetFormat = document.getElementById('buy-confirm-format').value;
+            const price = parseFloat(document.getElementById('buy-confirm-price').value) || 0;
+            const where = document.getElementById('buy-confirm-where').value.trim();
+            
+            const idx = data.wishlists.findIndex(w => w.id === id);
+            if (idx === -1) return;
+            
+            const wishItem = data.wishlists[idx];
+            
+            data.wishlists.splice(idx, 1);
+            
+            const newItem = {
+                id: Date.now(),
+                category: wishItem.category || 'music',
+                title: wishItem.title,
+                artist: wishItem.artist || '',
+                price: price,
+                whereBought: where || 'Перенос из Желаемого',
+                year: wishItem.year || '',
+                label: wishItem.label || '',
+                condition: wishItem.condition || 'NM',
+                formatDetails: wishItem.formatDetails || (targetFormat === 'vinyls' ? 'Черный винил' : 'Standart CD'),
+                size: wishItem.size || '',
+                style: wishItem.style || '',
+                brand: wishItem.brand || '',
+                priority: '',
+                url: '',
+                isGift: wishItem.isGift || false,
+                isCustom: wishItem.isCustom || false,
+                rating: wishItem.rating || 0,
+                playCount: 0,
+                lastPlayed: '',
+                tags: wishItem.tags || [],
+                img: wishItem.img || '',
+                imgPos: 'center',
+                note: wishItem.note || ''
+            };
+            
+            data[targetFormat].push(newItem);
+            
+            closeModal('buy-confirm-modal');
+            addXP(150, "покупка из желаемого 📥");
+        };
+    </script>
+
+    <script>
         let currentModalRating = 0;
         function setRatingValue(val) {
             currentModalRating = val;
@@ -1196,6 +1865,66 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             });
         }
 
+        window.logPlay = (type, id) => {
+            const item = data[type].find(x => x.id === id);
+            if (!item) return;
+
+            item.playCount = (item.playCount || 0) + 1;
+            item.lastPlayed = new Date().toLocaleDateString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            
+            const cardEl = document.querySelector(`[data-play-id="${id}"]`);
+            if (cardEl) {
+                const anim = document.createElement('div');
+                anim.className = "absolute inset-0 bg-[radial-gradient(circle,_var(--theme-btn)_0%,_transparent_70%)] pointer-events-none rounded-2xl z-30 opacity-0 play-animation-layer";
+                anim.innerHTML = `
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="text-6xl text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.8)] spin-slow">💿</span>
+                    </div>
+                `;
+                cardEl.appendChild(anim);
+                setTimeout(() => anim.remove(), 900);
+            }
+
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.setValueAtTime(440, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.35);
+                gain.gain.setValueAtTime(0.06, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.4);
+            } catch(e) {}
+
+            addXP(10, "прослушивание альбома 🎧");
+        };
+
+        window.toggleCategoryFields = () => {
+            const category = document.getElementById('item-category').value;
+            const musicContainer = document.getElementById('music-fields-container');
+            const clothingContainer = document.getElementById('clothing-fields-container');
+            const gearContainer = document.getElementById('gear-fields-container');
+            const ratingStarsWrapper = document.getElementById('rating-stars-wrapper');
+
+            musicContainer.classList.add('hidden');
+            clothingContainer.classList.add('hidden');
+            gearContainer.classList.add('hidden');
+            ratingStarsWrapper.classList.add('hidden');
+
+            if (category === 'music') {
+                musicContainer.classList.remove('hidden');
+                ratingStarsWrapper.classList.remove('hidden');
+            } else if (category === 'clothing') {
+                clothingContainer.classList.remove('hidden');
+            } else if (category === 'gear') {
+                gearContainer.classList.remove('hidden');
+            }
+        };
+
         function save() { 
             checkAchievements();
             localStorage.setItem('mirvel_data', JSON.stringify(data)); 
@@ -1204,12 +1933,10 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
         
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         
-        // Переключение страниц с добавлением анимированного смещения
         function showPage(id) { 
             document.querySelectorAll('main > section').forEach(s => {
                 if (s.id === id) {
                     s.classList.remove('hidden');
-                    // Анимация fade-in slide up
                     s.className = "fade-in transition-all duration-500 transform translate-y-2 opacity-0";
                     setTimeout(() => {
                         s.className = "fade-in transition-all duration-500 transform translate-y-0 opacity-100";
@@ -1219,13 +1946,12 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                 }
             });
             
-            // Навигационные кнопки подсветки
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3";
+                btn.className = "nav-btn text-left py-2.5 px-4 rounded-2xl hover:bg-white/5 transition-all duration-300 flex items-center gap-3 shrink-0";
             });
             const activeBtn = document.getElementById(`nav-${id}`);
             if (activeBtn) {
-                activeBtn.className = "nav-btn text-left py-3 px-4 rounded-2xl bg-purple-600/20 text-white border-l-4 border-purple-500 flex items-center gap-3 transition-all";
+                activeBtn.className = "nav-btn text-left py-2.5 px-4 rounded-2xl bg-purple-600/20 text-white border-l-4 md:border-l-4 border-purple-500 flex items-center gap-3 transition-all shrink-0";
             }
             updateUI(); 
         }
@@ -1253,28 +1979,19 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                 return;
             }
             const randomItem = all[Math.floor(Math.random() * all.length)];
-            document.getElementById('random-artist').innerText = randomItem.artist || 'Неизвестный артист';
+            document.getElementById('random-artist').innerText = randomItem.artist || 'Разные исполнители';
             document.getElementById('random-title').innerText = randomItem.title || 'Без названия';
             document.getElementById('random-modal').classList.remove('hidden');
         }
 
         function setTheme(theme) {
-            document.body.className = "flex min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-950 via-black to-black";
+            document.body.className = "flex flex-col md:flex-row min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-950 via-black to-black";
             if (theme) {
                 document.body.classList.add(theme);
             }
             data.selectedTheme = theme;
             save();
         }
-
-        window.cyclePos = (type, id) => {
-            const item = data[type].find(x => x.id === id);
-            if (!item) return;
-            const positions = ['center', 'top', 'bottom'];
-            const currentIdx = positions.indexOf(item.imgPos || 'center');
-            item.imgPos = positions[(currentIdx + 1) % positions.length];
-            save();
-        };
 
         window.exportData = () => {
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
@@ -1287,13 +2004,34 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             const reader = new FileReader();
             reader.onload = (ev) => { 
                 try { 
-                    data = { ...defaults, ...JSON.parse(ev.target.result) }; 
+                    const parsed = JSON.parse(ev.target.result);
+                    if (typeof parsed !== 'object' || parsed === null) {
+                        throw new Error("Неверный формат JSON");
+                    }
+                    
+                    data = { ...defaults, ...parsed }; 
+                    
+                    if (!Array.isArray(data.cds)) data.cds = [];
+                    if (!Array.isArray(data.vinyls)) data.vinyls = [];
+                    if (!Array.isArray(data.stuff)) data.stuff = [];
+                    if (!Array.isArray(data.wishlists)) data.wishlists = [];
+                    if (!Array.isArray(data.goals)) data.goals = [];
+                    if (!Array.isArray(data.availableTags)) data.availableTags = [];
+                    if (!Array.isArray(data.quotes)) data.quotes = [...defaultQuotes];
+                    if (!Array.isArray(data.quickNotes)) data.quickNotes = [];
+                    if (!Array.isArray(data.unlockedAchievements)) data.unlockedAchievements = [];
+                    if (!Array.isArray(data.musicSites)) data.musicSites = [...defaultSites];
+                    
+                    data.xp = Number(data.xp) || 0;
+                    
                     save(); 
                     updateUI(); 
-                    showToast("Коллекция успешно импортирована!");
+                    showToast("Коллекция успешно импортирована! 📥");
                 } catch(err) { 
-                    showToast("Ошибка при импорте бэкапа.");
-                } 
+                    showToast("Ошибка при импорте бэкапа: убедитесь в корректности JSON.");
+                } finally {
+                    e.target.value = ''; 
+                }
             };
             reader.readAsText(file);
         };
@@ -1326,15 +2064,30 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             document.getElementById('gift-container').classList.toggle('hidden', type === 'wishlists');
             document.getElementById('custom-cd-container').classList.toggle('hidden', type !== 'cds');
             document.getElementById('tags-selector').classList.toggle('hidden', type !== 'wishlists');
+            
+            document.getElementById('item-priority').classList.toggle('hidden', type !== 'wishlists');
             document.getElementById('item-img-status').classList.add('hidden');
             document.getElementById('item-img-status').innerText = '';
             window.tempImg = ''; tempTags = [];
             
             if(id) {
                 const item = data[type].find(x => x.id === parseInt(id));
+                document.getElementById('item-category').value = item.category || 'music';
                 document.getElementById('item-title').value = item.title;
                 document.getElementById('item-artist').value = item.artist || '';
                 document.getElementById('item-price').value = item.price;
+                document.getElementById('item-where-bought').value = item.whereBought || '';
+                
+                document.getElementById('item-year').value = item.year || '';
+                document.getElementById('item-label').value = item.label || '';
+                document.getElementById('item-condition').value = item.condition || '';
+                document.getElementById('item-format-details').value = item.formatDetails || '';
+                
+                document.getElementById('item-size').value = item.size || '';
+                document.getElementById('item-style').value = item.style || '';
+                document.getElementById('item-brand').value = item.brand || '';
+                
+                document.getElementById('item-priority').value = item.priority || '';
                 document.getElementById('item-url').value = item.url || '';
                 document.getElementById('item-gift').checked = !!item.isGift;
                 document.getElementById('item-custom-cd').checked = !!item.isCustom;
@@ -1345,14 +2098,32 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                     document.getElementById('item-img-status').classList.remove('hidden');
                 }
             } else {
+                if (type === 'stuff') {
+                    document.getElementById('item-category').value = 'clothing';
+                } else {
+                    document.getElementById('item-category').value = 'music';
+                }
+                
                 document.getElementById('item-title').value = ''; 
                 document.getElementById('item-artist').value = '';
                 document.getElementById('item-price').value = '';
+                document.getElementById('item-where-bought').value = '';
+                
+                document.getElementById('item-year').value = '';
+                document.getElementById('item-label').value = '';
+                document.getElementById('item-condition').value = '';
+                document.getElementById('item-format-details').value = '';
+                document.getElementById('item-size').value = '';
+                document.getElementById('item-style').value = '';
+                document.getElementById('item-brand').value = '';
+                
+                document.getElementById('item-priority').value = '';
                 document.getElementById('item-url').value = ''; 
                 document.getElementById('item-gift').checked = false;
                 document.getElementById('item-custom-cd').checked = false;
                 setRatingValue(0);
             }
+            toggleCategoryFields();
             renderModalTags();
             document.getElementById('modal').classList.remove('hidden');
         };
@@ -1360,23 +2131,51 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
         window.saveItem = async () => {
             const type = document.getElementById('edit-type').value;
             const idStr = document.getElementById('edit-id').value;
-            const title = document.getElementById('item-title').value;
-            const artist = document.getElementById('item-artist').value;
+            
+            const category = document.getElementById('item-category').value;
+            const title = document.getElementById('item-title').value.trim();
+            const artist = document.getElementById('item-artist').value.trim();
             const price = parseFloat(document.getElementById('item-price').value) || 0;
-            const url = document.getElementById('item-url').value;
+            const whereBought = document.getElementById('item-where-bought').value.trim();
+            
+            const year = parseInt(document.getElementById('item-year').value) || '';
+            const label = document.getElementById('item-label').value.trim();
+            const condition = document.getElementById('item-condition').value;
+            const formatDetails = document.getElementById('item-format-details').value.trim();
+            
+            const size = document.getElementById('item-size').value.trim();
+            const style = document.getElementById('item-style').value.trim();
+            const brand = document.getElementById('item-brand').value.trim();
+            
+            const priority = document.getElementById('item-priority').value;
+            const url = document.getElementById('item-url').value.trim();
             const isGift = document.getElementById('item-gift').checked;
             const isCustom = document.getElementById('item-custom-cd').checked;
             const rating = parseInt(document.getElementById('item-rating').value) || 0;
             
+            if (!title) {
+                showToast("Название обязательно к заполнению!");
+                return;
+            }
+
             if(idStr) {
                 const item = data[type].find(x => x.id === parseInt(idStr));
-                Object.assign(item, { title, artist, price, url, isGift, isCustom, rating, tags: [...tempTags], img: window.tempImg || item.img });
+                Object.assign(item, { 
+                    category, title, artist, price, whereBought, year, label, condition, formatDetails, 
+                    size, style, brand, priority, url, isGift, isCustom, rating, 
+                    tags: [...tempTags], img: window.tempImg || item.img 
+                });
+                save(); closeModal('modal');
             } else {
-                data[type].push({ id: Date.now(), title, artist, price, url, isGift, isCustom, rating, tags: [...tempTags], img: window.tempImg, imgPos: 'center', note: '' });
+                data[type].push({ 
+                    id: Date.now(), category, title, artist, price, whereBought, year, label, condition, formatDetails, 
+                    size, style, brand, priority, url, isGift, isCustom, rating, 
+                    playCount: 0, lastPlayed: '',
+                    tags: [...tempTags], img: window.tempImg, imgPos: 'center', note: '' 
+                });
+                closeModal('modal');
+                addXP(50, "новый предмет в коллекции ✨");
             }
-            const colSum = (data.cds.reduce((s, i) => s + i.price, 0) + data.vinyls.reduce((s, i) => s + i.price, 0));
-            data.xp = Math.floor(colSum / 10) + getAchievementXPRewards();
-            save(); closeModal('modal');
         };
     </script>
 
@@ -1392,17 +2191,24 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             data.goals.push({ id: Date.now(), artist, album, hasCd: false, hasVinyl: false });
             document.getElementById('goal-artist').value = '';
             document.getElementById('goal-album').value = '';
-            save();
-            showToast("Коллекционная цель поставлена! 🎯");
+            
+            addXP(15, "постановка коллекционной цели 🎯");
         };
 
         window.toggleGoalProp = (id, prop) => {
             if(!data.goals) return;
             const goal = data.goals.find(g => g.id === id);
             if(goal) {
+                const wasCompleted = goal.hasCd || goal.hasVinyl;
                 goal[prop] = !goal[prop];
+                const isCompletedNow = goal.hasCd || goal.hasVinyl;
+                
                 save();
-                showToast(goal[prop] ? "Выполнено! 🎉" : "Статус изменен");
+                if (isCompletedNow && !wasCompleted) {
+                    addXP(100, "выполнение коллекционной цели 🎯");
+                } else {
+                    showToast("Статус цели обновлен");
+                }
             }
         };
 
@@ -1512,7 +2318,6 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             const artistCds = (data.cds || []).filter(i => (i.artist || '').trim().toLowerCase() === artistName.trim().toLowerCase());
             const artistVinyls = (data.vinyls || []).filter(i => (i.artist || '').trim().toLowerCase() === artistName.trim().toLowerCase());
             const allReleases = [...artistCds, ...artistVinyls];
-            
             const totalSpent = allReleases.reduce((sum, item) => sum + (parseFloat(item.price) || 0), 0);
             
             document.getElementById('artist-stats-title').innerText = artistName;
@@ -1589,9 +2394,102 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
     </script>
 
     <script>
+        function renderAnalyticsTab() {
+            const totalCdsPrice = (data.cds || []).reduce((s, i) => s + i.price, 0);
+            const totalVinylsPrice = (data.vinyls || []).reduce((s, i) => s + i.price, 0);
+            const totalStuffPrice = (data.stuff || []).reduce((s, i) => s + i.price, 0);
+            
+            const categoriesCost = {
+                music: totalCdsPrice + totalVinylsPrice,
+                clothing: (data.stuff || []).filter(i => i.category === 'clothing').reduce((s, i) => s + i.price, 0),
+                gear: (data.stuff || []).filter(i => i.category === 'gear').reduce((s, i) => s + i.price, 0),
+                other: (data.stuff || []).filter(i => i.category === 'other').reduce((s, i) => s + i.price, 0),
+            };
+
+            const maxBudget = Math.max(...Object.values(categoriesCost), 1);
+            const categoriesHTML = [
+                { id: 'music', name: '💿 Музыкальная полка', cost: categoriesCost.music, barColor: 'from-purple-500 to-indigo-500' },
+                { id: 'clothing', name: '👕 Коллекция Одежды & Мерча', cost: categoriesCost.clothing, barColor: 'from-teal-500 to-emerald-500' },
+                { id: 'gear', name: '🔌 Аудиотехника & Девайсы', cost: categoriesCost.gear, barColor: 'from-amber-500 to-orange-500' },
+                { id: 'other', name: '🎁 Другие предметы коллекции', cost: categoriesCost.other, barColor: 'from-pink-500 to-rose-500' }
+            ].map(cat => {
+                const pct = Math.round((cat.cost / maxBudget) * 100);
+                return `
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-gray-300 font-medium">${cat.name}</span>
+                            <span class="font-bold font-mono text-white">${cat.cost} ₴</span>
+                        </div>
+                        <div class="w-full bg-white/5 h-3 rounded-full overflow-hidden p-0.5 border border-white/5">
+                            <div class="bg-gradient-to-r ${cat.barColor} h-full rounded-full transition-all duration-700" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const catContainer = document.getElementById('analytics-categories');
+            if (catContainer) catContainer.innerHTML = categoriesHTML;
+
+            const totalMusicCount = (data.cds?.length || 0) + (data.vinyls?.length || 0);
+            const cdPct = totalMusicCount > 0 ? Math.round((data.cds?.length || 0) / totalMusicCount * 100) : 0;
+            const vinylPct = totalMusicCount > 0 ? Math.round((data.vinyls?.length || 0) / totalMusicCount * 100) : 0;
+            
+            const totalMusEl = document.getElementById('analytics-total-music');
+            if (totalMusEl) totalMusEl.innerText = totalMusicCount;
+            const cdPctEl = document.getElementById('analytics-cd-pct');
+            if (cdPctEl) cdPctEl.innerText = `${cdPct}% (${data.cds?.length || 0} шт.)`;
+            const vinylPctEl = document.getElementById('analytics-vinyl-pct');
+            if (vinylPctEl) vinylPctEl.innerText = `${vinylPct}% (${data.vinyls?.length || 0} шт.)`;
+
+            const allAcquisitions = [...(data.cds || []), ...(data.vinyls || []), ...(data.stuff || [])];
+            const topExpensive = [...allAcquisitions].sort((a, b) => b.price - a.price).slice(0, 5);
+            
+            const expensiveContainer = document.getElementById('analytics-top-expensive');
+            if (expensiveContainer) {
+                expensiveContainer.innerHTML = topExpensive.map((item, idx) => `
+                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-2xl border border-white/5 text-xs">
+                        <div class="flex items-center gap-3 truncate">
+                            <span class="font-bold text-yellow-500 font-mono w-4">${idx + 1}.</span>
+                            <div class="truncate">
+                                <p class="font-bold text-white truncate">${item.title}</p>
+                                <p class="text-gray-400 text-[10px] truncate">${item.artist || 'Мерч / Девайс'}</p>
+                            </div>
+                        </div>
+                        <span class="text-cyan-400 font-black font-mono ml-2 shrink-0">${item.price} ₴</span>
+                    </div>
+                `).join('') || `<p class="text-gray-500 text-xs italic py-4">Нет приобретенных предметов</p>`;
+            }
+
+            const topPlayed = [...(data.cds || []), ...(data.vinyls || [])]
+                .filter(i => (i.playCount || 0) > 0)
+                .sort((a, b) => b.playCount - a.playCount)
+                .slice(0, 5);
+
+            const playedContainer = document.getElementById('analytics-top-played');
+            if (playedContainer) {
+                playedContainer.innerHTML = topPlayed.map((item, idx) => `
+                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-2xl border border-white/5 text-xs">
+                        <div class="flex items-center gap-3 truncate">
+                            <span class="font-bold text-purple-400 font-mono w-4">${idx + 1}.</span>
+                            <div class="truncate">
+                                <p class="font-bold text-white truncate">${item.title}</p>
+                                <p class="text-gray-400 text-[10px] truncate">${item.artist || 'Вещь / Одежда'}</p>
+                            </div>
+                        </div>
+                        <div class="text-right ml-2 shrink-0">
+                            <span class="bg-purple-500/10 text-purple-300 font-bold px-2 py-1 rounded-lg font-mono">${item.playCount} 🎧</span>
+                        </div>
+                    </div>
+                `).join('') || `<p class="text-gray-500 text-xs italic py-4">Статистика активности пуста.</p>`;
+            }
+        }
+    </script>
+
+    <script>
         function updateUI() {
             const cdsVal = (data.cds || []).reduce((s, i) => s + i.price, 0);
             const vinylsVal = (data.vinyls || []).reduce((s, i) => s + i.price, 0);
+            const stuffVal = (data.stuff || []).reduce((s, i) => s + i.price, 0);
             const wishVal = (data.wishlists || []).reduce((s, i) => s + i.price, 0);
             
             document.getElementById('display-name').innerText = data.name || 'Коллекционер';
@@ -1607,13 +2505,19 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             document.getElementById('fav-input-album').value = data.favAlbum.name || '';
             document.getElementById('fav-input-album-url').value = data.favAlbum.url || '';
             
-            document.getElementById('user-xp').innerText = data.xp || 0;
-            document.getElementById('user-lvl').innerText = Math.floor((data.xp || 0) / 500) + 1;
-            document.getElementById('stat-col-val').innerText = (cdsVal + vinylsVal) + ' ₴';
+            const xpVal = data.xp || 0;
+            const lvl = Math.floor(xpVal / 500) + 1;
+            const currentLvlXP = xpVal % 500;
+            const progressPercent = (currentLvlXP / 500) * 100;
+
+            document.getElementById('user-lvl').innerText = lvl;
+            document.getElementById('user-xp-display').innerText = currentLvlXP;
+            document.getElementById('xp-progress-bar').style.width = `${progressPercent}%`;
+
+            document.getElementById('stat-col-val').innerText = (cdsVal + vinylsVal + stuffVal) + ' ₴';
             document.getElementById('stat-wish-val').innerText = wishVal + ' ₴';
-            document.getElementById('stat-count-val').innerText = (data.cds?.length || 0) + (data.vinyls?.length || 0);
+            document.getElementById('stat-count-val').innerText = (data.cds?.length || 0) + (data.vinyls?.length || 0) + (data.stuff?.length || 0);
             
-            // Расчет средней оценки
             const allRatedItems = [...(data.cds || []), ...(data.vinyls || [])].filter(i => (i.rating || 0) > 0);
             const averageRating = allRatedItems.length > 0 
                 ? (allRatedItems.reduce((acc, i) => acc + i.rating, 0) / allRatedItems.length).toFixed(1) 
@@ -1624,10 +2528,33 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             document.getElementById('count-cds').innerText = data.cds.length;
             document.getElementById('total-vinyls').innerText = vinylsVal;
             document.getElementById('count-vinyls').innerText = data.vinyls.length;
+            document.getElementById('total-stuff').innerText = stuffVal;
+            document.getElementById('count-stuff').innerText = data.stuff.length;
             document.getElementById('total-wishlists').innerText = wishVal;
             document.getElementById('count-wishlists').innerText = data.wishlists.length;
 
-            // Рендер достижений
+            renderAnalyticsTab();
+
+            const currentMode = data.cozyAtmosphereMode || 'vinyl';
+            const iconEl = document.getElementById('vinyl-icon-player');
+            if (iconEl) {
+                if (currentMode === 'vinyl' || currentMode === 'vinyl_pure' || currentMode === 'vinyl_old') iconEl.innerText = '💽';
+                else if (currentMode === 'rain') iconEl.innerText = '🌧️';
+                else if (currentMode === 'space') iconEl.innerText = '🌌';
+                else if (currentMode === 'tape') iconEl.innerText = '📻';
+            }
+
+            ['vinyl', 'vinyl_pure', 'vinyl_old', 'rain', 'space', 'tape'].forEach(m => {
+                const btn = document.getElementById(`atm-btn-${m}`);
+                if (btn) {
+                    if (m === currentMode) {
+                        btn.className = "p-3 rounded-xl border border-purple-500 bg-purple-600/20 text-white font-bold transition duration-300 ring-2 ring-purple-500/50 scale-105 shadow-[0_0_15px_rgba(139,92,246,0.3)]";
+                    } else {
+                        btn.className = "p-3 rounded-xl border border-white/5 bg-white/5 text-gray-400 font-bold hover:bg-white/10 hover:text-white hover:scale-102 transition duration-300";
+                    }
+                }
+            });
+
             const achGrid = document.getElementById('achievements-grid');
             if (achGrid) {
                 const unlocked = data.unlockedAchievements || [];
@@ -1712,7 +2639,6 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                 }).join('');
             }
 
-            // Обновление Артиста и Альбома месяца
             const artImg = document.getElementById('fav-artist-img');
             const artPlc = document.getElementById('fav-artist-placeholder');
             document.getElementById('fav-artist-text').innerText = data.favArtist.name || 'Нажмите, чтобы настроить';
@@ -1739,24 +2665,35 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                 albPlc.classList.remove('hidden');
             }
 
-            // Фоновый баннер
             const banner = document.getElementById('banner-bg');
             if(data.bannerImg) { banner.style.backgroundImage = `url(${data.bannerImg})`; }
 
-            // Фильтры
-            document.getElementById('filter-tags').innerHTML = (data.availableTags || []).map(t => `<button onclick="setFilter('${t.text}')" class="px-3 py-1 rounded-full text-xs ${currentFilter === t.text ? 'ring-2 ring-white' : ''}" style="background-color: ${t.color}">${t.text}</button>`).join('');
+            ['all', 'music', 'clothing', 'gear', 'other'].forEach(cat => {
+                const btn = document.getElementById(`filter-cat-${cat}`);
+                if (btn) {
+                    if (currentFilter === cat || (cat === 'all' && currentFilter === null)) {
+                        btn.className = "px-3 py-1 rounded-full border border-purple-500 text-xs bg-purple-500/20 text-white transition-all ring-1 ring-purple-500/50";
+                    } else {
+                        btn.className = "px-3 py-1 rounded-full border border-white/10 text-xs bg-white/5 hover:bg-white/10 text-gray-300 transition-all";
+                    }
+                }
+            });
 
-            // Самый дорогой релиз
-            const allReleases = [...(data.cds || []), ...(data.vinyls || [])];
+            document.getElementById('filter-tags').innerHTML = (data.availableTags || []).map(t => {
+                const isSelected = currentFilter === t.text;
+                return `<button onclick="setFilter('${t.text}')" class="px-3 py-1 rounded-full text-xs transition-all ${isSelected ? 'ring-2 ring-white scale-105 font-bold' : 'opacity-70 hover:opacity-100'}" style="background-color: ${t.color}">${t.text}</button>`;
+            }).join('');
+
+            const realSpentReleases = [...(data.cds || []), ...(data.vinyls || []), ...(data.stuff || [])];
             let mostExpensive = null;
-            if (allReleases.length > 0) {
-                mostExpensive = allReleases.reduce((max, item) => (item.price > max.price) ? item : max, allReleases[0]);
+            if (realSpentReleases.length > 0) {
+                mostExpensive = realSpentReleases.reduce((max, item) => (item.price > max.price) ? item : max, realSpentReleases[0]);
             }
             const expEl = document.getElementById('stat-most-expensive');
             if (expEl) {
                 if (mostExpensive) {
                     expEl.innerHTML = `
-                        <span class="text-xs text-gray-400 block truncate" title="${mostExpensive.artist || ''} — ${mostExpensive.title}">${mostExpensive.artist || ''} — ${mostExpensive.title}</span>
+                        <span class="text-xs text-gray-400 block truncate" title="${mostExpensive.artist || 'Вещь / Девайс'} — ${mostExpensive.title}">${mostExpensive.artist || 'Вещь'} — ${mostExpensive.title}</span>
                         <span class="text-xl font-black text-yellow-400 font-mono block mt-1">${mostExpensive.price} ₴</span>
                     `;
                 } else {
@@ -1764,11 +2701,14 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                 }
             }
 
-            // Рендер сеток дисков и пластинок с 3D анимацией выезжающих пластинок/CD
             const renderGrid = (key, id) => {
                 let items = data[key] || [];
                 if(key === 'wishlists' && currentFilter) {
-                    items = items.filter(i => (i.tags || []).find(t => t.text === currentFilter));
+                    if (['music', 'clothing', 'gear', 'other'].includes(currentFilter)) {
+                        items = items.filter(i => i.category === currentFilter);
+                    } else {
+                        items = items.filter(i => (i.tags || []).find(t => t.text === currentFilter));
+                    }
                 }
                 const searchInput = document.getElementById(`search-${key}`);
                 const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
@@ -1783,44 +2723,51 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                 gridEl.innerHTML = '';
                 items.forEach(i => {
                     const wrap = document.createElement('div');
-                    wrap.className = "release-container relative w-full h-[210px] overflow-visible";
+                    wrap.className = "release-container relative w-full min-h-[220px] overflow-visible mb-6 group";
+                    wrap.setAttribute('data-play-id', i.id);
 
-                    // Конструктор выдвижного носителя
                     const disc = document.createElement('div');
                     disc.className = "media-disc absolute left-4 top-4 w-36 h-36 rounded-full flex items-center justify-center pointer-events-none z-0 shadow-2xl spin-slow";
                     
-                    if (key === 'cds') {
-                        // Вид компакт-диска
-                        disc.className += " bg-gradient-to-tr from-zinc-800 via-zinc-300 to-zinc-700 border-4 border-zinc-900";
+                    const itemCat = i.category || 'music';
+
+                    if (key === 'cds' || (key === 'wishlists' && itemCat === 'music' && !i.formatDetails?.toLowerCase().includes('винил'))) {
+                        disc.className += " bg-gradient-to-tr from-zinc-850 via-zinc-200 to-zinc-650 border-4 border-zinc-900";
                         disc.innerHTML = `
                             <div class="w-12 h-12 rounded-full bg-zinc-900 border border-white/20 flex items-center justify-center">
                                 <div class="w-4 h-4 rounded-full bg-black"></div>
                             </div>
                         `;
-                    } else if (key === 'vinyls') {
-                        // Вид виниловой пластинки
+                    } else if (key === 'vinyls' || (key === 'wishlists' && itemCat === 'music' && i.formatDetails?.toLowerCase().includes('винил'))) {
                         disc.className += " bg-zinc-950 border-4 border-zinc-900";
                         disc.innerHTML = `
                             <div class="w-14 h-14 rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center">
                                 <div class="w-4 h-4 rounded-full bg-black"></div>
                             </div>
                         `;
+                    } else if (itemCat === 'clothing') {
+                        disc.className += " bg-teal-900 border-2 border-teal-500/30 flex items-center justify-center";
+                        disc.innerHTML = `<span class="text-3xl">👕</span>`;
+                    } else if (itemCat === 'gear') {
+                        disc.className += " bg-amber-900 border-2 border-amber-500/30 flex items-center justify-center";
+                        disc.innerHTML = `<span class="text-3xl">🔌</span>`;
                     } else {
-                        // По умолчанию для wishlist
                         disc.className += " bg-zinc-900 border-2 border-white/10";
                         disc.innerHTML = `<span class="text-xs text-gray-500">Wish</span>`;
                     }
 
-                    // Конструктор карточки релиза
                     const card = document.createElement('div');
-                    card.className = "release-card glass p-4 rounded-3xl relative z-10 w-full h-full hover:border-[var(--theme-btn)] transition-all duration-300 flex gap-4 overflow-hidden";
+                    card.className = "release-card glass p-4 rounded-3xl relative z-10 w-full h-full hover:border-[var(--theme-btn)] transition-all duration-300 flex flex-col justify-between overflow-hidden min-h-[200px]";
                     
+                    const headerRow = document.createElement('div');
+                    headerRow.className = "flex gap-4 items-start";
+
                     const imgContainer = document.createElement('div');
-                    imgContainer.className = "w-28 h-28 bg-white/5 rounded-2xl overflow-hidden shrink-0 border border-white/5 relative";
+                    imgContainer.className = "w-24 h-24 bg-white/5 rounded-2xl overflow-hidden shrink-0 border border-white/5 relative";
                     if (i.img) {
                         const img = document.createElement('img');
                         img.src = i.img;
-                        img.className = `w-full h-full object-cover ${i.imgPos === 'top' ? 'object-top' : i.imgPos === 'bottom' ? 'object-bottom' : 'object-center'}`;
+                        img.className = "w-full h-full object-cover object-center";
                         imgContainer.appendChild(img);
                     } else {
                         const noPhoto = document.createElement('div');
@@ -1829,83 +2776,200 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                         imgContainer.appendChild(noPhoto);
                     }
 
-                    // Звезды рейтинга на обложке
-                    if (i.rating > 0) {
+                    if (itemCat === 'music' && i.rating > 0) {
                         const ratingBadge = document.createElement('div');
-                        ratingBadge.className = "absolute bottom-1 right-1 bg-black/60 px-1.5 py-0.5 rounded text-[9px] text-yellow-400 font-bold";
+                        ratingBadge.className = "absolute bottom-1 right-1 bg-black/75 px-1.5 py-0.5 rounded text-[9px] text-yellow-400 font-bold border border-yellow-500/20";
                         ratingBadge.innerText = `⭐ ${i.rating}`;
                         imgContainer.appendChild(ratingBadge);
                     }
 
                     const infoContainer = document.createElement('div');
-                    infoContainer.className = "flex-1 min-w-0 flex flex-col justify-between";
+                    infoContainer.className = "flex-grow min-w-0";
 
-                    const metaDiv = document.createElement('div');
-                    metaDiv.className = "min-w-0";
-                    
-                    const artistEl = document.createElement('p');
-                    artistEl.className = "text-[10px] uppercase font-bold text-purple-400 truncate";
-                    artistEl.innerText = i.artist || 'Неизвестный артист';
-                    
+                    if (i.artist) {
+                        const artistEl = document.createElement('p');
+                        artistEl.className = "text-[10px] uppercase font-bold text-purple-400 truncate";
+                        artistEl.innerText = i.artist;
+                        infoContainer.appendChild(artistEl);
+                    }
+
                     const titleEl = document.createElement('h3');
-                    titleEl.className = "font-bold text-sm truncate text-white mt-0.5";
+                    titleEl.className = i.artist ? "font-bold text-sm truncate text-white mt-0.5" : "font-black text-base truncate text-white mt-2 leading-tight";
                     titleEl.title = i.title;
                     titleEl.innerText = i.title + (i.isGift ? ' 🎁' : '') + (i.isCustom ? ' ✨' : '');
+                    infoContainer.appendChild(titleEl);
 
                     const priceEl = document.createElement('p');
-                    priceEl.className = "text-cyan-400 font-mono text-sm mt-1";
+                    priceEl.className = "text-cyan-400 font-mono text-sm mt-1 font-bold";
                     priceEl.innerText = `${i.price} ₴`;
+                    infoContainer.appendChild(priceEl);
 
-                    metaDiv.appendChild(artistEl);
-                    metaDiv.appendChild(titleEl);
-                    metaDiv.appendChild(priceEl);
+                    if (i.whereBought) {
+                        const boughtEl = document.createElement('p');
+                        boughtEl.className = "text-[10px] text-purple-300 font-medium truncate mt-0.5";
+                        boughtEl.innerText = (key === 'wishlists' ? `🏪 Где: ${i.whereBought}` : `🏪 Куплено в: ${i.whereBought}`);
+                        infoContainer.appendChild(boughtEl);
+                    }
+
+                    const metaDetails = document.createElement('div');
+                    metaDetails.className = "text-[10px] text-gray-500 mt-2 space-y-0.5 font-medium";
+
+                    if (itemCat === 'music') {
+                        if (i.year || i.label || i.condition || i.formatDetails || i.priority) {
+                            let metaString = '';
+                            if (i.year) metaString += `📅 ${i.year} `;
+                            if (i.label) metaString += `• 🏷️ ${i.label}`;
+                            
+                            if (metaString) {
+                                const mainMeta = document.createElement('div');
+                                mainMeta.className = "truncate text-gray-400";
+                                mainMeta.innerText = metaString;
+                                metaDetails.appendChild(mainMeta);
+                            }
+
+                            if (i.formatDetails) {
+                                const fmtDetails = document.createElement('div');
+                                fmtDetails.className = "truncate text-purple-300";
+                                fmtDetails.innerText = `🎨 ${i.formatDetails}`;
+                                metaDetails.appendChild(fmtDetails);
+                            }
+
+                            if (i.condition) {
+                                const condDetails = document.createElement('span');
+                                condDetails.className = "inline-block bg-cyan-950/40 text-cyan-400 border border-cyan-500/20 px-1.5 py-0.5 rounded text-[8px] font-bold mt-1";
+                                condDetails.innerText = `Состояние: ${i.condition}`;
+                                metaDetails.appendChild(condDetails);
+                            }
+                        }
+                    } else if (itemCat === 'clothing') {
+                        if (i.size || i.style) {
+                            const clothDetails = document.createElement('div');
+                            clothDetails.className = "text-teal-400 font-semibold";
+                            clothDetails.innerText = `👕 Размер: ${i.size || 'Не указан'} ${i.style ? `(${i.style})` : ''}`;
+                            metaDetails.appendChild(clothDetails);
+                        }
+                    } else if (itemCat === 'gear') {
+                        if (i.brand) {
+                            const gearDetails = document.createElement('div');
+                            gearDetails.className = "text-amber-400 font-semibold truncate";
+                            gearDetails.innerText = `🔌 Девайс: ${i.brand}`;
+                            metaDetails.appendChild(gearDetails);
+                        }
+                    }
+
+                    if (key === 'wishlists' && i.priority) {
+                        const prioDetails = document.createElement('span');
+                        prioDetails.className = "inline-block bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-[8px] font-bold mt-1 text-yellow-400";
+                        prioDetails.innerText = i.priority;
+                        metaDetails.appendChild(prioDetails);
+                    }
+
+                    infoContainer.appendChild(metaDetails);
 
                     if (i.url) {
                         const linkEl = document.createElement('a');
                         linkEl.href = i.url;
                         linkEl.target = "_blank";
-                        linkEl.className = "text-[10px] text-blue-400 hover:underline block truncate mt-1";
-                        linkEl.innerText = "🔗 Купить";
-                        metaDiv.appendChild(linkEl);
+                        linkEl.className = "text-[10px] text-blue-400 hover:underline inline-block mt-2 font-bold";
+                        linkEl.innerText = "🔗 Посмотреть на сайте";
+                        infoContainer.appendChild(linkEl);
                     }
 
-                    const tagsContainer = document.createElement('div');
-                    tagsContainer.className = "flex flex-wrap gap-1 mt-2";
-                    (i.tags || []).forEach(t => {
-                        const tagSpan = document.createElement('span');
-                        tagSpan.className = "px-1.5 py-0.5 rounded text-[8px]";
-                        tagSpan.style.backgroundColor = t.color;
-                        tagSpan.innerText = t.text;
-                        tagsContainer.appendChild(tagSpan);
-                    });
+                    headerRow.appendChild(imgContainer);
+                    headerRow.appendChild(infoContainer);
+                    card.appendChild(headerRow);
 
-                    infoContainer.appendChild(metaDiv);
-                    infoContainer.appendChild(tagsContainer);
+                    const footerContainer = document.createElement('div');
+                    footerContainer.className = "mt-3 space-y-1.5";
 
-                    // Органы управления на карточке (Hover)
+                    const badgesRow = document.createElement('div');
+                    badgesRow.className = "flex flex-wrap gap-1 items-center";
+
+                    if (key === 'wishlists' || key === 'stuff') {
+                        const catBadge = document.createElement('span');
+                        catBadge.className = "px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-wider";
+                        if (itemCat === 'music') {
+                            catBadge.className += " bg-purple-500/20 text-purple-300 border border-purple-500/20";
+                            catBadge.innerText = "💿 Музыка";
+                        } else if (itemCat === 'clothing') {
+                            catBadge.className += " bg-teal-500/20 text-teal-300 border border-teal-500/20";
+                            catBadge.innerText = "👕 Одежда";
+                        } else if (itemCat === 'gear') {
+                            catBadge.className += " bg-amber-500/20 text-amber-300 border border-amber-500/20";
+                            catBadge.innerText = "🔌 Техника";
+                        } else {
+                            catBadge.className += " bg-gray-500/20 text-gray-300 border border-gray-500/20";
+                            catBadge.innerText = "🎁 Другое";
+                        }
+                        badgesRow.appendChild(catBadge);
+                    }
+
+                    if (i.tags && i.tags.length > 0) {
+                        i.tags.forEach(t => {
+                            const tagSpan = document.createElement('span');
+                            tagSpan.className = "px-1.5 py-0.5 rounded text-[8px]";
+                            tagSpan.style.backgroundColor = t.color;
+                            tagSpan.innerText = t.text;
+                            badgesRow.appendChild(tagSpan);
+                        });
+                    }
+                    footerContainer.appendChild(badgesRow);
+
+                    if (key !== 'wishlists' && key !== 'stuff' && itemCat === 'music') {
+                        const listenerRow = document.createElement('div');
+                        listenerRow.className = "flex justify-between items-center bg-white/5 p-2 rounded-2xl border border-white/5 text-[10px] text-gray-400 font-medium";
+                        
+                        const statsDiv = document.createElement('div');
+                        statsDiv.className = "space-y-0.5";
+                        
+                        statsDiv.innerHTML = `
+                            <div>Прослушано: <span class="text-purple-300 font-black font-mono">${i.playCount || 0}</span> раз(а)</div>
+                            ${i.lastPlayed ? `<div class="text-[9px] text-gray-500">Последний: ${i.lastPlayed}</div>` : ''}
+                        `;
+                        const playBtn = document.createElement('button');
+                        playBtn.className = "bg-purple-600/30 hover:bg-purple-600/70 border border-purple-500/30 text-purple-200 px-2.5 py-1 rounded-xl transition font-black flex items-center gap-1 active:scale-95";
+                        playBtn.innerHTML = "🎧 Скробблинг";
+                        playBtn.onclick = (e) => { e.stopPropagation(); logPlay(key, i.id); };
+                        
+                        listenerRow.appendChild(statsDiv);
+                        listenerRow.appendChild(playBtn);
+                        footerContainer.appendChild(listenerRow);
+                    }
+
+                    if (key === 'wishlists') {
+                        const buyMoveBtn = document.createElement('button');
+                        buyMoveBtn.className = "w-full bg-green-600/20 hover:bg-green-600/40 border border-green-500/30 text-green-300 text-xs py-2 rounded-xl transition-all font-bold mt-1 flex items-center justify-center gap-1.5 active:scale-95";
+                        buyMoveBtn.innerHTML = "📥 В коллекцию (Куплено)";
+                        buyMoveBtn.onclick = (e) => { e.stopPropagation(); openPurchaseMoveModal(i.id); };
+                        footerContainer.appendChild(buyMoveBtn);
+                    }
+
+                    if (i.note) {
+                        const notePreview = document.createElement('div');
+                        notePreview.className = "text-[11px] text-gray-400 italic bg-white/5 p-2 rounded-xl border border-white/5 line-clamp-2 mt-1 leading-relaxed relative overflow-hidden";
+                        notePreview.innerText = `💬 ${i.note}`;
+                        footerContainer.appendChild(notePreview);
+                    }
+
+                    card.appendChild(footerContainer);
+
                     const actionsContainer = document.createElement('div');
-                    actionsContainer.className = "absolute right-3 bottom-3 flex gap-1 opacity-0 group-hover:opacity-100 transition duration-300 z-20";
-
-                    const cyclePosBtn = document.createElement('button');
-                    cyclePosBtn.className = "bg-white/10 p-1.5 rounded-xl hover:bg-white/20 text-xs";
-                    cyclePosBtn.title = "Позиция фото";
-                    cyclePosBtn.innerText = "🔄";
-                    cyclePosBtn.onclick = (e) => { e.stopPropagation(); cyclePos(key, i.id); };
+                    actionsContainer.className = "absolute right-3 top-3 flex gap-1 opacity-0 group-hover:opacity-100 transition duration-350 z-20";
 
                     const openNoteBtn = document.createElement('button');
-                    openNoteBtn.className = "bg-white/10 p-1.5 rounded-xl hover:bg-white/20 text-xs";
+                    openNoteBtn.className = "bg-black/80 hover:bg-black p-1.5 rounded-xl text-xs border border-white/10";
                     openNoteBtn.title = "Рецензия";
                     openNoteBtn.innerText = "💬";
                     openNoteBtn.onclick = (e) => { e.stopPropagation(); openNote(key, i.id); };
 
                     const editBtn = document.createElement('button');
-                    editBtn.className = "bg-white/10 p-1.5 rounded-xl hover:bg-white/20 text-xs";
+                    editBtn.className = "bg-black/80 hover:bg-black p-1.5 rounded-xl text-xs border border-white/10";
                     editBtn.title = "Редактировать";
                     editBtn.innerText = "✏️";
                     editBtn.onclick = (e) => { e.stopPropagation(); openModal(key, i.id); };
 
                     const delBtn = document.createElement('button');
-                    delBtn.className = "bg-red-500/20 p-1.5 rounded-xl hover:bg-red-500/40 text-red-400 text-xs";
+                    delBtn.className = "bg-red-950/80 hover:bg-red-900 p-1.5 rounded-xl text-red-400 text-xs border border-red-500/25";
                     delBtn.title = "Удалить";
                     delBtn.innerText = "✕";
                     delBtn.onclick = (e) => {
@@ -1914,32 +2978,24 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                         save();
                     };
 
-                    actionsContainer.appendChild(cyclePosBtn);
                     actionsContainer.appendChild(openNoteBtn);
                     actionsContainer.appendChild(editBtn);
                     actionsContainer.appendChild(delBtn);
-
-                    card.appendChild(imgContainer);
-                    card.appendChild(infoContainer);
                     card.appendChild(actionsContainer);
 
                     wrap.appendChild(disc);
                     wrap.appendChild(card);
-                    
-                    // Позволим всей карточке быть группой для анимации
-                    wrap.className += " group";
-
                     gridEl.appendChild(wrap);
                 });
             };
             
             renderGrid('cds', 'cd-grid'); 
             renderGrid('vinyls', 'vinyl-grid'); 
+            renderGrid('stuff', 'stuff-grid');
             renderGrid('wishlists', 'wishlist-grid');
             renderQuickNotes();
             updateQuoteUI();
 
-            // Рендер коллекционных целей
             const goalsGrid = document.getElementById('goals-grid');
             if(goalsGrid) {
                 goalsGrid.innerHTML = '';
@@ -2019,7 +3075,6 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             const avatar = document.getElementById('main-avatar');
             if(data.avatar) { avatar.src = data.avatar; avatar.classList.remove('hidden'); }
 
-            // Расчет статистики по артистам
             const stats = {};
             [...data.cds, ...data.vinyls].forEach(item => {
                 const artistName = (item.artist || '').trim();
@@ -2033,7 +3088,7 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             if (statsEl) {
                 statsEl.innerHTML = '';
                 if (sortedStats.length === 0) {
-                    statsEl.innerHTML = `<p class="text-gray-500 text-sm italic col-span-full">Укажите исполнителей ваших релизов...</p>`;
+                    statsEl.innerHTML = `<p class="text-gray-500 text-sm italic col-span-full text-center py-4">Укажите исполнителей ваших релизов...</p>`;
                 } else {
                     sortedStats.forEach(stat => {
                         const artist = stat[0];
@@ -2058,7 +3113,6 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
                 }
             }
 
-            // Рендер музыкальных сайтов
             const sitesGrid = document.getElementById('music-sites-grid');
             if (sitesGrid) {
                 sitesGrid.innerHTML = '';
