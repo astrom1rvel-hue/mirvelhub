@@ -199,11 +199,12 @@
                 </div>
             </div>
 
-            <!-- Grid: Оптимизирована адаптивность колонок -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mb-10">
-                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Коллекция</p><h3 class="text-xl md:text-2xl font-black mt-2 text-purple-400 truncate" id="stat-col-val">0 ₴</h3></div>
+            <!-- Grid: Оптимизирована адаптивность колонок под 6 элементов -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mb-10">
+                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Муз. Коллекция 💿</p><h3 class="text-xl md:text-2xl font-black mt-2 text-purple-400 truncate" id="stat-music-col-val">0 ₴</h3></div>
+                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Коллекция вещей 📦</p><h3 class="text-xl md:text-2xl font-black mt-2 text-teal-400 truncate" id="stat-stuff-col-val">0 ₴</h3></div>
                 <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Желаемое</p><h3 class="text-xl md:text-2xl font-black mt-2 text-cyan-400 truncate" id="stat-wish-val">0 ₴</h3></div>
-                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Всего вещей</p><h3 class="text-xl md:text-2xl font-black mt-2 text-white truncate" id="stat-count-val">0</h3></div>
+                <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Всего предметов</p><h3 class="text-xl md:text-2xl font-black mt-2 text-white truncate" id="stat-count-val">0</h3></div>
                 <div class="glass p-6 rounded-3xl"><p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Ср. Оценка ⭐</p><h3 class="text-xl md:text-2xl font-black mt-2 text-yellow-400 truncate" id="stat-avg-rating">0.0</h3></div>
                 <div class="glass p-6 rounded-3xl relative overflow-hidden group col-span-2 md:col-span-1">
                     <p class="text-gray-500 text-xs uppercase font-bold tracking-wider">Самый дорогой релиз 💎</p>
@@ -2514,7 +2515,8 @@ Output strictly as a raw valid JSON array, without markdown backticks block form
             document.getElementById('user-xp-display').innerText = currentLvlXP;
             document.getElementById('xp-progress-bar').style.width = `${progressPercent}%`;
 
-            document.getElementById('stat-col-val').innerText = (cdsVal + vinylsVal + stuffVal) + ' ₴';
+            document.getElementById('stat-music-col-val').innerText = (cdsVal + vinylsVal) + ' ₴';
+            document.getElementById('stat-stuff-col-val').innerText = stuffVal + ' ₴';
             document.getElementById('stat-wish-val').innerText = wishVal + ' ₴';
             document.getElementById('stat-count-val').innerText = (data.cds?.length || 0) + (data.vinyls?.length || 0) + (data.stuff?.length || 0);
             
