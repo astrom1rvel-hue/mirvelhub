@@ -142,6 +142,22 @@
                     <!-- Заполняется динамически -->
                 </div>
             </div>
+
+            <!-- Блок любимых музыкальных сайтов -->
+            <div class="glass p-8 rounded-3xl mt-10">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h3 class="text-gray-400 text-sm uppercase tracking-wider font-bold">🛒 Любимые музыкальные сайты</h3>
+                        <p class="text-xs text-gray-500">Быстрый доступ к покупке пластинок и дисков</p>
+                    </div>
+                    <button onclick="openMusicSiteModal()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs px-4 py-2.5 rounded-xl transition font-bold shadow-lg">
+                        + Добавить сайт
+                    </button>
+                </div>
+                <div id="music-sites-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Заполняется динамически -->
+                </div>
+            </div>
         </section>
 
         <section id="cds" class="hidden fade-in">
@@ -344,14 +360,40 @@
             <button onclick="closeModal('artist-stats-modal')" class="w-full bg-white/10 hover:bg-white/20 py-4 rounded-xl font-bold transition-all mt-2">Закрыть</button>
         </div>
     </div>
+
+    <!-- Модалка для добавления музыкальных сайтов -->
+    <div id="music-site-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-8 rounded-3xl w-96 space-y-4 shadow-2xl">
+            <h2 class="text-2xl font-bold">Добавить маркетплейс</h2>
+            <input id="site-name" placeholder="Название (например: Discogs)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
+            <input id="site-url" placeholder="Ссылка (например: discogs.com)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
+            <div class="flex gap-4 items-center">
+                <label class="text-xs text-gray-400 block font-bold uppercase tracking-wider">Эмодзи-иконка:</label>
+                <input id="site-emoji" value="🛒" class="w-16 bg-white/5 p-3 rounded-xl border border-white/10 text-white text-center focus:outline-none focus:border-purple-500/50">
+            </div>
+            <button onclick="saveMusicSite()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button>
+            <button onclick="closeModal('music-site-modal')" class="w-full bg-white/10 py-4 rounded-xl">Отмена</button>
+        </div>
+    </div>
     
     <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl text-3xl z-40 hover:scale-110 transition-transform">📝</button>
 
     <script>
-        const defaults = { cds: [], vinyls: [], wishlists: [], goals: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', bannerImg: '', favArtist: {name:'', url:'', img:''}, favAlbum: {name:'', url:'', img:''}, quickNotes: [], selectedTheme: '' };
+        const defaults = { cds: [], vinyls: [], wishlists: [], goals: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', bannerImg: '', favArtist: {name:'', url:'', img:''}, favAlbum: {name:'', url:'', img:''}, quickNotes: [], selectedTheme: '', musicSites: [] };
         let data = JSON.parse(localStorage.getItem('mirvel_data')) || { ...defaults };
         data = { ...defaults, ...data };
         let tempTags = []; let currentFilter = null; let editingNoteId = null;
+
+        // По умолчанию, если список сайтов пуст, добавим популярные площадки
+        const defaultSites = [
+            { id: 1, name: 'Discogs', url: 'https://www.discogs.com', emoji: '💿' },
+            { id: 2, name: 'Bandcamp', url: 'https://www.bandcamp.com', emoji: '🎸' },
+            { id: 3, name: 'eBay', url: 'https://www.ebay.com', emoji: '📦' },
+            { id: 4, name: 'MusicStack', url: 'https://www.musicstack.com', emoji: '🛒' }
+        ];
+        if (!data.musicSites || data.musicSites.length === 0) {
+            data.musicSites = [...defaultSites];
+        }
 
         function save() { localStorage.setItem('mirvel_data', JSON.stringify(data)); updateUI(); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
@@ -528,6 +570,45 @@
             data.goals = (data.goals || []).filter(g => g.id !== id);
             save();
             showToast("Цель удалена");
+        };
+
+        // Функции для музыкальных сайтов
+        window.openMusicSiteModal = () => {
+            document.getElementById('site-name').value = '';
+            document.getElementById('site-url').value = '';
+            document.getElementById('site-emoji').value = '🛒';
+            document.getElementById('music-site-modal').classList.remove('hidden');
+        };
+
+        window.saveMusicSite = () => {
+            const name = document.getElementById('site-name').value.trim();
+            let url = document.getElementById('site-url').value.trim();
+            const emoji = document.getElementById('site-emoji').value.trim() || '🌐';
+
+            if (!name || !url) {
+                showToast("Заполните название и ссылку!");
+                return;
+            }
+
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+            }
+
+            if (!data.musicSites) data.musicSites = [];
+            data.musicSites.push({ id: Date.now(), name, url, emoji });
+            save();
+            closeModal('music-site-modal');
+            showToast("Сайт добавлен!");
+        };
+
+        window.deleteMusicSite = (id, event) => {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            data.musicSites = (data.musicSites || []).filter(s => s.id !== id);
+            save();
+            showToast("Сайт удален");
         };
 
         // Тэги и примечания
@@ -802,6 +883,30 @@
                         <div onclick="showArtistStats('${artist.replace(/'/g, "\\'")}')" class="bg-white/5 p-4 rounded-2xl border border-white/5 flex justify-between items-center cursor-pointer hover:border-[var(--theme-btn)] hover:bg-white/10 hover:scale-[1.02] transition-all">
                             <span class="font-medium truncate mr-2 text-sm" title="${artist}">${artist}</span>
                             <span class="bg-purple-500/20 text-purple-300 text-xs font-bold px-2 py-0.5 rounded-lg shrink-0">${count} рел.</span>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Рендер музыкальных сайтов
+            const sitesGrid = document.getElementById('music-sites-grid');
+            if (sitesGrid) {
+                const sitesList = data.musicSites || [];
+                if (sitesList.length === 0) {
+                    sitesGrid.innerHTML = `<p class="text-gray-500 text-sm italic col-span-full">Добавьте сайты для быстрого перехода...</p>`;
+                } else {
+                    sitesGrid.innerHTML = sitesList.map(s => `
+                        <div class="glass p-5 rounded-3xl border border-white/5 flex flex-col justify-between hover:border-[var(--theme-btn)] hover:bg-white/10 hover:scale-[1.02] transition-all relative group h-28">
+                            <a href="${s.url}" target="_blank" class="flex items-center gap-4 h-full w-full">
+                                <span class="text-3xl filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] select-none">${s.emoji || '🌐'}</span>
+                                <div class="truncate">
+                                    <h4 class="font-black text-white text-base truncate" title="${s.name}">${s.name}</h4>
+                                    <p class="text-[10px] text-gray-500 truncate mt-0.5">${s.url.replace(/^https?:\/\/(www\.)?/, '')}</p>
+                                </div>
+                            </a>
+                            <button onclick="deleteMusicSite(${s.id}, event)" class="absolute top-4 right-4 bg-red-500/10 text-red-400 p-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/30" title="Удалить">
+                                ✕
+                            </button>
                         </div>
                     `).join('');
                 }
