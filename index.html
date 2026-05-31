@@ -243,6 +243,9 @@
             <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
             <input id="item-url" placeholder="Ссылка (URL)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 hidden">
             <div id="gift-container" class="flex items-center gap-2"><input type="checkbox" id="item-gift"> <label>Подарок 🎁</label></div>
+            <!-- Опция для кастомного CD диска -->
+            <div id="custom-cd-container" class="flex items-center gap-2 hidden"><input type="checkbox" id="item-custom-cd"> <label>Кастомный CD 💿✨</label></div>
+            
             <div id="tags-selector" class="hidden space-y-2"><div class="text-sm text-gray-400">Выберите теги:</div><div id="available-tags-list" class="flex flex-wrap gap-2"></div></div>
             <input type="file" id="item-img" accept="image/*" class="w-full text-sm p-2 bg-white/5 rounded-xl border border-white/10">
             <button onclick="saveItem()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button>
@@ -400,6 +403,7 @@
             document.getElementById('edit-type').value = type; document.getElementById('edit-id').value = id || '';
             document.getElementById('item-url').classList.toggle('hidden', type !== 'wishlists');
             document.getElementById('gift-container').classList.toggle('hidden', type === 'wishlists');
+            document.getElementById('custom-cd-container').classList.toggle('hidden', type !== 'cds');
             document.getElementById('tags-selector').classList.toggle('hidden', type !== 'wishlists');
             window.tempImg = ''; tempTags = [];
             
@@ -410,6 +414,7 @@
                 document.getElementById('item-price').value = item.price;
                 document.getElementById('item-url').value = item.url || '';
                 document.getElementById('item-gift').checked = !!item.isGift;
+                document.getElementById('item-custom-cd').checked = !!item.isCustom;
                 tempTags = item.tags || [];
             } else {
                 document.getElementById('item-title').value = ''; 
@@ -417,6 +422,7 @@
                 document.getElementById('item-price').value = '';
                 document.getElementById('item-url').value = ''; 
                 document.getElementById('item-gift').checked = false;
+                document.getElementById('item-custom-cd').checked = false;
             }
             renderModalTags();
             document.getElementById('modal').classList.remove('hidden');
@@ -430,12 +436,13 @@
             const price = parseFloat(document.getElementById('item-price').value) || 0;
             const url = document.getElementById('item-url').value;
             const isGift = document.getElementById('item-gift').checked;
+            const isCustom = document.getElementById('item-custom-cd').checked;
             
             if(idStr) {
                 const item = data[type].find(x => x.id === parseInt(idStr));
-                Object.assign(item, { title, artist, price, url, isGift, tags: [...tempTags], img: window.tempImg || item.img });
+                Object.assign(item, { title, artist, price, url, isGift, isCustom, tags: [...tempTags], img: window.tempImg || item.img });
             } else {
-                data[type].push({ id: Date.now(), title, artist, price, url, isGift, tags: [...tempTags], img: window.tempImg, imgPos: 'center', note: '' });
+                data[type].push({ id: Date.now(), title, artist, price, url, isGift, isCustom, tags: [...tempTags], img: window.tempImg, imgPos: 'center', note: '' });
             }
             const colSum = (data.cds.reduce((s, i) => s + i.price, 0) + data.vinyls.reduce((s, i) => s + i.price, 0));
             data.xp = Math.floor(colSum / 10);
@@ -493,9 +500,10 @@
             } else {
                 listEl.innerHTML = allReleases.map(i => {
                     const icon = artistCds.includes(i) ? '💿' : '💽';
+                    const customBadge = (artistCds.includes(i) && i.isCustom) ? ' ✨' : '';
                     return `
                         <div class="bg-white/5 p-3 rounded-xl text-xs flex justify-between items-center border border-white/5">
-                            <span class="truncate font-medium text-gray-200">${icon} ${i.title}</span>
+                            <span class="truncate font-medium text-gray-200">${icon} ${i.title}${customBadge}</span>
                             <span class="text-cyan-400 font-mono font-bold shrink-0">${i.price} ₴</span>
                         </div>
                     `;
@@ -608,12 +616,13 @@
                     const pos = i.imgPos === 'top' ? 'object-top' : i.imgPos === 'bottom' ? 'object-bottom' : 'object-center';
                     // Форматируем название как Артист — Альбом
                     const titleText = i.artist ? `${i.artist} — ${i.title}` : i.title;
+                    const customBadge = (key === 'cds' && i.isCustom) ? ' ✨' : '';
                     return `
                     <div class="glass p-6 rounded-3xl card-hover relative group">
                         <div class="w-full h-40 bg-white/5 rounded-2xl mb-4 overflow-hidden">
                             ${i.img ? `<img src="${i.img}" class="w-full h-full object-cover ${pos}">` : '<div class="h-full flex items-center justify-center opacity-20">Без фото</div>'}
                         </div>
-                        <h3 class="font-bold truncate" title="${titleText}">${titleText} ${i.isGift ? '🎁' : ''}</h3>
+                        <h3 class="font-bold truncate" title="${titleText}">${titleText} ${i.isGift ? '🎁' : ''}${customBadge}</h3>
                         <p class="text-cyan-400 font-mono text-sm">${i.price} ₴</p>
                         ${i.url ? `<a href="${i.url}" target="_blank" class="text-xs text-blue-400 hover:underline block mt-1">🔗 Ссылка</a>` : ''}
                         <div class="flex flex-wrap gap-1 mt-2">${(i.tags || []).map(t => `<span class="px-2 py-0.5 rounded text-[10px]" style="background-color: ${t.color}">${t.text}</span>`).join('')}</div>
