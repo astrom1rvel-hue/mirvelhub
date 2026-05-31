@@ -6,25 +6,88 @@
     <title>MIRVEL HUB</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --bg-dark: #050508; --glass: rgba(255, 255, 255, 0.03); }
+        :root { 
+            --bg-dark: #050508; 
+            --glass: rgba(255, 255, 255, 0.03); 
+            --theme-color: rgba(139, 92, 246, 0.5); /* Стандартная фиолетовая */
+            --theme-btn: rgb(139, 92, 246);
+        }
         body { background: var(--bg-dark); color: #fff; font-family: 'Inter', sans-serif; }
         .glass { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
         .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .card-hover:hover { transform: translateY(-5px) scale(1.02); border-color: rgba(139, 92, 246, 0.5); }
+        .card-hover:hover { transform: translateY(-5px) scale(1.02); border-color: var(--theme-color); }
         .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Стили для полной и корректной перезаписи Tailwind-классов под кастомные темы */
+        
+        /* Синяя Тема */
+        body.theme-blue { 
+            --theme-color: rgba(59, 130, 246, 0.5); 
+            --theme-btn: rgb(59, 130, 246); 
+        }
+        body.theme-blue .text-purple-400 { color: #3b82f6 !important; }
+        body.theme-blue .text-purple-300 { color: #60a5fa !important; }
+        body.theme-blue .text-cyan-400 { color: #06b6d4 !important; }
+        body.theme-blue .bg-purple-600 { background-color: #2563eb !important; }
+        body.theme-blue .bg-purple-600:hover { background-color: #1d4ed8 !important; }
+        body.theme-blue .bg-cyan-600 { background-color: #0891b2 !important; }
+        body.theme-blue .border-purple-500\/30 { border-color: rgba(59, 130, 246, 0.3) !important; }
+        body.theme-blue .from-purple-400 { --tw-gradient-from: #60a5fa !important; --tw-gradient-to: rgb(96 165 250 / 0) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+        body.theme-blue .to-cyan-400 { --tw-gradient-to: #06b6d4 !important; }
+
+        /* Зеленая Тема */
+        body.theme-green { 
+            --theme-color: rgba(34, 197, 94, 0.5); 
+            --theme-btn: rgb(34, 197, 94); 
+        }
+        body.theme-green .text-purple-400 { color: #22c55e !important; }
+        body.theme-green .text-purple-300 { color: #4ade80 !important; }
+        body.theme-green .text-cyan-400 { color: #10b981 !important; }
+        body.theme-green .bg-purple-600 { background-color: #16a34a !important; }
+        body.theme-green .bg-purple-600:hover { background-color: #15803d !important; }
+        body.theme-green .bg-cyan-600 { background-color: #047857 !important; }
+        body.theme-green .border-purple-500\/30 { border-color: rgba(34, 197, 94, 0.3) !important; }
+        body.theme-green .from-purple-400 { --tw-gradient-from: #4ade80 !important; --tw-gradient-to: rgb(74 222 128 / 0) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+        body.theme-green .to-cyan-400 { --tw-gradient-to: #10b981 !important; }
+
+        /* Розовая Тема */
+        body.theme-pink { 
+            --theme-color: rgba(236, 72, 153, 0.5); 
+            --theme-btn: rgb(236, 72, 153); 
+        }
+        body.theme-pink .text-purple-400 { color: #ec4899 !important; }
+        body.theme-pink .text-purple-300 { color: #f472b6 !important; }
+        body.theme-pink .text-cyan-400 { color: #f43f5e !important; }
+        body.theme-pink .bg-purple-600 { background-color: #db2777 !important; }
+        body.theme-pink .bg-purple-600:hover { background-color: #be185d !important; }
+        body.theme-pink .bg-cyan-600 { background-color: #9d174d !important; }
+        body.theme-pink .border-purple-500\/30 { border-color: rgba(236, 72, 153, 0.3) !important; }
+        body.theme-pink .from-purple-400 { --tw-gradient-from: #f472b6 !important; --tw-gradient-to: rgb(244 114 182 / 0) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+        body.theme-pink .to-cyan-400 { --tw-gradient-to: #f43f5e !important; }
     </style>
 </head>
 <body class="flex min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black">
 
     <nav class="w-64 p-8 flex flex-col gap-6 border-r border-white/5">
         <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic">MIRVEL HUB</h1>
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-2 flex-grow">
             <button onclick="showPage('home')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🏠 Главная</button>
             <button onclick="showPage('cds')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">💿 CD Коллекция</button>
             <button onclick="showPage('vinyls')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">💽 Винил</button>
             <button onclick="showPage('wishlists')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🎁 Желаемое</button>
             <button onclick="showPage('profile')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">👤 Профиль</button>
+        </div>
+        
+        <!-- Цветовые темы -->
+        <div class="mt-auto pt-4 border-t border-white/5">
+            <p class="text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-2">Цветовая тема</p>
+            <div class="flex gap-2">
+                <button onclick="setTheme('')" class="w-6 h-6 rounded-full bg-purple-500 border border-white/20 hover:scale-110 transition-all duration-300" title="Стандартная"></button>
+                <button onclick="setTheme('theme-blue')" class="w-6 h-6 rounded-full bg-blue-500 border border-white/20 hover:scale-110 transition-all duration-300" title="Синяя"></button>
+                <button onclick="setTheme('theme-green')" class="w-6 h-6 rounded-full bg-green-500 border border-white/20 hover:scale-110 transition-all duration-300" title="Зеленая"></button>
+                <button onclick="setTheme('theme-pink')" class="w-6 h-6 rounded-full bg-pink-500 border border-white/20 hover:scale-110 transition-all duration-300" title="Розовая"></button>
+            </div>
         </div>
     </nav>
 
@@ -38,7 +101,13 @@
                     <p class="text-gray-500 text-sm mb-6">Любимые: <span id="display-artists" class="text-purple-300"></span></p>
                     <p class="text-gray-400 text-lg">Уровень: <span id="user-lvl" class="text-purple-400 font-bold">1</span> | XP: <span id="user-xp" class="text-cyan-400 font-bold">0</span></p>
                 </div>
-                <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
+                <div class="flex flex-col items-end gap-4 relative z-10">
+                    <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
+                    <!-- Кнопка "Что послушать" -->
+                    <button onclick="getRandomRelease()" class="bg-purple-600 hover:bg-purple-500 text-white border border-white/10 px-4 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center gap-2">
+                        🎲 Что послушать?
+                    </button>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -47,7 +116,7 @@
                 <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Всего предметов (CD+Vinyl)</p><h3 class="text-3xl font-black mt-2 text-white" id="stat-count-val">0</h3></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                 <div class="glass p-5 rounded-3xl">
                     <h3 class="text-gray-500 text-sm mb-2 uppercase tracking-wider">Артист месяца</h3>
                     <a id="fav-link-artist" href="#" target="_blank" class="text-xl font-bold hover:text-cyan-400 transition"><span id="fav-artist-text">...</span></a>
@@ -59,11 +128,26 @@
                     <div id="fav-album-img-wrapper" class="w-48 h-48 bg-white/10 rounded-xl overflow-hidden mt-4 hidden"><img id="fav-album-img" class="w-full h-full object-cover"></div>
                 </div>
             </div>
+
+            <!-- Блок статистики артистов на Главной -->
+            <div class="glass p-8 rounded-3xl">
+                <h3 class="text-gray-400 text-sm mb-4 uppercase tracking-wider font-bold">Статистика релизов по артистам</h3>
+                <div id="artist-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Заполняется динамически -->
+                </div>
+            </div>
         </section>
 
         <section id="cds" class="hidden fade-in">
             <div class="flex justify-between items-center mb-10">
-                <div><h2 class="text-4xl font-bold">CD Коллекция</h2><p class="text-gray-500">Сумма: <span id="total-cds">0</span> ₴ | Предметов: <span id="count-cds">0</span></p></div>
+                <div class="flex items-center gap-6">
+                    <div>
+                        <h2 class="text-4xl font-bold">CD Коллекция</h2>
+                        <p class="text-gray-500">Сумма: <span id="total-cds">0</span> ₴ | Предметов: <span id="count-cds">0</span></p>
+                    </div>
+                    <!-- Поиск по CD -->
+                    <input type="text" id="search-cds" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-64">
+                </div>
                 <button onclick="openModal('cds')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button>
             </div>
             <div id="cd-grid" class="grid grid-cols-4 gap-6"></div>
@@ -71,7 +155,14 @@
         
         <section id="vinyls" class="hidden fade-in">
             <div class="flex justify-between items-center mb-10">
-                <div><h2 class="text-4xl font-bold">Винил</h2><p class="text-gray-500">Сумма: <span id="total-vinyls">0</span> ₴ | Предметов: <span id="count-vinyls">0</span></p></div>
+                <div class="flex items-center gap-6">
+                    <div>
+                        <h2 class="text-4xl font-bold">Винил</h2>
+                        <p class="text-gray-500">Сумма: <span id="total-vinyls">0</span> ₴ | Предметов: <span id="count-vinyls">0</span></p>
+                    </div>
+                    <!-- Поиск по Винилу -->
+                    <input type="text" id="search-vinyls" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-64">
+                </div>
                 <button onclick="openModal('vinyls')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button>
             </div>
             <div id="vinyl-grid" class="grid grid-cols-4 gap-6"></div>
@@ -79,7 +170,14 @@
         
         <section id="wishlists" class="hidden fade-in">
             <div class="flex justify-between items-center mb-10">
-                <div><h2 class="text-4xl font-bold">Желаемое</h2><p class="text-gray-500">Сумма: <span id="total-wishlists">0</span> ₴ | Предметов: <span id="count-wishlists">0</span></p></div>
+                <div class="flex items-center gap-6">
+                    <div>
+                        <h2 class="text-4xl font-bold">Желаемое</h2>
+                        <p class="text-gray-500">Сумма: <span id="total-wishlists">0</span> ₴ | Предметов: <span id="count-wishlists">0</span></p>
+                    </div>
+                    <!-- Поиск по Желаемому -->
+                    <input type="text" id="search-wishlists" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-64">
+                </div>
                 <div class="flex gap-2">
                     <button onclick="openTagsManager()" class="bg-white/10 text-white px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">Тэги</button>
                     <button onclick="openModal('wishlists')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Добавить</button>
@@ -134,13 +232,16 @@
         </section>
     </main>
 
+    <!-- Редактор / Модалка -->
     <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <h2 class="text-2xl font-bold">Редактор</h2>
             <input type="hidden" id="edit-type"><input type="hidden" id="edit-id">
-            <input id="item-title" placeholder="Название" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
-            <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white">
-            <input id="item-url" placeholder="Ссылка (URL)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white hidden">
+            <!-- Поля ввода с поддержкой Артиста -->
+            <input id="item-artist" placeholder="Исполнитель / Артист" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
+            <input id="item-title" placeholder="Название альбома" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
+            <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
+            <input id="item-url" placeholder="Ссылка (URL)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 hidden">
             <div id="gift-container" class="flex items-center gap-2"><input type="checkbox" id="item-gift"> <label>Подарок 🎁</label></div>
             <div id="tags-selector" class="hidden space-y-2"><div class="text-sm text-gray-400">Выберите теги:</div><div id="available-tags-list" class="flex flex-wrap gap-2"></div></div>
             <input type="file" id="item-img" accept="image/*" class="w-full text-sm p-2 bg-white/5 rounded-xl border border-white/10">
@@ -148,6 +249,23 @@
             <button onclick="closeModal('modal')" class="w-full bg-white/10 py-4 rounded-xl">Отмена</button>
         </div>
     </div>
+
+    <!-- Модалка Рандомайзера (замена alert) -->
+    <div id="random-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
+        <div class="glass p-8 rounded-3xl w-96 space-y-6 shadow-2xl text-center fade-in">
+            <div class="text-5xl">🎲</div>
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Что послушать?</h2>
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                <p id="random-artist" class="text-purple-300 font-bold text-lg mb-1"></p>
+                <p id="random-title" class="text-white text-xl font-black italic"></p>
+            </div>
+            <button onclick="closeModal('random-modal')" class="w-full bg-purple-600 py-3 rounded-xl font-bold hover:bg-purple-500 transition-all">Круто, послушаю!</button>
+        </div>
+    </div>
+
+    <!-- Уведомления Toast -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
     <div id="tags-manager-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Управление тэгами</h2><div id="manage-tags-list" class="space-y-2"></div><div class="flex gap-2 pt-4"><input id="new-tag-text" placeholder="Имя" class="flex-1 bg-white/5 p-2 rounded-lg text-sm"><input type="color" id="new-tag-color" class="w-8 h-8"><button onclick="addGlobalTag()" class="bg-white/10 px-3 rounded-lg">+</button></div><button onclick="closeModal('tags-manager-modal')" class="w-full bg-white/10 py-4 rounded-xl mt-4">Закрыть</button></div></div>
     <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Примечание</h2><textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea><button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button><button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button></div></div>
     <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Быстрые заметки</h2><div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div><div class="flex gap-2"><input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10" placeholder="Заметка..."> <button onclick="saveQuickNote()" class="bg-purple-600 px-4 py-3 rounded-xl font-bold">+</button></div><button onclick="closeModal('quick-notes-modal')" class="w-full bg-white/30 py-3 rounded-xl mt-2">Закрыть</button></div></div>
@@ -155,7 +273,7 @@
     <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl text-3xl z-40 hover:scale-110 transition-transform">📝</button>
 
     <script>
-        const defaults = { cds: [], vinyls: [], wishlists: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', bannerImg: '', favArtist: {name:'', url:'', img:''}, favAlbum: {name:'', url:'', img:''}, quickNotes: [] };
+        const defaults = { cds: [], vinyls: [], wishlists: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', bannerImg: '', favArtist: {name:'', url:'', img:''}, favAlbum: {name:'', url:'', img:''}, quickNotes: [], selectedTheme: '' };
         let data = JSON.parse(localStorage.getItem('mirvel_data')) || { ...defaults };
         data = { ...defaults, ...data };
         let tempTags = []; let currentFilter = null; let editingNoteId = null;
@@ -163,6 +281,46 @@
         function save() { localStorage.setItem('mirvel_data', JSON.stringify(data)); updateUI(); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         function showPage(id) { document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id)); updateUI(); }
+
+        // Показ тоста вместо alert
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `glass p-4 rounded-xl text-sm border shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 flex items-center gap-2 pointer-events-auto`;
+            toast.style.borderColor = 'var(--theme-color)';
+            toast.innerHTML = `<span>ℹ️</span> <span>${message}</span>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Метод выбора случайной пластинки / CD
+        function getRandomRelease() {
+            const all = [...data.cds, ...data.vinyls];
+            if (all.length === 0) {
+                showToast("У вас пока нет релизов в коллекции!");
+                return;
+            }
+            const randomItem = all[Math.floor(Math.random() * all.length)];
+            document.getElementById('random-artist').innerText = randomItem.artist || 'Неизвестный артист';
+            document.getElementById('random-title').innerText = randomItem.title || 'Без названия';
+            document.getElementById('random-modal').classList.remove('hidden');
+        }
+
+        // Метод установки цветовых тем
+        function setTheme(theme) {
+            document.body.className = "flex min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black";
+            if (theme) {
+                document.body.classList.add(theme);
+            }
+            data.selectedTheme = theme;
+            localStorage.setItem('mirvel_data', JSON.stringify(data));
+        }
 
         window.cyclePos = (type, id) => {
             const item = data[type].find(x => x.id === id);
@@ -218,13 +376,17 @@
             if(id) {
                 const item = data[type].find(x => x.id === parseInt(id));
                 document.getElementById('item-title').value = item.title;
+                document.getElementById('item-artist').value = item.artist || '';
                 document.getElementById('item-price').value = item.price;
                 document.getElementById('item-url').value = item.url || '';
                 document.getElementById('item-gift').checked = !!item.isGift;
                 tempTags = item.tags || [];
             } else {
-                document.getElementById('item-title').value = ''; document.getElementById('item-price').value = '';
-                document.getElementById('item-url').value = ''; document.getElementById('item-gift').checked = false;
+                document.getElementById('item-title').value = ''; 
+                document.getElementById('item-artist').value = '';
+                document.getElementById('item-price').value = '';
+                document.getElementById('item-url').value = ''; 
+                document.getElementById('item-gift').checked = false;
             }
             renderModalTags();
             document.getElementById('modal').classList.remove('hidden');
@@ -234,15 +396,16 @@
             const type = document.getElementById('edit-type').value;
             const idStr = document.getElementById('edit-id').value;
             const title = document.getElementById('item-title').value;
+            const artist = document.getElementById('item-artist').value;
             const price = parseFloat(document.getElementById('item-price').value) || 0;
             const url = document.getElementById('item-url').value;
             const isGift = document.getElementById('item-gift').checked;
             
             if(idStr) {
                 const item = data[type].find(x => x.id === parseInt(idStr));
-                Object.assign(item, { title, price, url, isGift, tags: [...tempTags], img: window.tempImg || item.img });
+                Object.assign(item, { title, artist, price, url, isGift, tags: [...tempTags], img: window.tempImg || item.img });
             } else {
-                data[type].push({ id: Date.now(), title, price, url, isGift, tags: [...tempTags], img: window.tempImg, imgPos: 'center', note: '' });
+                data[type].push({ id: Date.now(), title, artist, price, url, isGift, tags: [...tempTags], img: window.tempImg, imgPos: 'center', note: '' });
             }
             const colSum = (data.cds.reduce((s, i) => s + i.price, 0) + data.vinyls.reduce((s, i) => s + i.price, 0));
             data.xp = Math.floor(colSum / 10);
@@ -360,17 +523,35 @@
 
             document.getElementById('filter-tags').innerHTML = (data.availableTags || []).map(t => `<button onclick="setFilter('${t.text}')" class="px-3 py-1 rounded-full text-xs ${currentFilter === t.text ? 'ring-2 ring-white' : ''}" style="background-color: ${t.color}">${t.text}</button>`).join('');
 
+            // Рендер сеток с учетом ПОИСКА
             const renderGrid = (key, id) => {
                 let items = data[key] || [];
-                if(key === 'wishlists' && currentFilter) items = items.filter(i => (i.tags || []).find(t => t.text === currentFilter));
+                
+                // Фильтр по тегам для желаемого
+                if(key === 'wishlists' && currentFilter) {
+                    items = items.filter(i => (i.tags || []).find(t => t.text === currentFilter));
+                }
+                
+                // Фильтр по быстрому поиску
+                const searchInput = document.getElementById(`search-${key}`);
+                const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                if (query) {
+                    items = items.filter(i => 
+                        (i.title || '').toLowerCase().includes(query) || 
+                        (i.artist || '').toLowerCase().includes(query)
+                    );
+                }
+
                 document.getElementById(id).innerHTML = items.map(i => {
                     const pos = i.imgPos === 'top' ? 'object-top' : i.imgPos === 'bottom' ? 'object-bottom' : 'object-center';
+                    // Форматируем название как Артист — Альбом
+                    const titleText = i.artist ? `${i.artist} — ${i.title}` : i.title;
                     return `
                     <div class="glass p-6 rounded-3xl card-hover relative group">
                         <div class="w-full h-40 bg-white/5 rounded-2xl mb-4 overflow-hidden">
                             ${i.img ? `<img src="${i.img}" class="w-full h-full object-cover ${pos}">` : '<div class="h-full flex items-center justify-center opacity-20">Без фото</div>'}
                         </div>
-                        <h3 class="font-bold truncate">${i.title} ${i.isGift ? '🎁' : ''}</h3>
+                        <h3 class="font-bold truncate" title="${titleText}">${titleText} ${i.isGift ? '🎁' : ''}</h3>
                         <p class="text-cyan-400 font-mono text-sm">${i.price} ₴</p>
                         ${i.url ? `<a href="${i.url}" target="_blank" class="text-xs text-blue-400 hover:underline block mt-1">🔗 Ссылка</a>` : ''}
                         <div class="flex flex-wrap gap-1 mt-2">${(i.tags || []).map(t => `<span class="px-2 py-0.5 rounded text-[10px]" style="background-color: ${t.color}">${t.text}</span>`).join('')}</div>
@@ -384,13 +565,46 @@
                 }).join('');
             };
             
-            renderGrid('cds', 'cd-grid'); renderGrid('vinyls', 'vinyl-grid'); renderGrid('wishlists', 'wishlist-grid');
+            renderGrid('cds', 'cd-grid'); 
+            renderGrid('vinyls', 'vinyl-grid'); 
+            renderGrid('wishlists', 'wishlist-grid');
             renderQuickNotes();
+            
             const avatar = document.getElementById('main-avatar');
             if(data.avatar) { avatar.src = data.avatar; avatar.classList.remove('hidden'); }
+
+            // Логика калькуляции статистики артистов
+            const stats = {};
+            [...data.cds, ...data.vinyls].forEach(item => {
+                const artistName = (item.artist || '').trim();
+                if (artistName) {
+                    stats[artistName] = (stats[artistName] || 0) + 1;
+                }
+            });
+
+            const sortedStats = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+            const statsEl = document.getElementById('artist-stats-grid');
+            if (statsEl) {
+                if (sortedStats.length === 0) {
+                    statsEl.innerHTML = `<p class="text-gray-500 text-sm italic col-span-full">Добавьте релизы с указанием артиста, чтобы увидеть топ...</p>`;
+                } else {
+                    statsEl.innerHTML = sortedStats.map(([artist, count]) => `
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5 flex justify-between items-center">
+                            <span class="font-medium truncate mr-2 text-sm" title="${artist}">${artist}</span>
+                            <span class="bg-purple-500/20 text-purple-300 text-xs font-bold px-2 py-0.5 rounded-lg shrink-0">${count} рел.</span>
+                        </div>
+                    `).join('');
+                }
+            }
         }
         
-        window.onload = () => { updateUI(); };
+        window.onload = () => { 
+            // Подгружаем выбранную тему при старте
+            if (data.selectedTheme) {
+                setTheme(data.selectedTheme);
+            }
+            updateUI(); 
+        };
     </script>
 </body>
 </html>
