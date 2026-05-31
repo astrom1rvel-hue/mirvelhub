@@ -19,8 +19,6 @@
         .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Стили для полной и корректной перезаписи Tailwind-классов под кастомные темы */
-        
         /* Синяя Тема */
         body.theme-blue { 
             --theme-color: rgba(59, 130, 246, 0.5); 
@@ -69,7 +67,7 @@
 </head>
 <body class="flex min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black">
 
-    <nav class="w-64 p-8 flex flex-col gap-6 border-r border-white/5">
+    <nav class="w-64 p-8 flex flex-col gap-6 border-r border-white/5 shrink-0">
         <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic">MIRVEL HUB</h1>
         <div class="flex flex-col gap-2 flex-grow">
             <button onclick="showPage('home')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🏠 Главная</button>
@@ -77,6 +75,7 @@
             <button onclick="showPage('vinyls')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">💽 Винил</button>
             <button onclick="showPage('wishlists')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🎁 Желаемое</button>
             <button onclick="showPage('goals')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🎯 Цели по артистам</button>
+            <button onclick="showPage('achievements')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">🏆 Достижения</button>
             <button onclick="showPage('profile')" class="nav-btn text-left py-3 px-4 rounded-2xl hover:bg-white/5 transition">👤 Профиль</button>
         </div>
         
@@ -104,14 +103,13 @@
                 </div>
                 <div class="flex flex-col items-end gap-4 relative z-10">
                     <img id="main-avatar" class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover hidden">
-                    <!-- Кнопка "Что послушать" -->
                     <button onclick="getRandomRelease()" class="bg-purple-600 hover:bg-purple-500 text-white border border-white/10 px-4 py-2.5 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center gap-2">
                         🎲 Что послушать?
                     </button>
                 </div>
             </div>
 
-            <!-- Сетка статистики на главной из 4 колонок (добавлен самый дорогой релиз) -->
+            <!-- Сетка статистики на главной из 4 колонок -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
                 <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Коллекция (CD + Винил)</p><h3 class="text-3xl font-black mt-2 text-purple-400" id="stat-col-val">0 ₴</h3></div>
                 <div class="glass p-8 rounded-3xl"><p class="text-gray-500 text-sm">Желаемое</p><h3 class="text-3xl font-black mt-2 text-cyan-400" id="stat-wish-val">0 ₴</h3></div>
@@ -160,6 +158,29 @@
             </div>
         </section>
 
+        <section id="achievements" class="hidden fade-in">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-4xl font-bold">Коллекционные достижения 🏆</h2>
+                    <p class="text-gray-500">Выполняйте условия, чтобы разблокировать редкие награды и увеличивать опыт (XP)!</p>
+                </div>
+            </div>
+            
+            <!-- Шкала прогресса открытий -->
+            <div class="glass p-6 rounded-3xl mb-10">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-bold text-gray-300">Прогресс открытий</span>
+                    <span id="achievements-progress-text" class="text-sm font-bold text-purple-400">0 / 0 (0%)</span>
+                </div>
+                <div class="w-full bg-white/5 h-3.5 rounded-full overflow-hidden p-0.5 border border-white/5">
+                    <div id="achievements-progress-bar" class="bg-gradient-to-r from-purple-500 to-cyan-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Сетка достижений -->
+            <div id="achievements-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        </section>
+
         <section id="cds" class="hidden fade-in">
             <div class="flex justify-between items-center mb-10">
                 <div class="flex items-center gap-6">
@@ -167,7 +188,6 @@
                         <h2 class="text-4xl font-bold">CD Коллекция</h2>
                         <p class="text-gray-500">Сумма: <span id="total-cds">0</span> ₴ | Предметов: <span id="count-cds">0</span></p>
                     </div>
-                    <!-- Поиск по CD -->
                     <input type="text" id="search-cds" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-64">
                 </div>
                 <button onclick="openModal('cds')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новый CD</button>
@@ -182,7 +202,6 @@
                         <h2 class="text-4xl font-bold">Винил</h2>
                         <p class="text-gray-500">Сумма: <span id="total-vinyls">0</span> ₴ | Предметов: <span id="count-vinyls">0</span></p>
                     </div>
-                    <!-- Поиск по Винилу -->
                     <input type="text" id="search-vinyls" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-64">
                 </div>
                 <button onclick="openModal('vinyls')" class="bg-white text-black px-8 py-3 rounded-2xl font-bold hover:scale-105 transition-all">+ Новая пластинка</button>
@@ -197,7 +216,6 @@
                         <h2 class="text-4xl font-bold">Желаемое</h2>
                         <p class="text-gray-500">Сумма: <span id="total-wishlists">0</span> ₴ | Предметов: <span id="count-wishlists">0</span></p>
                     </div>
-                    <!-- Поиск по Желаемому -->
                     <input type="text" id="search-wishlists" oninput="updateUI()" placeholder="🔍 Быстрый поиск..." class="bg-white/5 p-3 px-4 rounded-xl border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 w-64">
                 </div>
                 <div class="flex gap-2">
@@ -221,7 +239,6 @@
                 </div>
             </div>
             
-            <!-- Инлайновая форма добавления целей -->
             <div class="glass p-6 rounded-3xl mb-10 flex flex-col md:flex-row gap-4 items-end">
                 <div class="w-full md:flex-1">
                     <label class="text-xs text-gray-400 block mb-1.5 font-bold uppercase tracking-wider">Исполнитель</label>
@@ -236,7 +253,6 @@
                 </button>
             </div>
 
-            <!-- Сетка карточек целей -->
             <div id="goals-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
 
@@ -281,23 +297,19 @@
         </section>
     </main>
 
-    <!-- Редактор / Модалка -->
     <div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <h2 class="text-2xl font-bold">Редактор</h2>
             <input type="hidden" id="edit-type"><input type="hidden" id="edit-id">
-            <!-- Поля ввода с поддержкой Артиста -->
             <input id="item-artist" placeholder="Исполнитель / Артист" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
             <input id="item-title" placeholder="Название альбома" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
             <input id="item-price" type="number" placeholder="Цена (₴)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50">
             <input id="item-url" placeholder="Ссылка (URL)" class="w-full bg-white/5 p-4 rounded-xl border border-white/10 text-white focus:outline-none focus:border-purple-500/50 hidden">
             <div id="gift-container" class="flex items-center gap-2"><input type="checkbox" id="item-gift"> <label>Подарок 🎁</label></div>
-            <!-- Опция для кастомного CD диска -->
             <div id="custom-cd-container" class="flex items-center gap-2 hidden"><input type="checkbox" id="item-custom-cd"> <label>Кастомный CD 💿✨</label></div>
             
             <div id="tags-selector" class="hidden space-y-2"><div class="text-sm text-gray-400">Выберите теги:</div><div id="available-tags-list" class="flex flex-wrap gap-2"></div></div>
             
-            <!-- Стилизованная кнопка выбора обложки под дизайн "Сохранить" -->
             <div class="space-y-1">
                 <button type="button" onclick="document.getElementById('item-img').click()" class="w-full bg-cyan-600 hover:bg-cyan-500 py-3.5 rounded-xl font-bold text-white transition-all duration-300 shadow-md flex items-center justify-center gap-2">
                     📷 Выбрать обложку релиза
@@ -331,7 +343,7 @@
     <div id="note-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-10 rounded-3xl w-96 space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Примечание</h2><textarea id="note-text" class="w-full h-32 bg-white/5 p-4 rounded-xl border border-white/10 text-white"></textarea><button onclick="saveNote()" class="w-full bg-purple-600 py-4 rounded-xl font-bold">Сохранить</button><button onclick="closeModal('note-modal')" class="w-full bg-white/10 py-4 rounded-xl">Закрыть</button></div></div>
     <div id="quick-notes-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50"><div class="glass p-8 rounded-3xl w-96 max-h-[80vh] flex flex-col space-y-4 shadow-2xl"><h2 class="text-2xl font-bold">Быстрые заметки</h2><div id="quick-notes-list" class="flex-1 overflow-y-auto space-y-2"></div><div class="flex gap-2"><input id="new-quick-note" class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10" placeholder="Заметка..."> <button onclick="saveQuickNote()" class="bg-purple-600 px-4 py-3 rounded-xl font-bold">+</button></div><button onclick="closeModal('quick-notes-modal')" class="w-full bg-white/30 py-3 rounded-xl mt-2">Закрыть</button></div></div>
     
-    <!-- Модалка детальной статистики артиста (УВЕЛИЧЕНА с w-96 до w-full max-w-xl) -->
+    <!-- Модалка детальной статистики артиста -->
     <div id="artist-stats-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50">
         <div class="glass p-10 rounded-3xl w-full max-w-xl space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
             <h2 id="artist-stats-title" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 italic truncate">Статистика артиста</h2>
@@ -379,12 +391,144 @@
     <button onclick="document.getElementById('quick-notes-modal').classList.remove('hidden')" class="fixed bottom-8 right-8 w-16 h-16 bg-purple-600 rounded-full shadow-2xl text-3xl z-40 hover:scale-110 transition-transform">📝</button>
 
     <script>
-        const defaults = { cds: [], vinyls: [], wishlists: [], goals: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', bannerImg: '', favArtist: {name:'', url:'', img:''}, favAlbum: {name:'', url:'', img:''}, quickNotes: [], selectedTheme: '', musicSites: [] };
+        const defaults = { cds: [], vinyls: [], wishlists: [], goals: [], availableTags: [], name: 'Коллекционер', description: '', favoriteArtists: '', xp: 0, avatar: '', bannerImg: '', favArtist: {name:'', url:'', img:''}, favAlbum: {name:'', url:'', img:''}, quickNotes: [], selectedTheme: '', musicSites: [], unlockedAchievements: [] };
         let data = JSON.parse(localStorage.getItem('mirvel_data')) || { ...defaults };
         data = { ...defaults, ...data };
         let tempTags = []; let currentFilter = null; let editingNoteId = null;
 
-        // По умолчанию, если список сайтов пуст, добавим популярные площадки
+        const ACHIEVEMENTS_LIST = [
+            // МНОГОУРОВНЕВЫЕ ДОСТИЖЕНИЯ (TIERED)
+            { 
+                id: 'cd_collector', 
+                title: 'CD-Магнат', 
+                icon: '💿', 
+                isTiered: true, 
+                getVal: d => d.cds?.length || 0,
+                tiers: [
+                    { req: 3, label: 'Lvl 1', xp: 50, desc: 'Собрать 3 CD диска в коллекции' },
+                    { req: 7, label: 'Lvl 2', xp: 100, desc: 'Собрать 7 CD дисков в коллекции' },
+                    { req: 15, label: 'Lvl 3', xp: 200, desc: 'Собрать 15 CD дисков в коллекции' },
+                    { req: 30, label: 'Lvl 4', xp: 350, desc: 'Собрать 30 CD дисков в коллекции' },
+                    { req: 50, label: 'Lvl 5', xp: 500, desc: 'Собрать 50 CD дисков в коллекции' }
+                ]
+            },
+            { 
+                id: 'vinyl_collector', 
+                title: 'Виниловый Эстет', 
+                icon: '💽', 
+                isTiered: true, 
+                getVal: d => d.vinyls?.length || 0,
+                tiers: [
+                    { req: 2, label: 'Lvl 1', xp: 50, desc: 'Собрать 2 виниловые пластинки' },
+                    { req: 5, label: 'Lvl 2', xp: 120, desc: 'Собрать 5 виниловых пластинок' },
+                    { req: 10, label: 'Lvl 3', xp: 220, desc: 'Собрать 10 виниловых пластинок' },
+                    { req: 20, label: 'Lvl 4', xp: 380, desc: 'Собрать 20 виниловых пластинок' },
+                    { req: 40, label: 'Lvl 5', xp: 600, desc: 'Собрать 40 виниловых пластинок' }
+                ]
+            },
+            { 
+                id: 'rich_collector', 
+                title: 'Драгоценный Стек', 
+                icon: '💎', 
+                isTiered: true, 
+                getVal: d => ((d.cds?.reduce((s, i) => s + i.price, 0) || 0) + (d.vinyls?.reduce((s, i) => s + i.price, 0) || 0)),
+                tiers: [
+                    { req: 1500, label: 'Lvl 1', xp: 50, desc: 'Общая стоимость коллекции превышает 1 500 ₴' },
+                    { req: 5000, label: 'Lvl 2', xp: 150, desc: 'Общая стоимость коллекции превышает 5 000 ₴' },
+                    { req: 12000, label: 'Lvl 3', xp: 300, desc: 'Общая стоимость коллекции превышает 12 000 ₴' },
+                    { req: 25000, label: 'Lvl 4', xp: 500, desc: 'Общая стоимость коллекции превышает 25 000 ₴' },
+                    { req: 50000, label: 'Lvl 5', xp: 800, desc: 'Общая стоимость коллекции превышает 50 000 ₴' }
+                ]
+            },
+            { 
+                id: 'ultimate_artist_fan', 
+                title: 'Преданный Фанатик', 
+                icon: '👑', 
+                isTiered: true, 
+                getVal: d => {
+                    const s = {};
+                    [...(d.cds || []), ...(d.vinyls || [])].forEach(i => {
+                        const a = (i.artist || '').trim().toLowerCase();
+                        if (a) s[a] = (s[a] || 0) + 1;
+                    });
+                    return Object.values(s).length > 0 ? Math.max(...Object.values(s)) : 0;
+                },
+                tiers: [
+                    { req: 3, label: 'Lvl 1', xp: 40, desc: 'Собрать 3 релиза одного артиста' },
+                    { req: 5, label: 'Lvl 2', xp: 80, desc: 'Собрать 5 релизов одного артиста' },
+                    { req: 10, label: 'Lvl 3', xp: 180, desc: 'Собрать 10 релизов одного артиста' },
+                    { req: 15, label: 'Lvl 4', xp: 300, desc: 'Собрать 15 релизов одного артиста' },
+                    { req: 25, label: 'Lvl 5', xp: 500, desc: 'Собрать 25 релизов одного артиста' }
+                ]
+            },
+            { 
+                id: 'dreamer', 
+                title: 'Большие Мечты', 
+                icon: '🎁', 
+                isTiered: true, 
+                getVal: d => d.wishlists?.length || 0,
+                tiers: [
+                    { req: 3, label: 'Lvl 1', xp: 30, desc: 'Добавить 3 альбома в список желаний' },
+                    { req: 8, label: 'Lvl 2', xp: 70, desc: 'Добавить 8 альбомов в список желаний' },
+                    { req: 15, label: 'Lvl 3', xp: 150, desc: 'Добавить 15 альбомов в список желаний' },
+                    { req: 30, label: 'Lvl 4', xp: 300, desc: 'Добавить 30 альбомов в список желаний' }
+                ]
+            },
+            { 
+                id: 'notebook', 
+                title: 'Музыкальный Критик', 
+                icon: '📝', 
+                isTiered: true, 
+                getVal: d => d.quickNotes?.length || 0,
+                tiers: [
+                    { req: 1, label: 'Lvl 1', xp: 20, desc: 'Написать 1 быструю заметку' },
+                    { req: 5, label: 'Lvl 2', xp: 60, desc: 'Написать 5 быстрых заметок' },
+                    { req: 15, label: 'Lvl 3', xp: 150, desc: 'Написать 15 быстрых заметок' },
+                    { req: 30, label: 'Lvl 4', xp: 300, desc: 'Написать 30 быстрых заметок' }
+                ]
+            },
+
+            // СТАНДАРТНЫЕ СИНГЛОВЫЕ ДОСТИЖЕНИЯ
+            { id: 'first_item', title: 'Первая игла / Луч', desc: 'Добавьте ваш первый музыкальный релиз в коллекцию (CD или Винил)', icon: '⭐', xp: 50, cond: d => ((d.cds?.length || 0) + (d.vinyls?.length || 0)) >= 1 },
+            { id: 'goal_completed', title: 'Целеустремлённый', desc: 'Отметьте хотя бы одну выполненную коллекционную цель (CD или Винил)', icon: '🎯', xp: 100, cond: d => (d.goals || []).some(g => g.hasCd || g.hasVinyl) },
+            { id: 'theme_customizer', title: 'Стиляга', desc: 'Переключите стандартную цветовую тему хаба на любую другую', icon: '🎨', xp: 30, cond: d => !!d.selectedTheme },
+            { id: 'custom_cd', title: 'Особый ценитель', desc: 'Добавьте в хаб хотя бы один кастомный CD диск ✨', icon: '✨', xp: 75, cond: d => (d.cds || []).some(c => c.isCustom) },
+            { id: 'free_music', title: 'Сладкая халява', desc: 'Добавьте бесплатный релиз (0 ₴) или подарок в коллекцию', icon: '🎈', xp: 50, cond: d => [...(d.cds || []), ...(d.vinyls || [])].some(i => i.price === 0 || i.isGift) },
+            { id: 'super_wish', title: 'Элитное желание', desc: 'Добавьте в Wishlist вещь стоимостью 5000 ₴ или выше', icon: '💸', xp: 100, cond: d => (d.wishlists || []).some(i => i.price >= 5000) },
+            { id: 'tag_master', title: 'Генерал тегов', desc: 'Создайте не менее 5 различных кастомных тегов для классификации', icon: '🏷️', xp: 75, cond: d => (d.availableTags || []).length >= 5 },
+            { id: 'social_butterfly', title: 'Сетевой сёрфер', desc: 'Прикрепите внешние ссылки к 3 или более вещам в списке желаемого', icon: '🌐', xp: 60, cond: d => (d.wishlists || []).filter(i => !!i.url).length >= 3 },
+            { id: 'custom_market', title: 'Торговый эксперт', desc: 'Добавьте не менее 6 любимых музыкальных сайтов или маркетплейсов', icon: '🏪', xp: 70, cond: d => (d.musicSites || []).length >= 6 },
+            { id: 'complete_planner', title: 'Опытный стратег', desc: 'Запланируйте не менее 5 целей по альбомам', icon: '🗺️', xp: 90, cond: d => (d.goals || []).length >= 5 },
+            { id: 'super_fan', title: 'Двойной удар', desc: 'Отметьте выполненными обе цели (и CD, и Винил) для одного релиза', icon: '🔥', xp: 120, cond: d => (d.goals || []).some(g => g.hasCd && g.hasVinyl) },
+            { id: 'annotator', title: 'Вдумчивый рецензент', desc: 'Напишите подробное примечание (более 10 символов) минимум к 3 дискам или пластинкам', icon: '🖋️', xp: 100, cond: d => [...(d.cds || []), ...(d.vinyls || [])].filter(i => (i.note || '').trim().length > 10).length >= 3 },
+            { id: 'billionaire', title: 'Золотой стандарт', desc: 'Приобретите хотя бы один ультра-дорогой релиз в коллекцию (от 2000 ₴)', icon: '🤑', xp: 120, cond: d => [...(d.cds || []), ...(d.vinyls || [])].some(i => i.price >= 2000) },
+            { id: 'avatar_update', title: 'Лицо бренда', desc: 'Загрузите уникальное изображение профиля в настройках', icon: '🎭', xp: 40, cond: d => !!d.avatar },
+            { id: 'banner_update', title: 'Новые горизонты', desc: 'Обновите фоновый баннер вашего хаба в настройках', icon: '🖼️', xp: 40, cond: d => !!d.bannerImg },
+            { id: 'aesthetic', title: 'Зал славы', desc: 'Установите обложки для Артиста месяца и Альбома месяца в профиле', icon: '🌌', xp: 100, cond: d => !!d.favArtist?.img && !!d.favAlbum?.img },
+            { id: 'wish_collector', title: 'Синдром Плюшкина', desc: 'Общая сумма вещей в списке желаемого превысила 15 000 ₴', icon: '🏺', xp: 150, cond: d => (d.wishlists || []).reduce((s, i) => s + i.price, 0) >= 15000 },
+            { id: 'collector_debut', title: 'Уверенное начало', desc: 'Соберите хотя бы 3 любых музыкальных релиза в коллекции', icon: '🏁', xp: 40, cond: d => ((d.cds?.length || 0) + (d.vinyls?.length || 0)) >= 3 },
+            { id: 'perfectionist', title: 'Краснобай', desc: 'Напишите подробное описание своего профиля в настройках (не менее 50 символов)', icon: '📖', xp: 50, cond: d => (d.description || '').trim().length >= 50 },
+            { id: 'duet', title: 'Дуэт веков', desc: 'Соберите релизы как минимум от 5 разных исполнителей в вашей коллекции', icon: '👥', xp: 60, cond: d => new Set([...(d.cds || []), ...(d.vinyls || [])].map(i => (i.artist || '').trim().toLowerCase()).filter(Boolean)).size >= 5 },
+            { id: 'big_band', title: 'Музыкальный фестиваль', desc: 'Соберите релизы как минимум от 10 разных исполнителей в вашей коллекции', icon: '🎸', xp: 120, cond: d => new Set([...(d.cds || []), ...(d.vinyls || [])].map(i => (i.artist || '').trim().toLowerCase()).filter(Boolean)).size >= 10 },
+            { id: 'orchestra', title: 'Филармония хаба', desc: 'Соберите релизы как минимум от 20 разных исполнителей в вашей коллекции', icon: '🎻', xp: 250, cond: d => new Set([...(d.cds || []), ...(d.vinyls || [])].map(i => (i.artist || '').trim().toLowerCase()).filter(Boolean)).size >= 20 },
+            { id: 'superfan_dedicated', title: 'Преданный фан', desc: 'Укажите ваших любимых исполнителей в настройках профиля', icon: '❤️', xp: 40, cond: d => (d.favoriteArtists || '').trim().length > 3 },
+            { id: 'artist_month_fever', title: 'Артист в фокусе', desc: 'Настройте блок «Артист месяца» в профиле, указав имя артиста и прикрепив к нему ссылку', icon: '📣', xp: 50, cond: d => !!d.favArtist?.name && !!d.favArtist?.url },
+            { id: 'album_month_fever', title: 'Альбом в фокусе', desc: 'Настройте блок «Альбом месяца» в профиле, указав название альбома и прикрепив к нему ссылку', icon: '💿', xp: 50, cond: d => !!d.favAlbum?.name && !!d.favAlbum?.url },
+            { id: 'discography_collector_1', title: 'Архивариус артиста', desc: 'Соберите 3 или более релиза одного конкретного исполнителя в вашей CD-коллекции', icon: '🗄️', xp: 80, cond: d => { const s = {}; (d.cds || []).forEach(i => { const a = (i.artist || '').trim().toLowerCase(); if (a) s[a] = (s[a] || 0) + 1; }); return Object.values(s).some(c => c >= 3); } },
+            { id: 'discography_collector_2', title: 'Виниловый культ артиста', desc: 'Соберите 3 или более релиза одного конкретного исполнителя на виниле', icon: '🔮', xp: 80, cond: d => { const s = {}; (d.vinyls || []).forEach(i => { const a = (i.artist || '').trim().toLowerCase(); if (a) s[a] = (s[a] || 0) + 1; }); return Object.values(s).some(c => c >= 3); } },
+            { id: 'wishlist_artist_monopoly', title: 'Одержимый артистом', desc: 'Добавьте не менее 3 альбомов одного и того же исполнителя в список желаемого', icon: '💭', xp: 50, cond: d => { const s = {}; (d.wishlists || []).forEach(i => { const a = (i.artist || '').trim().toLowerCase(); if (a) s[a] = (s[a] || 0) + 1; }); return Object.values(s).some(c => c >= 3); } },
+            { id: 'artist_goals_focus', title: 'Прицел на дискографию', desc: 'Запланируйте не менее 3 коллекционных целей по альбомам для одного конкретного исполнителя', icon: '🎯', xp: 60, cond: d => { const s = {}; (d.goals || []).forEach(i => { const a = (i.artist || '').trim().toLowerCase(); if (a) s[a] = (s[a] || 0) + 1; }); return Object.values(s).some(c => c >= 3); } },
+            { id: 'anonymous_no_more', title: 'Имя на слуху', desc: 'Укажите имя артиста для каждого CD и винила в вашей коллекции (минимум 5 релизов)', icon: '🏷️', xp: 70, cond: d => { const items = [...(d.cds || []), ...(d.vinyls || [])]; return items.length >= 5 && items.every(i => (i.artist || '').trim().length > 0); } },
+            { id: 'gold_standard_artist', title: 'Любимчик фортуны', desc: 'Суммарная стоимость релизов одного конкретного исполнителя в вашей коллекции превысила 3000 ₴', icon: '💸', xp: 150, cond: d => { const s = {}; [...(d.cds || []), ...(d.vinyls || [])].forEach(i => { const a = (i.artist || '').trim().toLowerCase(); if (a) s[a] = (s[a] || 0) + (i.price || 0); }); return Object.values(s).some(val => val >= 3000); } },
+            { id: 'custom_avatar_and_banner', title: 'Полный апгрейд', desc: 'Установите в настройках профиля одновременно и собственную аватарку, и фоновый баннер', icon: '💫', xp: 75, cond: d => !!d.avatar && !!d.bannerImg },
+            { id: 'cheap_finds', title: 'Охотник за скидками', desc: 'Добавьте в коллекцию как минимум 3 релиза стоимостью менее 200 ₴ каждый', icon: '🏷️', xp: 50, cond: d => [...(d.cds || []), ...(d.vinyls || [])].filter(i => i.price > 0 && i.price < 200).length >= 3 },
+            { id: 'half_century', title: 'Полководческий размах', desc: 'Соберите 50 релизов во всех списках суммарно (диски + винилы + список желаний)', icon: '🎪', xp: 200, cond: d => ((d.cds?.length || 0) + (d.vinyls?.length || 0) + (d.wishlists?.length || 0)) >= 50 },
+            { id: 'super_planner_unlocked', title: 'Гроссмейстер планов', desc: 'Успешно выполните 5 или более различных целей по приобретению альбомов', icon: '📊', xp: 150, cond: d => (d.goals || []).filter(g => g.hasCd || g.hasVinyl).length >= 5 },
+            { id: 'tags_everywhere', title: 'Маркированная база', desc: 'Добавьте хотя бы по одному кастомному тегу минимум к 5 различным релизам в списке желаемого', icon: '🔖', xp: 80, cond: d => (d.wishlists || []).filter(i => (i.tags || []).length >= 1).length >= 5 },
+            { id: 'note_novelist', title: 'Музыкальный романист', desc: 'Напишите хотя бы одно подробное примечание к релизу длиной от 100 символов', icon: '✍️', xp: 90, cond: d => [...(d.cds || []), ...(d.vinyls || [])].some(i => (i.note || '').trim().length >= 100) },
+            { id: 'level_5_master', title: 'Элита MIRVEL', desc: 'Достигните 5-го уровня в нашей системе коллекционирования (наберите не менее 2000 XP)', icon: '⚡', xp: 250, cond: d => (d.xp || 0) >= 2000 }
+        ];
+
         const defaultSites = [
             { id: 1, name: 'Discogs', url: 'https://www.discogs.com', emoji: '💿' },
             { id: 2, name: 'Bandcamp', url: 'https://www.bandcamp.com', emoji: '🎸' },
@@ -395,11 +539,106 @@
             data.musicSites = [...defaultSites];
         }
 
-        function save() { localStorage.setItem('mirvel_data', JSON.stringify(data)); updateUI(); }
+        function playUnlockSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                const now = ctx.currentTime;
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+                osc.frequency.setValueAtTime(1046.50, now + 0.24); // C6
+                osc.frequency.setValueAtTime(1318.51, now + 0.32); // E6
+                
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                
+                osc.start(now);
+                osc.stop(now + 0.6);
+            } catch (e) { console.error('AudioContext не поддерживается в данном браузере', e); }
+        }
+
+        function getAchievementXPRewards() {
+            if (!data.unlockedAchievements) return 0;
+            let totalXp = 0;
+            ACHIEVEMENTS_LIST.forEach(ach => {
+                if (ach.isTiered) {
+                    ach.tiers.forEach((tier, idx) => {
+                        if (data.unlockedAchievements.includes(`${ach.id}_${idx}`)) {
+                            totalXp += tier.xp;
+                        }
+                    });
+                } else {
+                    if (data.unlockedAchievements.includes(ach.id)) {
+                        totalXp += ach.xp;
+                    }
+                }
+            });
+            return totalXp;
+        }
+
+        function getTotalAchievementsCount() {
+            let count = 0;
+            ACHIEVEMENTS_LIST.forEach(ach => {
+                if (ach.isTiered) {
+                    count += ach.tiers.length;
+                } else {
+                    count += 1;
+                }
+            });
+            return count;
+        }
+
+        function checkAchievements() {
+            if (!data.unlockedAchievements) data.unlockedAchievements = [];
+            let newlyUnlocked = false;
+
+            ACHIEVEMENTS_LIST.forEach(ach => {
+                if (ach.isTiered) {
+                    const currentVal = ach.getVal(data);
+                    ach.tiers.forEach((tier, idx) => {
+                        const tierId = `${ach.id}_${idx}`;
+                        const isAlreadyUnlocked = data.unlockedAchievements.includes(tierId);
+                        if (!isAlreadyUnlocked && currentVal >= tier.req) {
+                            data.unlockedAchievements.push(tierId);
+                            newlyUnlocked = true;
+                            
+                            playUnlockSound();
+                            showToast(`🏆 Открыт новый уровень в <strong>${ach.title}</strong> (${tier.label}) (+${tier.xp} XP)!`);
+                        }
+                    });
+                } else {
+                    const isAlreadyUnlocked = data.unlockedAchievements.includes(ach.id);
+                    if (!isAlreadyUnlocked && ach.cond(data)) {
+                        data.unlockedAchievements.push(ach.id);
+                        newlyUnlocked = true;
+                        
+                        playUnlockSound();
+                        showToast(`🏆 Открыто достижение: <strong>${ach.title}</strong> (+${ach.xp} XP)!`);
+                    }
+                }
+            });
+
+            if (newlyUnlocked) {
+                const colSum = ((data.cds?.reduce((s, i) => s + i.price, 0) || 0) + (data.vinyls?.reduce((s, i) => s + i.price, 0) || 0));
+                data.xp = Math.floor(colSum / 10) + getAchievementXPRewards();
+                localStorage.setItem('mirvel_data', JSON.stringify(data));
+            }
+        }
+
+        function save() { 
+            checkAchievements();
+            localStorage.setItem('mirvel_data', JSON.stringify(data)); 
+            updateUI(); 
+        }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         function showPage(id) { document.querySelectorAll('main > section').forEach(s => s.classList.toggle('hidden', s.id !== id)); updateUI(); }
 
-        // Показ тоста вместо alert
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -416,7 +655,6 @@
             }, 3000);
         }
 
-        // Метод выбора случайной пластинки / CD
         function getRandomRelease() {
             const all = [...data.cds, ...data.vinyls];
             if (all.length === 0) {
@@ -429,14 +667,13 @@
             document.getElementById('random-modal').classList.remove('hidden');
         }
 
-        // Метод установки цветовых тем
         function setTheme(theme) {
             document.body.className = "flex min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black";
             if (theme) {
                 document.body.classList.add(theme);
             }
             data.selectedTheme = theme;
-            localStorage.setItem('mirvel_data', JSON.stringify(data));
+            save();
         }
 
         window.cyclePos = (type, id) => {
@@ -535,11 +772,10 @@
                 data[type].push({ id: Date.now(), title, artist, price, url, isGift, isCustom, tags: [...tempTags], img: window.tempImg, imgPos: 'center', note: '' });
             }
             const colSum = (data.cds.reduce((s, i) => s + i.price, 0) + data.vinyls.reduce((s, i) => s + i.price, 0));
-            data.xp = Math.floor(colSum / 10);
+            data.xp = Math.floor(colSum / 10) + getAchievementXPRewards();
             save(); closeModal('modal');
         };
 
-        // Функции для управления целями по артистам
         window.addArtistGoal = () => {
             const artist = document.getElementById('goal-artist').value.trim();
             const album = document.getElementById('goal-album').value.trim();
@@ -572,7 +808,6 @@
             showToast("Цель удалена");
         };
 
-        // Функции для музыкальных сайтов
         window.openMusicSiteModal = () => {
             document.getElementById('site-name').value = '';
             document.getElementById('site-url').value = '';
@@ -611,7 +846,6 @@
             showToast("Сайт удален");
         };
 
-        // Тэги и примечания
         window.addGlobalTag = () => {
             const text = document.getElementById('new-tag-text').value; const color = document.getElementById('new-tag-color').value;
             if(!text) return; data.availableTags.push({ text, color }); renderManageTagsList(); renderModalTags(); save();
@@ -625,16 +859,46 @@
             const idx = tempTags.findIndex(t => t.text === tag.text);
             if(idx > -1) tempTags.splice(idx, 1); else tempTags.push(tag); renderModalTags();
         };
+        
         window.renderModalTags = () => {
-            document.getElementById('available-tags-list').innerHTML = data.availableTags.map(t => `
-                <button type="button" onclick='toggleTag(${JSON.stringify(t)})' class="px-2 py-1 rounded text-xs border ${tempTags.find(x => x.text === t.text) ? 'opacity-100 ring-2 ring-white' : 'opacity-40'}" style="background-color: ${t.color}">${t.text}</button>
-            `).join('');
+            const listEl = document.getElementById('available-tags-list');
+            listEl.innerHTML = '';
+            data.availableTags.forEach(t => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `px-2 py-1 rounded text-xs border ${tempTags.find(x => x.text === t.text) ? 'opacity-100 ring-2 ring-white' : 'opacity-40'}`;
+                btn.style.backgroundColor = t.color;
+                btn.innerText = t.text;
+                btn.onclick = () => {
+                    toggleTag(t);
+                };
+                listEl.appendChild(btn);
+            });
         };
+        
         window.openTagsManager = () => { renderManageTagsList(); document.getElementById('tags-manager-modal').classList.remove('hidden'); };
+        
         window.renderManageTagsList = () => {
-            document.getElementById('manage-tags-list').innerHTML = data.availableTags.map(t => `
-                <div class="flex justify-between items-center p-2 rounded-lg bg-white/5"><span class="px-2 py-1 rounded text-xs" style="background-color: ${t.color}">${t.text}</span><button onclick="deleteTag('${t.text}')" class="text-red-500">✕</button></div>
-            `).join('');
+            const listEl = document.getElementById('manage-tags-list');
+            listEl.innerHTML = '';
+            data.availableTags.forEach(t => {
+                const row = document.createElement('div');
+                row.className = "flex justify-between items-center p-2 rounded-lg bg-white/5";
+                
+                const span = document.createElement('span');
+                span.className = "px-2 py-1 rounded text-xs";
+                span.style.backgroundColor = t.color;
+                span.innerText = t.text;
+                
+                const delBtn = document.createElement('button');
+                delBtn.className = "text-red-500 hover:text-red-400";
+                delBtn.innerHTML = "✕";
+                delBtn.onclick = () => deleteTag(t.text);
+                
+                row.appendChild(span);
+                row.appendChild(delBtn);
+                listEl.appendChild(row);
+            });
         };
 
         window.openNote = (type, id) => {
@@ -661,16 +925,26 @@
             if (allReleases.length === 0) {
                 listEl.innerHTML = '<p class="text-gray-500 text-xs italic">Релизов нет</p>';
             } else {
-                listEl.innerHTML = allReleases.map(i => {
+                listEl.innerHTML = '';
+                allReleases.forEach(i => {
                     const icon = artistCds.includes(i) ? '💿' : '💽';
                     const customBadge = (artistCds.includes(i) && i.isCustom) ? ' ✨' : '';
-                    return `
-                        <div class="bg-white/5 p-3 rounded-xl text-xs flex justify-between items-center border border-white/5">
-                            <span class="truncate font-medium text-gray-200">${icon} ${i.title}${customBadge}</span>
-                            <span class="text-cyan-400 font-mono font-bold shrink-0">${i.price} ₴</span>
-                        </div>
-                    `;
-                }).join('');
+                    
+                    const itemRow = document.createElement('div');
+                    itemRow.className = "bg-white/5 p-3 rounded-xl text-xs flex justify-between items-center border border-white/5";
+                    
+                    const titleSpan = document.createElement('span');
+                    titleSpan.className = "truncate font-medium text-gray-200";
+                    titleSpan.innerText = `${icon} ${i.title}${customBadge}`;
+                    
+                    const priceSpan = document.createElement('span');
+                    priceSpan.className = "text-cyan-400 font-mono font-bold shrink-0";
+                    priceSpan.innerText = `${i.price} ₴`;
+                    
+                    itemRow.appendChild(titleSpan);
+                    itemRow.appendChild(priceSpan);
+                    listEl.appendChild(itemRow);
+                });
             }
             
             document.getElementById('artist-stats-modal').classList.remove('hidden');
@@ -743,6 +1017,112 @@
             document.getElementById('total-wishlists').innerText = wishVal;
             document.getElementById('count-wishlists').innerText = data.wishlists.length;
 
+            const achGrid = document.getElementById('achievements-grid');
+            if (achGrid) {
+                const unlocked = data.unlockedAchievements || [];
+                const total = getTotalAchievementsCount();
+                const countUnlocked = unlocked.length;
+                const percent = total > 0 ? Math.round((countUnlocked / total) * 100) : 0;
+                
+                document.getElementById('achievements-progress-text').innerText = `${countUnlocked} / ${total} (${percent}%)`;
+                document.getElementById('achievements-progress-bar').style.width = `${percent}%`;
+
+                achGrid.innerHTML = ACHIEVEMENTS_LIST.map(ach => {
+                    if (ach.isTiered) {
+                        let activeTierIdx = -1;
+                        ach.tiers.forEach((tier, idx) => {
+                            if (unlocked.includes(`${ach.id}_${idx}`)) {
+                                activeTierIdx = idx;
+                            }
+                        });
+
+                        const currentVal = ach.getVal(data);
+                        const isUnlockedAtLeastOnce = activeTierIdx >= 0;
+                        const isMaxedOut = activeTierIdx === ach.tiers.length - 1;
+                        
+                        const nextTier = isMaxedOut ? null : ach.tiers[activeTierIdx + 1];
+                        
+                        let starsHtml = '';
+                        for(let s = 0; s < ach.tiers.length; s++) {
+                            if (s <= activeTierIdx) {
+                                starsHtml += '<span class="text-yellow-400">★</span>';
+                            } else {
+                                starsHtml += '<span class="text-gray-600">☆</span>';
+                            }
+                        }
+
+                        let progressPercent = 100;
+                        let progressText = 'Максимум!';
+                        if (!isMaxedOut) {
+                            const targetReq = nextTier.req;
+                            const currentProgress = currentVal;
+                            progressPercent = Math.min(100, Math.max(0, (currentProgress / targetReq) * 100));
+                            progressText = `${currentVal} / ${targetReq}`;
+                        }
+
+                        const borderStyle = isUnlockedAtLeastOnce ? `border-color: var(--theme-btn); box-shadow: 0 4px 20px var(--theme-color)` : `border-color: rgba(255,255,255,0.05);`;
+
+                        return `
+                            <div class="glass p-6 rounded-3xl border transition-all duration-500 ${isUnlockedAtLeastOnce ? 'opacity-100 hover:scale-[1.02]' : 'opacity-40 grayscale'}" style="${borderStyle}">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-4xl filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] select-none">${ach.icon}</span>
+                                        <div>
+                                            <h4 class="font-black text-white text-base">${ach.title}</h4>
+                                            <div class="flex gap-1 text-sm mt-0.5">${starsHtml}</div>
+                                        </div>
+                                    </div>
+                                    <span class="text-[10px] font-bold tracking-wider uppercase bg-purple-500/10 text-purple-300 px-2.5 py-1 rounded-full border border-purple-500/20 shrink-0">
+                                        ${isMaxedOut ? '👑 МАКС' : `${activeTierIdx + 1} / ${ach.tiers.length} Ур.`}
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-400 leading-relaxed min-h-[32px] mb-3">
+                                    ${isMaxedOut ? 'Все уровни этого испытания успешно выполнены!' : `Текущая цель: ${nextTier.desc}`}
+                                </p>
+                                
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between items-center text-[10px] font-bold text-gray-500 uppercase">
+                                        <span>Прогресс</span>
+                                        <span class="font-mono text-cyan-400">${progressText}</span>
+                                    </div>
+                                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden p-0.5 border border-white/5">
+                                        <div class="bg-gradient-to-r from-purple-500 to-cyan-500 h-full rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4 flex justify-between items-center text-[10px] text-gray-500 font-bold uppercase pt-3 border-t border-white/5">
+                                    <span>XP Награда:</span>
+                                    <span class="text-yellow-400">+${isMaxedOut ? ach.tiers.reduce((s,t) => s + t.xp, 0) : nextTier.xp} XP</span>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        const isOpen = unlocked.includes(ach.id);
+                        return `
+                            <div class="glass p-6 rounded-3xl border transition-all duration-500 ${isOpen ? 'border-[var(--theme-btn)] opacity-100 hover:scale-[1.02]' : 'border-white/5 opacity-40 grayscale'}" style="${isOpen ? 'box-shadow: 0 4px 20px var(--theme-color)' : ''}">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <span class="text-4xl filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] select-none">${isOpen ? ach.icon : '🔒'}</span>
+                                    <div>
+                                        <h4 class="font-black text-white text-base ${isOpen ? '' : 'text-gray-400'}">${ach.title}</h4>
+                                        <span class="text-[10px] font-bold tracking-wider uppercase ${isOpen ? 'text-yellow-400' : 'text-gray-500'}">🏆 +${ach.xp} XP</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-400 leading-relaxed min-h-[32px]">${ach.desc}</p>
+                                ${isOpen ? `
+                                    <div class="mt-4 flex justify-end">
+                                        <span class="bg-green-500/20 text-green-300 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full border border-green-500/30">Открыто</span>
+                                    </div>
+                                ` : `
+                                    <div class="mt-4 flex justify-end">
+                                        <span class="bg-white/5 text-gray-500 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full border border-white/5">Закрыто</span>
+                                    </div>
+                                `}
+                            </div>
+                        `;
+                    }
+                }).join('');
+            }
+
             document.getElementById('fav-artist-text').innerText = data.favArtist.name || '...';
             document.getElementById('fav-album-text').innerText = data.favAlbum.name || '...';
             document.getElementById('fav-link-artist').href = data.favArtist.url || '#';
@@ -766,25 +1146,29 @@
             if (expEl) {
                 if (mostExpensive) {
                     const artistPart = mostExpensive.artist ? `${mostExpensive.artist} — ` : '';
-                    expEl.innerHTML = `
-                        <span class="text-xs text-gray-400 block truncate" title="${artistPart}${mostExpensive.title}">${artistPart}${mostExpensive.title}</span> 
-                        <span class="text-3xl font-black text-yellow-400 font-mono block mt-1">${mostExpensive.price} ₴</span>
-                    `;
+                    expEl.innerHTML = '';
+                    
+                    const metaSpan = document.createElement('span');
+                    metaSpan.className = "text-xs text-gray-400 block truncate";
+                    metaSpan.title = `${artistPart}${mostExpensive.title}`;
+                    metaSpan.innerText = `${artistPart}${mostExpensive.title}`;
+                    
+                    const priceSpan = document.createElement('span');
+                    priceSpan.className = "text-3xl font-black text-yellow-400 font-mono block mt-1";
+                    priceSpan.innerText = `${mostExpensive.price} ₴`;
+                    
+                    expEl.appendChild(metaSpan);
+                    expEl.appendChild(priceSpan);
                 } else {
                     expEl.innerText = 'Нет релизов';
                 }
             }
 
-            // Рендер сеток с учетом ПОИСКА
             const renderGrid = (key, id) => {
                 let items = data[key] || [];
-                
-                // Фильтр по тегам для желаемого
                 if(key === 'wishlists' && currentFilter) {
                     items = items.filter(i => (i.tags || []).find(t => t.text === currentFilter));
                 }
-                
-                // Фильтр по быстрому поиску
                 const searchInput = document.getElementById(`search-${key}`);
                 const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
                 if (query) {
@@ -794,28 +1178,101 @@
                     );
                 }
 
-                document.getElementById(id).innerHTML = items.map(i => {
+                const gridEl = document.getElementById(id);
+                gridEl.innerHTML = '';
+                items.forEach(i => {
+                    const card = document.createElement('div');
+                    card.className = "glass p-6 rounded-3xl card-hover relative group";
+                    
                     const pos = i.imgPos === 'top' ? 'object-top' : i.imgPos === 'bottom' ? 'object-bottom' : 'object-center';
-                    // Форматируем название как Артист — Альбом
                     const titleText = i.artist ? `${i.artist} — ${i.title}` : i.title;
                     const customBadge = (key === 'cds' && i.isCustom) ? ' ✨' : '';
-                    return `
-                    <div class="glass p-6 rounded-3xl card-hover relative group">
-                        <div class="w-full h-40 bg-white/5 rounded-2xl mb-4 overflow-hidden">
-                            ${i.img ? `<img src="${i.img}" class="w-full h-full object-cover ${pos}">` : '<div class="h-full flex items-center justify-center opacity-20">Без фото</div>'}
-                        </div>
-                        <h3 class="font-bold truncate" title="${titleText}">${titleText} ${i.isGift ? '🎁' : ''}${customBadge}</h3>
-                        <p class="text-cyan-400 font-mono text-sm">${i.price} ₴</p>
-                        ${i.url ? `<a href="${i.url}" target="_blank" class="text-xs text-blue-400 hover:underline block mt-1">🔗 Ссылка</a>` : ''}
-                        <div class="flex flex-wrap gap-1 mt-2">${(i.tags || []).map(t => `<span class="px-2 py-0.5 rounded text-[10px]" style="background-color: ${t.color}">${t.text}</span>`).join('')}</div>
-                        <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition">
-                            <button onclick="cyclePos('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full" title="Позиция фото">🔄</button>
-                            <button onclick="openNote('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full" title="Примечание">💬</button>
-                            <button onclick="openModal('${key}', ${i.id})" class="bg-white/10 p-2 rounded-full" title="Редактировать">✏️</button>
-                            <button onclick="data['${key}'] = data['${key}'].filter(x => x.id !== ${i.id}); save();" class="bg-red-500/20 p-2 rounded-full" title="Удалить">🗑️</button>
-                        </div>
-                    </div>`;
-                }).join('');
+                    
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = "w-full h-40 bg-white/5 rounded-2xl mb-4 overflow-hidden";
+                    if (i.img) {
+                        const img = document.createElement('img');
+                        img.src = i.img;
+                        img.className = `w-full h-full object-cover ${pos}`;
+                        imgContainer.appendChild(img);
+                    } else {
+                        const noPhoto = document.createElement('div');
+                        noPhoto.className = "h-full flex items-center justify-center opacity-20 text-xs";
+                        noPhoto.innerText = "Без фото";
+                        imgContainer.appendChild(noPhoto);
+                    }
+                    
+                    const titleEl = document.createElement('h3');
+                    titleEl.className = "font-bold truncate";
+                    titleEl.title = titleText;
+                    titleEl.innerText = `${titleText} ${i.isGift ? '🎁' : ''}${customBadge}`;
+                    
+                    const priceEl = document.createElement('p');
+                    priceEl.className = "text-cyan-400 font-mono text-sm";
+                    priceEl.innerText = `${i.price} ₴`;
+                    
+                    card.appendChild(imgContainer);
+                    card.appendChild(titleEl);
+                    card.appendChild(priceEl);
+                    
+                    if (i.url) {
+                        const linkEl = document.createElement('a');
+                        linkEl.href = i.url;
+                        linkEl.target = "_blank";
+                        linkEl.className = "text-xs text-blue-400 hover:underline block mt-1";
+                        linkEl.innerText = "🔗 Ссылка";
+                        card.appendChild(linkEl);
+                    }
+                    
+                    const tagsContainer = document.createElement('div');
+                    tagsContainer.className = "flex flex-wrap gap-1 mt-2";
+                    (i.tags || []).forEach(t => {
+                        const tagSpan = document.createElement('span');
+                        tagSpan.className = "px-2 py-0.5 rounded text-[10px]";
+                        tagSpan.style.backgroundColor = t.color;
+                        tagSpan.innerText = t.text;
+                        tagsContainer.appendChild(tagSpan);
+                    });
+                    card.appendChild(tagsContainer);
+                    
+                    const actionsContainer = document.createElement('div');
+                    actionsContainer.className = "absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition";
+                    
+                    const cyclePosBtn = document.createElement('button');
+                    cyclePosBtn.className = "bg-white/10 p-2 rounded-full hover:bg-white/20";
+                    cyclePosBtn.title = "Позиция фото";
+                    cyclePosBtn.innerText = "🔄";
+                    cyclePosBtn.onclick = () => cyclePos(key, i.id);
+                    
+                    const openNoteBtn = document.createElement('button');
+                    openNoteBtn.className = "bg-white/10 p-2 rounded-full hover:bg-white/20";
+                    openNoteBtn.title = "Примечание";
+                    openNoteBtn.innerText = "💬";
+                    openNoteBtn.onclick = () => openNote(key, i.id);
+                    
+                    const editBtn = document.createElement('button');
+                    editBtn.className = "bg-white/10 p-2 rounded-full hover:bg-white/20";
+                    editBtn.title = "Редактировать";
+                    editBtn.innerText = "✏️";
+                    editBtn.onclick = () => openModal(key, i.id);
+                    
+                    const delBtn = document.createElement('button');
+                    delBtn.className = "bg-red-500/20 p-2 rounded-full hover:bg-red-500/40 text-red-400";
+                    delBtn.title = "Удалить";
+                    delBtn.innerText = "🗑️";
+                    delBtn.onclick = () => {
+                        data[key] = data[key].filter(x => x.id !== i.id);
+                        save();
+                    };
+                    
+                    actionsContainer.appendChild(cyclePosBtn);
+                    actionsContainer.appendChild(openNoteBtn);
+                    actionsContainer.appendChild(editBtn);
+                    actionsContainer.appendChild(delBtn);
+                    
+                    card.appendChild(actionsContainer);
+                    gridEl.appendChild(card);
+                });
             };
             
             renderGrid('cds', 'cd-grid'); 
@@ -826,6 +1283,7 @@
             // Рендер целей по артистам
             const goalsGrid = document.getElementById('goals-grid');
             if(goalsGrid) {
+                goalsGrid.innerHTML = '';
                 const goalsList = data.goals || [];
                 if(goalsList.length === 0) {
                     goalsGrid.innerHTML = `
@@ -834,30 +1292,71 @@
                         </div>
                     `;
                 } else {
-                    goalsGrid.innerHTML = goalsList.map(g => `
-                        <div class="glass p-6 rounded-3xl relative group border border-white/5 hover:border-[var(--theme-btn)] transition-all duration-300">
-                            <h4 class="font-black text-lg text-white truncate" title="${g.album}">${g.album}</h4>
-                            <p class="text-purple-300 text-sm italic mb-4 truncate" title="${g.artist}">${g.artist}</p>
-                            
-                            <div class="space-y-3 pt-3 border-t border-white/5">
-                                <label class="flex items-center gap-3 cursor-pointer select-none text-sm text-gray-300">
-                                    <input type="checkbox" ${g.hasCd ? 'checked' : ''} onchange="toggleGoalProp(${g.id}, 'hasCd')" class="w-4 h-4 rounded accent-purple-500">
-                                    <span class="${g.hasCd ? 'line-through text-gray-500' : 'text-gray-200'} flex items-center gap-1.5 transition-all">
-                                        💿 Купить на CD ${g.hasCd ? '✅' : ''}
-                                    </span>
-                                </label>
-                                <label class="flex items-center gap-3 cursor-pointer select-none text-sm text-gray-300">
-                                    <input type="checkbox" ${g.hasVinyl ? 'checked' : ''} onchange="toggleGoalProp(${g.id}, 'hasVinyl')" class="w-4 h-4 rounded accent-cyan-500">
-                                    <span class="${g.hasVinyl ? 'line-through text-gray-500' : 'text-gray-200'} flex items-center gap-1.5 transition-all">
-                                        💽 Купить на Виниле ${g.hasVinyl ? '✅' : ''}
-                                    </span>
-                                </label>
-                            </div>
-                            <button onclick="deleteGoal(${g.id})" class="absolute top-4 right-4 bg-red-500/10 text-red-400 p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/30" title="Удалить цель">
-                                ✕
-                            </button>
-                        </div>
-                    `).join('');
+                    goalsList.forEach(g => {
+                        const card = document.createElement('div');
+                        card.className = "glass p-6 rounded-3xl relative group border border-white/5 hover:border-[var(--theme-btn)] transition-all duration-300";
+                        
+                        const title = document.createElement('h4');
+                        title.className = "font-black text-lg text-white truncate";
+                        title.title = g.album;
+                        title.innerText = g.album;
+                        
+                        const artist = document.createElement('p');
+                        artist.className = "text-purple-300 text-sm italic mb-4 truncate";
+                        artist.title = g.artist;
+                        artist.innerText = g.artist;
+                        
+                        const divider = document.createElement('div');
+                        divider.className = "space-y-3 pt-3 border-t border-white/5";
+                        
+                        const labelCd = document.createElement('label');
+                        labelCd.className = "flex items-center gap-3 cursor-pointer select-none text-sm text-gray-300";
+                        
+                        const inputCd = document.createElement('input');
+                        inputCd.type = "checkbox";
+                        inputCd.checked = g.hasCd;
+                        inputCd.className = "w-4 h-4 rounded accent-purple-500";
+                        inputCd.onchange = () => toggleGoalProp(g.id, 'hasCd');
+                        
+                        const spanCd = document.createElement('span');
+                        spanCd.className = `${g.hasCd ? 'line-through text-gray-500' : 'text-gray-200'} flex items-center gap-1.5 transition-all`;
+                        spanCd.innerText = `CD ${g.hasCd ? '✅' : ''}`;
+                        
+                        labelCd.appendChild(inputCd);
+                        labelCd.appendChild(spanCd);
+                        
+                        const labelVinyl = document.createElement('label');
+                        labelVinyl.className = "flex items-center gap-3 cursor-pointer select-none text-sm text-gray-300";
+                        
+                        const inputVinyl = document.createElement('input');
+                        inputVinyl.type = "checkbox";
+                        inputVinyl.checked = g.hasVinyl;
+                        inputVinyl.className = "w-4 h-4 rounded accent-cyan-500";
+                        inputVinyl.onchange = () => toggleGoalProp(g.id, 'hasVinyl');
+                        
+                        const spanVinyl = document.createElement('span');
+                        spanVinyl.className = `${g.hasVinyl ? 'line-through text-gray-500' : 'text-gray-200'} flex items-center gap-1.5 transition-all`;
+                        spanVinyl.innerText = `Виниле ${g.hasVinyl ? '✅' : ''}`;
+                        
+                        labelVinyl.appendChild(inputVinyl);
+                        labelVinyl.appendChild(spanVinyl);
+                        
+                        divider.appendChild(labelCd);
+                        divider.appendChild(labelVinyl);
+                        
+                        const delBtn = document.createElement('button');
+                        delBtn.className = "absolute top-4 right-4 bg-red-500/10 text-red-400 p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/30";
+                        delBtn.title = "Удалить цель";
+                        delBtn.innerText = "✕";
+                        delBtn.onclick = () => deleteGoal(g.id);
+                        
+                        card.appendChild(title);
+                        card.appendChild(artist);
+                        card.appendChild(divider);
+                        card.appendChild(delBtn);
+                        
+                        goalsGrid.appendChild(card);
+                    });
                 }
             }
 
@@ -876,48 +1375,94 @@
             const sortedStats = Object.entries(stats).sort((a, b) => b[1] - a[1]);
             const statsEl = document.getElementById('artist-stats-grid');
             if (statsEl) {
+                statsEl.innerHTML = '';
                 if (sortedStats.length === 0) {
                     statsEl.innerHTML = `<p class="text-gray-500 text-sm italic col-span-full">Добавьте релизы с указанием артиста, чтобы увидеть топ...</p>`;
                 } else {
-                    statsEl.innerHTML = sortedStats.map(([artist, count]) => `
-                        <div onclick="showArtistStats('${artist.replace(/'/g, "\\'")}')" class="bg-white/5 p-4 rounded-2xl border border-white/5 flex justify-between items-center cursor-pointer hover:border-[var(--theme-btn)] hover:bg-white/10 hover:scale-[1.02] transition-all">
-                            <span class="font-medium truncate mr-2 text-sm" title="${artist}">${artist}</span>
-                            <span class="bg-purple-500/20 text-purple-300 text-xs font-bold px-2 py-0.5 rounded-lg shrink-0">${count} рел.</span>
-                        </div>
-                    `).join('');
+                    sortedStats.forEach(stat => {
+                        const artist = stat[0];
+                        const count = stat[1];
+                        
+                        const div = document.createElement('div');
+                        div.className = "bg-white/5 p-4 rounded-2xl border border-white/5 flex justify-between items-center cursor-pointer hover:border-[var(--theme-btn)] hover:bg-white/10 hover:scale-[1.02] transition-all";
+                        div.onclick = () => showArtistStats(artist);
+                        
+                        const nameSpan = document.createElement('span');
+                        nameSpan.className = "font-medium truncate mr-2 text-sm";
+                        nameSpan.title = artist;
+                        nameSpan.innerText = artist;
+                        
+                        const countSpan = document.createElement('span');
+                        countSpan.className = "bg-purple-500/20 text-purple-300 text-xs font-bold px-2 py-0.5 rounded-lg shrink-0";
+                        countSpan.innerText = `${count} рел.`;
+                        
+                        div.appendChild(nameSpan);
+                        div.appendChild(countSpan);
+                        statsEl.appendChild(div);
+                    });
                 }
             }
 
             // Рендер музыкальных сайтов
             const sitesGrid = document.getElementById('music-sites-grid');
             if (sitesGrid) {
+                sitesGrid.innerHTML = '';
                 const sitesList = data.musicSites || [];
                 if (sitesList.length === 0) {
                     sitesGrid.innerHTML = `<p class="text-gray-500 text-sm italic col-span-full">Добавьте сайты для быстрого перехода...</p>`;
                 } else {
-                    sitesGrid.innerHTML = sitesList.map(s => `
-                        <div class="glass p-5 rounded-3xl border border-white/5 flex flex-col justify-between hover:border-[var(--theme-btn)] hover:bg-white/10 hover:scale-[1.02] transition-all relative group h-28">
-                            <a href="${s.url}" target="_blank" class="flex items-center gap-4 h-full w-full">
-                                <span class="text-3xl filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] select-none">${s.emoji || '🌐'}</span>
-                                <div class="truncate">
-                                    <h4 class="font-black text-white text-base truncate" title="${s.name}">${s.name}</h4>
-                                    <p class="text-[10px] text-gray-500 truncate mt-0.5">${s.url.replace(/^https?:\/\/(www\.)?/, '')}</p>
-                                </div>
-                            </a>
-                            <button onclick="deleteMusicSite(${s.id}, event)" class="absolute top-4 right-4 bg-red-500/10 text-red-400 p-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/30" title="Удалить">
-                                ✕
-                            </button>
-                        </div>
-                    `).join('');
+                    sitesList.forEach(s => {
+                        const card = document.createElement('div');
+                        card.className = "glass p-5 rounded-3xl border border-white/5 flex flex-col justify-between hover:border-[var(--theme-btn)] hover:bg-white/10 hover:scale-[1.02] transition-all relative group h-28";
+                        
+                        const link = document.createElement('a');
+                        link.href = s.url;
+                        link.target = "_blank";
+                        link.className = "flex items-center gap-4 h-full w-full";
+                        
+                        const emojiSpan = document.createElement('span');
+                        emojiSpan.className = "text-3xl filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] select-none";
+                        emojiSpan.innerText = s.emoji || '🌐';
+                        
+                        const infoDiv = document.createElement('div');
+                        infoDiv.className = "truncate";
+                        
+                        const title = document.createElement('h4');
+                        title.className = "font-black text-white text-base truncate";
+                        title.title = s.name;
+                        title.innerText = s.name;
+                        
+                        const subtitle = document.createElement('p');
+                        subtitle.className = "text-[10px] text-gray-500 truncate mt-0.5";
+                        subtitle.innerText = s.url.replace(/^https?:\/\/(www\.)?/, '');
+                        
+                        infoDiv.appendChild(title);
+                        infoDiv.appendChild(subtitle);
+                        
+                        link.appendChild(emojiSpan);
+                        link.appendChild(infoDiv);
+                        
+                        const delBtn = document.createElement('button');
+                        delBtn.className = "absolute top-4 right-4 bg-red-500/10 text-red-400 p-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/30";
+                        delBtn.title = "Удалить";
+                        delBtn.innerText = "✕";
+                        delBtn.onclick = (event) => {
+                            deleteMusicSite(s.id, event);
+                        };
+                        
+                        card.appendChild(link);
+                        card.appendChild(delBtn);
+                        sitesGrid.appendChild(card);
+                    });
                 }
             }
         }
         
         window.onload = () => { 
-            // Подгружаем выбранную тему при старте
             if (data.selectedTheme) {
                 setTheme(data.selectedTheme);
             }
+            checkAchievements();
             updateUI(); 
         };
     </script>
